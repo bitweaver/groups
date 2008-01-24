@@ -107,9 +107,9 @@ class BitGroup extends LibertyAttachable {
 	* @access public
 	**/
 	function store( &$pParamHash ) {
+		$this->mDb->StartTrans();
 		if( $this->verify( $pParamHash )&& LibertyAttachable::store( $pParamHash ) ) {
 			$table = BIT_DB_PREFIX."groups";
-			$this->mDb->StartTrans();
 			if( $this->mGroupId ) {
 				$locId = array( "group_id" => $pParamHash['group_id'] );
 				$result = $this->mDb->associateUpdate( $table, $pParamHash['group_store'], $locId );
