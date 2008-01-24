@@ -3,7 +3,8 @@ $tables = array(
 	'groups' => "
 		group_id I4 AUTO PRIMARY,
 		content_id I4 NOTNULL,
-		description C(160)
+		CONSTRAINT ', CONSTRAINT `groups_group_id` FOREIGN KEY (`group_id`) REFERENCES `".BIT_DB_PREFIX."users_groups` (`group_id`)
+					, CONSTRAINT `groups_content_id` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)'
 	",
 );
 
@@ -20,16 +21,16 @@ $gBitInstaller->registerPackageInfo( GROUPS_PKG_NAME, array(
 
 // ### Indexes
 $indices = array(
-	'bit_groups_group_id_idx' => array('table' => 'groups', 'cols' => 'group_id', 'opts' => NULL ),
+	'groups_group_id_idx' => array('table' => 'groups', 'cols' => 'group_id', 'opts' => NULL ),
+	'groups_content_id_idx' => array( 'table' => 'groups', 'cols' => 'content_id', 'opts' => array( 'UNIQUE' ) ),
 );
 $gBitInstaller->registerSchemaIndexes( GROUPS_PKG_NAME, $indices );
 
-/*// ### Sequences
+// ### Sequences
 $sequences = array (
-	'bit_group_id_seq' => array( 'start' => 1 )
+	'groups_group_id_seq' => array( 'start' => 1 )
 );
 $gBitInstaller->registerSchemaSequences( GROUPS_PKG_NAME, $sequences );
-*/
 
 
 $gBitInstaller->registerSchemaDefault( GROUPS_PKG_NAME, array(
