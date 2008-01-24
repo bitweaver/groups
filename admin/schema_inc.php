@@ -1,7 +1,7 @@
 <?php
 $tables = array(
 	'groups' => "
-		group_id I4 AUTO PRIMARY,
+		group_id I4 PRIMARY,
 		content_id I4 NOTNULL,
 		CONSTRAINT ', CONSTRAINT `groups_group_id` FOREIGN KEY (`group_id`) REFERENCES `".BIT_DB_PREFIX."users_groups` (`group_id`)
 					, CONSTRAINT `groups_content_id` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)'
@@ -27,11 +27,12 @@ $indices = array(
 $gBitInstaller->registerSchemaIndexes( GROUPS_PKG_NAME, $indices );
 
 // ### Sequences
+/* not needed becuase the id is generated in users_groups. leaving it here just for ref during development incase we need another sequence 
 $sequences = array (
 	'groups_group_id_seq' => array( 'start' => 1 )
 );
 $gBitInstaller->registerSchemaSequences( GROUPS_PKG_NAME, $sequences );
-
+*/
 
 $gBitInstaller->registerSchemaDefault( GROUPS_PKG_NAME, array(
 	//      "INSERT INTO `".BIT_DB_PREFIX."bit_group_types` (`type`) VALUES ('Group')",
