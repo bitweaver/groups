@@ -3,6 +3,11 @@ $tables = array(
 	'groups' => "
 		group_id I4 PRIMARY,
 		content_id I4 NOTNULL,
+		mod_msgs C(5) DEFAULT 'false',
+		mod_content C(5) DEFAULT 'true',
+		admin_content_strict C(5) DEFAULT 'false',
+		view_content_public C(5) DEFAULT 'true',
+		list_group_public C(5) DEFAULT 'true',
 		CONSTRAINT ', CONSTRAINT `groups_group_id` FOREIGN KEY (`group_id`) REFERENCES `".BIT_DB_PREFIX."users_groups` (`group_id`)
 					, CONSTRAINT `groups_content_id` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)'
 	",
