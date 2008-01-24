@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/Attic/list_groups.php,v 1.1 2008/01/24 14:47:56 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/Attic/list_groups.php,v 1.2 2008/01/24 19:41:31 nickpalmer Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -11,7 +11,7 @@ require_once( GROUPS_PKG_PATH.'BitGroup.php' );
 $gBitSystem->verifyPackage( 'groups' );
 
 // Now check permissions to access this page
-$gBitSystem->verifyPermission( 'p_group_read' );
+$gBitSystem->verifyPermission( 'p_group_view' );
 
 /* mass-remove:
 	the checkboxes are sent as the array $_REQUEST["checked[]"], values are the wiki-PageNames,
