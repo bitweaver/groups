@@ -3,13 +3,40 @@ $tables = array(
 	'groups' => "
 		group_id I4 PRIMARY,
 		content_id I4 NOTNULL,
-		mod_msgs C(5) DEFAULT 'false',
-		mod_content C(5) DEFAULT 'true',
-		admin_content_strict C(5) DEFAULT 'false',
-		view_content_public C(5) DEFAULT 'true',
-		list_group_public C(5) DEFAULT 'true',
+		mod_msgs C(1) DEFAULT 'n',
+		mod_content C(1) DEFAULT 'y',
+		admin_content_strict C(1) DEFAULT 'n',
+		view_content_public C(1) DEFAULT 'y',
+		list_group_public C(1) DEFAULT 'y',
 		CONSTRAINT ', CONSTRAINT `groups_group_id` FOREIGN KEY (`group_id`) REFERENCES `".BIT_DB_PREFIX."users_groups` (`group_id`)
 					, CONSTRAINT `groups_content_id` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)'
+	",
+
+	'groups_rolls' => "
+		roll_id I4 PRIMARY,
+		roll_name C(30)
+	",
+
+	'groups_permsissions' => "
+		perm_name C(30) PRIMARY
+	",
+
+	'groups_rolls_perms_map' => "
+		group_content_id I4 PRIMARY,
+		roll_id I4 PRIMARY,
+		perm_name C(30)
+		CONSTRAINT ', CONSTRAINT `groups_rolls_perms_map_group_content_id` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
+					, CONSTRAINT `groups_rolls_perms_map_roll_id` FOREIGN KEY (`roll_id`) REFERENCES `".BIT_DB_PREFIX."groups_rolls` (`roll_id`)
+					, CONSTRAINT `groups_rolls_perms_map_perm_name` FOREIGN KEY (`perm_name`) REFERENCES `".BIT_DB_PREFIX."groups_permissions` (`perm_name`)'
+	",
+
+	'groups_rolls_users_map' => "
+		group_content_id I4 PRIMARY, 
+		user_id I4 NOTNULL,
+		roll_id I4,
+		CONSTRAINT ', CONSTRAINT `groups_rolls_users_map_group_content_id` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
+					, CONSTRAINT `groups_rolls_users_map_user_id` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users` (`user_id`)
+					, CONSTRAINT `groups_rolls_perms_map_roll_id` FOREIGN KEY (`roll_id`) REFERENCES `".BIT_DB_PREFIX."groups_rolls` (`roll_id`)'
 	",
 );
 
