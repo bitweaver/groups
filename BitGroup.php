@@ -22,7 +22,7 @@ require_once( LIBERTY_PKG_PATH.'LibertyAttachable.php' );
 define( 'BITGROUP_CONTENT_TYPE_GUID', 'bitgroup' );
 
 /**
- * @package groups
+ * @package group
  */
 class BitGroup extends LibertyAttachable {
 	/**
@@ -43,7 +43,7 @@ class BitGroup extends LibertyAttachable {
 			'content_type_guid' => BITGROUP_CONTENT_TYPE_GUID,
 			'content_description' => 'Group package with bare essentials',
 			'handler_class' => 'BitGroup',
-			'handler_package' => 'groups',
+			'handler_package' => 'group',
 			'handler_file' => 'BitGroup.php',
 			'maintainer_url' => 'http://www.bitweaver.org'
 		) );
@@ -107,23 +107,27 @@ class BitGroup extends LibertyAttachable {
 	* @access public
 	**/
 	function store( &$pParamHash ) {
+		global $gBitUser;
 		$this->mDb->StartTrans();
-		if( $this->verify( $pParamHash )&& LibertyAttachable::store( $pParamHash ) ) {
+
+		// Verify and then store group and content.
+		if( $this->verify( $pParamHash ) && $gBitUser->storeGroup( $pParamHash ) && LibertyAttachable::store( $pParamHash ) ) {
 			$table = BIT_DB_PREFIX."groups";
 			if( $this->mGroupId ) {
 				$locId = array( "group_id" => $pParamHash['group_id'] );
-				$result = $this->mDb->associateUpdate( $table, $pParamHash['group_store'], $locId );
-			} else {
-				$pParamHash['group_store']['content_id'] = $pParamHash['content_id'];
-				if( @$this->verifyId( $pParamHash['group_id'] ) ) {
-					// if pParamHash['group_id'] is set, some is requesting a particular group_id. Use with caution!
-					$pParamHash['group_store']['group_id'] = $pParamHash['group_id'];
-				} else {
-					$pParamHash['group_store']['group_id'] = $this->mDb->GenID( 'groups_group_id_seq' );
-				}
+				$result = $this->mDb->associateUpdate( $table, $pParamHash['group_pkg_store'], $locId );
+			}
+			else {
+				// Get content
+				$pParamHash['group_pkg_store']['content_id'] = $pParamHash['content_id'];
+				$pParamHash['group_pkg_store']['group_id'] = $pParamHash['group_store']['group_id'];
 				$this->mGroupId = $pParamHash['group_store']['group_id'];
 
-				$result = $this->mDb->associateInsert( $table, $pParamHash['group_store'] );
+				vd($pParamHash);
+				die;
+				$result = $this->mDb->associateInsert( $table, $pParamHash['group_pkg_store'] );
+				// Make sure this user is in the group
+				$gBitUser->addUserToGroup( $gBitYser->mUserId, $this->mGroupId );
 			}
 
 
@@ -157,23 +161,22 @@ class BitGroup extends LibertyAttachable {
 			$pParamHash['content_id'] = $this->mInfo['content_id'];
 		}
 
+		if( @$this->verifyId( $this->mInfo['group_id'] ) ) {
+			$pParamHash['group_id'] = $this->mInfo['group_id'];
+		}
+
 		// It is possible a derived class set this to something different
 		if( @$this->verifyId( $pParamHash['content_type_guid'] ) ) {
 			$pParamHash['content_type_guid'] = $this->mContentTypeGuid;
 		}
 
 		if( @$this->verifyId( $pParamHash['content_id'] ) ) {
-			$pParamHash['group_store']['content_id'] = $pParamHash['content_id'];
+			$pParamHash['group_pkg_store']['content_id'] = $pParamHash['content_id'];
 		}
 
-		// check some lengths, if too long, then truncate
-		if( $this->isValid() && !empty( $this->mInfo['description'] ) && empty( $pParamHash['description'] ) ) {
-			// someone has deleted the description, we need to null it out
-			$pParamHash['group_store']['description'] = '';
-		} else if( empty( $pParamHash['description'] ) ) {
-			unset( $pParamHash['description'] );
-		} else {
-			$pParamHash['group_store']['description'] = substr( $pParamHash['description'], 0, 200 );
+		if( @$this->verifyId( $pParamHash['group_id'] ) ) {
+			$pParamHash['group_store']['group_id'] = $pParamHash['group_id'];
+			$pParamHash['group_pkg_store']['group_id'] = $pParamHash['group_id'];
 		}
 
 		if( !empty( $pParamHash['data'] ) ) {
@@ -184,17 +187,53 @@ class BitGroup extends LibertyAttachable {
 		if( !empty( $pParamHash['title'] ) ) {
 			if( empty( $this->mGroupId ) ) {
 				if( empty( $pParamHash['title'] ) ) {
-					$this->mErrors['title'] = 'You must enter a name for this page.';
+					$this->mErrors['title'] = tra('You must enter a name for this group.');
 				} else {
 					$pParamHash['content_store']['title'] = substr( $pParamHash['title'], 0, 160 );
+					// Copy title to name for group verify
+					$pParamHash['name'] = $pParamHash['content_store']['title'];
 				}
 			} else {
 				$pParamHash['content_store']['title'] =( isset( $pParamHash['title'] ) )? substr( $pParamHash['title'], 0, 160 ): '';
+				// Copy title to name for group verify
+				$pParamHash['name'] = $pParamHash['content_store']['title'];
 			}
 		} else if( empty( $pParamHash['title'] ) ) {
 			// no name specified
-			$this->mErrors['title'] = 'You must specify a name';
+			$this->mErrors['title'] = tra('You must specify a name for this group.');
 		}
+
+		// Constrain summary to 250 to fit in groups desc table as well
+		if( isset($pParamHash['summary']) ) {
+			$pParamHash['summary'] = substr($pParamHash['summary'], 0, 250);
+			$pParamHash['desc'] = $pParamHash['summary'];
+		}
+
+		// Setup the group home URL
+		$pParamHash['home'] = GROUP_PKG_URL.urlencode($pParamHash['name']);
+
+		// Do we have after_registration data?
+		if( !empty($pParamHash['after_registration']) ) {
+			$pParamHash['data_store']['after_registration'] = $pParamHash['after_registration'];
+			$pParamHash['after_registration_page'] = $pParamHash['home'] = GROUP_PKG_URL.'registered/'.$pParamHash['name'];
+		}
+		else {
+			$pParamHash['data_store']['after_registration'] = NULL;
+			$pParamHash['after_registration_page'] = GROUP_PKG_URL.urlencode($pParamHash['name']);
+		}
+
+		// Make sure we don't set is_default or batch_set_default for security
+		if( isset($pParamHash['is_default']) || isset($pParamHash['batch_set_default']) ) {
+			$this->mErrors['default'] = tra('Attempt to set group as default group or batch set default. This is not allowed.');
+		}
+
+		// Verify the group information
+		$gBitUser->verifyGroup( $pParamHash );
+
+		// Merge errors from the group checks
+		$this->mErrors = array_merge($gBitUser->mErrors, $this->mErrors);
+
+		vd($pParamHash);
 
 		return( count( $this->mErrors )== 0 );
 	}
@@ -209,8 +248,13 @@ class BitGroup extends LibertyAttachable {
 			$query = "DELETE FROM `".BIT_DB_PREFIX."groups` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
 			if( LibertyAttachable::expunge() ) {
-				$ret = TRUE;
-				$this->mDb->CompleteTrans();
+				if( $gBitUser->removeGroup($this->mGroupId) ) {
+					$ret = TRUE;
+					$this->mDb->CompleteTrans();
+				}
+				else {
+					$this->mDb->RollbackTrans();
+				}
 			} else {
 				$this->mDb->RollbackTrans();
 			}
@@ -254,7 +298,7 @@ class BitGroup extends LibertyAttachable {
 		$query = "SELECT ts.*, lc.`content_id`, lc.`title`, lc.`data` $selectSql
 			FROM `".BIT_DB_PREFIX."groups` ts INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = ts.`content_id` ) $joinSql
 			WHERE lc.`content_type_guid` = ? $whereSql
-			ORDER BY ".$this->mDb->convert_sortmode( $sort_mode );
+			ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 		$query_cant = "select count(*)
 				FROM `".BIT_DB_PREFIX."groups` ts INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = ts.`content_id` ) $joinSql
 			WHERE lc.`content_type_guid` = ? $whereSql";
@@ -278,7 +322,7 @@ class BitGroup extends LibertyAttachable {
 	function getDisplayUrl() {
 		$ret = NULL;
 		if( @$this->verifyId( $this->mGroupId ) ) {
-			$ret = GROUPS_PKG_URL."index.php?group_id=".$this->mGroupId;
+			$ret = GROUP_PKG_URL."index.php?group_id=".$this->mGroupId;
 		}
 		return $ret;
 	}

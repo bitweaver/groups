@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.1 2008/01/24 14:47:56 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.2 2008/02/04 19:09:10 nickpalmer Exp $
 // Copyright (c) 2005 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -10,7 +10,7 @@
 //	$gBitSmarty->assign('home_group', $_REQUEST["homeGroup"]);
 //}
 
-require_once( GROUPS_PKG_PATH.'BitGroup.php' );
+require_once( GROUP_PKG_PATH.'BitGroup.php' );
 
 $formGroupLists = array(
 	"group_list_group_id" => array(
@@ -37,7 +37,7 @@ $processForm = set_tab();
 if( $processForm ) {
 	$groupToggles = array_merge( $formGroupLists );
 	foreach( $groupToggles as $item => $data ) {
-		simple_set_toggle( $item, 'groups' );
+		simple_set_toggle( $item, 'group' );
 	}
 
 }

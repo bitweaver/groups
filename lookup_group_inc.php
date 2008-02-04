@@ -1,6 +1,6 @@
 <?php
 global $gContent;
-require_once( GROUPS_PKG_PATH.'BitGroup.php');
+require_once( GROUP_PKG_PATH.'BitGroup.php');
 require_once( LIBERTY_PKG_PATH.'lookup_content_inc.php' );
 
 // if we already have a gContent, we assume someone else created it for us, and has properly loaded everything up.

@@ -1,14 +1,14 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/Attic/list_groups.php,v 1.2 2008/01/24 19:41:31 nickpalmer Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/Attic/list_groups.php,v 1.3 2008/02/04 19:09:10 nickpalmer Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
 // Initialization
 require_once( '../bit_setup_inc.php' );
-require_once( GROUPS_PKG_PATH.'BitGroup.php' );
+require_once( GROUP_PKG_PATH.'BitGroup.php' );
 
 // Is package installed and enabled
-$gBitSystem->verifyPackage( 'groups' );
+$gBitSystem->verifyPackage( 'group' );
 
 // Now check permissions to access this page
 $gBitSystem->verifyPermission( 'p_group_view' );

@@ -10,8 +10,8 @@ $gBitSystem->registerPackage( $registerHash );
 
 if( $gBitSystem->isPackageActive( 'group' ) ) {
 	$menuHash = array(
-		'package_name'  => GROUPS_PKG_NAME,
-		'index_url'     => GROUPS_PKG_URL.'index.php',
+		'package_name'  => GROUP_PKG_NAME,
+		'index_url'     => GROUP_PKG_URL.'index.php',
 		'menu_template' => 'bitpackage:group/menu_group.tpl',
 	);
 	$gBitSystem->registerAppMenu( $menuHash );
