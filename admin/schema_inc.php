@@ -13,11 +13,13 @@ $tables = array(
 
 	'groups_rolls' => "
 		roll_id I4 PRIMARY,
-		roll_name C(30)
+		roll_name C(30),
+		roll_desc C(255)
 	",
 
-	'groups_permsissions' => "
-		perm_name C(30) PRIMARY
+	'groups_permissions' => "
+		perm_name C(30) PRIMARY,
+		perm_desc C(250)
 	",
 
 	'groups_rolls_perms_map' => "
@@ -58,15 +60,28 @@ $indices = array(
 $gBitInstaller->registerSchemaIndexes( GROUP_PKG_NAME, $indices );
 
 // ### Sequences
-/* not needed becuase the id is generated in users_groups. leaving it here just for ref during development incase we need another sequence 
 $sequences = array (
-	//	'groups_group_id_seq' => array( 'start' => 1 )
+	'groups_rolls_roll_id_seq' => array( 'start' => 4 )
 );
 $gBitInstaller->registerSchemaSequences( GROUP_PKG_NAME, $sequences );
-*/
 
 $gBitInstaller->registerSchemaDefault( GROUP_PKG_NAME, array(
 	//      "INSERT INTO `".BIT_DB_PREFIX."bit_group_types` (`type`) VALUES ('Group')",
+) );
+
+// ### Default group level rolls and permissions
+$gBitInstaller->registerSchemaDefault( LIBERTY_PKG_NAME, array(
+	"INSERT INTO `".BIT_DB_PREFIX."groups_rolls` (`roll_id`,`roll_name`, `roll_desc`) VALUES (1, 'admin', 'Group Administrators')",
+	"INSERT INTO `".BIT_DB_PREFIX."groups_rolls` (`roll_id`,`roll_name`, `roll_desc`) VALUES (2, 'editors', 'Group Managers')",
+	"INSERT INTO `".BIT_DB_PREFIX."groups_rolls` (`roll_id`,`roll_name`, `roll_desc`) VALUES (3, 'registered', 'Group Members')",
+	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_content_admin', 'Can admin group content')",
+	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_content_create', 'Can create group content')",
+	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_content_submit', 'Can submit content to group for inclusion')",
+	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_members_admin', 'Can admin group members')",
+	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_members_view', 'Can view group members')",
+	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_members_invite', 'Can send invitations to the group')",
+	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_msgs_admin', 'Can admin group forums')",
+	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_msgs_create', 'Can post messages to group forums')",
 ) );
 
 // ### Default UserPermissions
