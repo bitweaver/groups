@@ -24,8 +24,8 @@ $tables = array(
 
 	'groups_rolls_perms_map' => "
 		group_content_id I4 PRIMARY,
-		roll_id I4 PRIMARY,
-		perm_name C(30)
+		perm_name C(30) NOTNULL,
+		roll_id I4 NOTNULL
 		CONSTRAINT ', CONSTRAINT `groups_rolls_perms_map_group_content_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
 					, CONSTRAINT `groups_rolls_perms_map_roll_id` FOREIGN KEY (`roll_id`) REFERENCES `".BIT_DB_PREFIX."groups_rolls` (`roll_id`)
 					, CONSTRAINT `groups_rolls_perms_map_perm_name` FOREIGN KEY (`perm_name`) REFERENCES `".BIT_DB_PREFIX."users_permissions` (`perm_name`)'
@@ -34,7 +34,7 @@ $tables = array(
 	'groups_rolls_users_map' => "
 		group_content_id I4 PRIMARY, 
 		user_id I4 NOTNULL,
-		roll_id I4
+		roll_id I4 NOTNULL
 		CONSTRAINT ', CONSTRAINT `groups_rolls_users_map_group_content_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
 					, CONSTRAINT `groups_rolls_users_map_user_id` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users` (`user_id`)
 					, CONSTRAINT `groups_rolls_perms_map_roll_id` FOREIGN KEY (`roll_id`) REFERENCES `".BIT_DB_PREFIX."groups_rolls` (`roll_id`)'

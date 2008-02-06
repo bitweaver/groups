@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.2 2008/02/04 19:09:10 nickpalmer Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.3 2008/02/06 21:28:51 wjames5 Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -58,19 +58,24 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 
 // What options do groups support?
 $formGroupOptions = array(
+	"view_content_public" => array(
+		'label' => 'Publicly Viewable',
+		'note' => 'Is this group and its content publically viewable?',
+		'default' => 'y',
+	),
 	"is_public" => array(
-		'label' => 'Open Join',
-		'note' => 'Is anyone free to join this group?',
+		'label' => 'Public Membership',
+		'note' => 'Is anyone free to join this group? Unchecking this box means an invitation will be required to join this group',
 		'default' => 'y',
 	),
 	"mod_msg" => array(
-		'label' => 'Comment Moderation',
-		'note' => 'Does the addition of comments require moderation?',
+		'label' => 'Moderate Messages',
+		'note' => 'When checked all messages to this group will be held for moderation before being displayed.',
 		'default' => 'n',
 	),
 	"mod_content" => array(
-		'label' => 'Content Moderation',
-		'note' => 'Does the addition of content require moderation?',
+		'label' => 'Moderate Content',
+		'note' => 'When checked any content created (like pages or blog posts) wiil be held for moderation before being displayed',
 		'default' => 'n',
 	),
 	"admin_content_strict" => array(
@@ -78,13 +83,24 @@ $formGroupOptions = array(
 		'note' => 'Can the administrator edit any content assigned to the group?',
 		'default' => 'n',
 	),
-	"view_content_public" => array(
-		'label' => 'Publicly Viewable Content',
-		'note' => 'Is content in this group publically viewable?',
-		'default' => 'y',
-	),
-	);
+);
 $gBitSmarty->assign('formGroupOptions', $formGroupOptions);
+
+$formGroupRollsOptions = array(
+	"stuff" => array(
+		'label' => 'Set stuff',
+		'note' => 'When you set stuff it does what you want',
+	),
+);
+$gBitSmarty->assign('formGroupRollsOptions', $formGroupRollsOptions);
+
+// Get all rolls - used in access control options
+$groupRolls = $gContent->getAllRolls();
+$gBitSmarty->assign('groupRolls', $groupRolls );
+
+// Get all perms - used in access control options
+$groupRollsPerms = $gContent->getAllRollsPerms();
+$gBitSmarty->assign('groupRollsPerms', $groupRollsPerms );
 
 // Display the template
 $gBitSystem->display( 'bitpackage:group/edit_group.tpl', tra('Group') );

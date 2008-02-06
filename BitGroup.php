@@ -87,6 +87,8 @@ class BitGroup extends LibertyAttachable {
 				$this->mInfo['editor'] =( isset( $result->fields['modifier_real_name'] )? $result->fields['modifier_real_name'] : $result->fields['modifier_user'] );
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
 				$this->mInfo['parsed_data'] = $this->parseData();
+				
+				$this->getMemberPermsForGroup();
 
 				LibertyAttachable::load();
 			}
@@ -122,12 +124,9 @@ class BitGroup extends LibertyAttachable {
 				$pParamHash['group_pkg_store']['content_id'] = $pParamHash['content_id'];
 				$pParamHash['group_pkg_store']['group_id'] = $pParamHash['group_store']['group_id'];
 				$this->mGroupId = $pParamHash['group_store']['group_id'];
-
-				vd($pParamHash);
-				die;
 				$result = $this->mDb->associateInsert( $table, $pParamHash['group_pkg_store'] );
 				// Make sure this user is in the group
-				$gBitUser->addUserToGroup( $gBitYser->mUserId, $this->mGroupId );
+				$gBitUser->addUserToGroup( $gBitUser->mUserId, $this->mGroupId );
 			}
 
 
@@ -325,6 +324,37 @@ class BitGroup extends LibertyAttachable {
 			$ret = GROUP_PKG_URL."index.php?group_id=".$this->mGroupId;
 		}
 		return $ret;
+	}
+
+	function getAllRolls() {
+        $sql = "SELECT gr.* FROM `".BIT_DB_PREFIX."groups_rolls` gr 
+                ORDER BY gr.`roll_name` ASC";
+        return $this->mDb->getAssoc( $sql );
+	}
+
+	function getAllRollsPerms() {
+		$ret = NULL;
+		$sql = "SELECT gp.* FROM `".BIT_DB_PREFIX."groups_permissions` gp
+				ORDER BY gp.`perm_name` ASC";
+		$result = $this->mDb->query( $sql );
+		return $result->fields;
+	}
+
+	function assignPermissionToRoll() {
+	}
+
+	function removePermissionFromRoll() {
+	}
+
+	function getMemberPermsForGroup(){
+		if ( $this->verifyId( $this->mContentId ) ){
+			$query = "SELECT p.`perm_name`, rp.`roll_id`, ru.`roll_id` AS user_roll_id 
+				FROM `".BIT_DB_PREFIX."groups_permissions` p
+				LEFT JOIN `".BIT_DB_PREFIX."groups_rolls_perms_map` rp ON (p.`perm_name` = rp.`perm_name`)
+				LEFT JOIN `".BIT_DB_PREFIX."groups_rolls_users_map` ru ON (rp.`group_content_id` = ru.`group_content_id` AND rp.`roll_id` = ru.`roll_id`) 
+				WHERE rp.`group_content_id` IS NULL OR rp.`group_content_id` = ?";
+			 $this->mGroupMemberPermissions = $this->mDb->getAssoc( $query, array( $this->mContentId ) ); 
+		}
 	}
 }
 ?>

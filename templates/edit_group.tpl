@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.3 2008/02/06 16:40:51 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.4 2008/02/06 21:28:53 wjames5 Exp $ *}
 {strip}
 <div class="floaticon">{bithelp}</div>
 
@@ -57,6 +57,9 @@
 
 				{jstab title="Group Options"}
 					{include file="bitpackage:group/edit_group_options.tpl"}
+				{/jstab}
+				{jstab title="Group Administration"}
+					{include file="bitpackage:group/edit_group_admin.tpl"}
 				{/jstab}
 
 				{* any service edit template tabs *}
