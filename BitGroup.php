@@ -327,8 +327,8 @@ class BitGroup extends LibertyAttachable {
 	}
 
 	function getAllRolls() {
-        $sql = "SELECT gr.* FROM `".BIT_DB_PREFIX."groups_rolls` gr 
-                ORDER BY gr.`roll_name` ASC";
+        $sql = "SELECT gr.* FROM `".BIT_DB_PREFIX."groups_roles` gr 
+                ORDER BY gr.`role_name` ASC";
         return $this->mDb->getAssoc( $sql );
 	}
 
@@ -348,10 +348,10 @@ class BitGroup extends LibertyAttachable {
 
 	function getMemberPermsForGroup(){
 		if ( $this->verifyId( $this->mContentId ) ){
-			$query = "SELECT p.`perm_name`, rp.`roll_id`, ru.`roll_id` AS user_roll_id 
+			$query = "SELECT p.`perm_name`, rp.`role_id`, ru.`role_id` AS user_role_id 
 				FROM `".BIT_DB_PREFIX."groups_permissions` p
-				LEFT JOIN `".BIT_DB_PREFIX."groups_rolls_perms_map` rp ON (p.`perm_name` = rp.`perm_name`)
-				LEFT JOIN `".BIT_DB_PREFIX."groups_rolls_users_map` ru ON (rp.`group_content_id` = ru.`group_content_id` AND rp.`roll_id` = ru.`roll_id`) 
+				LEFT JOIN `".BIT_DB_PREFIX."groups_roles_perms_map` rp ON (p.`perm_name` = rp.`perm_name`)
+				LEFT JOIN `".BIT_DB_PREFIX."groups_roles_users_map` ru ON (rp.`group_content_id` = ru.`group_content_id` AND rp.`role_id` = ru.`role_id`) 
 				WHERE rp.`group_content_id` IS NULL OR rp.`group_content_id` = ?";
 			 $this->mGroupMemberPermissions = $this->mDb->getAssoc( $query, array( $this->mContentId ) ); 
 		}

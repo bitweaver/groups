@@ -11,10 +11,10 @@ $tables = array(
 					, CONSTRAINT `groups_content_id` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)'
 	",
 
-	'groups_rolls' => "
-		roll_id I4 PRIMARY,
-		roll_name C(30),
-		roll_desc C(255)
+	'groups_roles' => "
+		role_id I4 PRIMARY,
+		role_name C(30),
+		role_desc C(255)
 	",
 
 	'groups_permissions' => "
@@ -22,22 +22,22 @@ $tables = array(
 		perm_desc C(250)
 	",
 
-	'groups_rolls_perms_map' => "
+	'groups_roles_perms_map' => "
 		group_content_id I4 PRIMARY,
 		perm_name C(30) NOTNULL,
-		roll_id I4 NOTNULL
-		CONSTRAINT ', CONSTRAINT `groups_rolls_perms_map_group_content_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
-					, CONSTRAINT `groups_rolls_perms_map_roll_id` FOREIGN KEY (`roll_id`) REFERENCES `".BIT_DB_PREFIX."groups_rolls` (`roll_id`)
-					, CONSTRAINT `groups_rolls_perms_map_perm_name` FOREIGN KEY (`perm_name`) REFERENCES `".BIT_DB_PREFIX."users_permissions` (`perm_name`)'
+		role_id I4 NOTNULL
+		CONSTRAINT ', CONSTRAINT `groups_roles_perms_map_group_content_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
+					, CONSTRAINT `groups_roles_perms_map_role_id` FOREIGN KEY (`role_id`) REFERENCES `".BIT_DB_PREFIX."groups_roles` (`role_id`)
+					, CONSTRAINT `groups_roles_perms_map_perm_name` FOREIGN KEY (`perm_name`) REFERENCES `".BIT_DB_PREFIX."users_permissions` (`perm_name`)'
 	",
 
-	'groups_rolls_users_map' => "
+	'groups_roles_users_map' => "
 		group_content_id I4 PRIMARY, 
 		user_id I4 NOTNULL,
-		roll_id I4 NOTNULL
-		CONSTRAINT ', CONSTRAINT `groups_rolls_users_map_group_content_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
-					, CONSTRAINT `groups_rolls_users_map_user_id` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users` (`user_id`)
-					, CONSTRAINT `groups_rolls_perms_map_roll_id` FOREIGN KEY (`roll_id`) REFERENCES `".BIT_DB_PREFIX."groups_rolls` (`roll_id`)'
+		role_id I4 NOTNULL
+		CONSTRAINT ', CONSTRAINT `groups_roles_users_map_group_content_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
+					, CONSTRAINT `groups_roles_users_map_user_id` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users` (`user_id`)
+					, CONSTRAINT `groups_roles_perms_map_role_id` FOREIGN KEY (`role_id`) REFERENCES `".BIT_DB_PREFIX."groups_roles` (`role_id`)'
 	",
 );
 
@@ -61,7 +61,7 @@ $gBitInstaller->registerSchemaIndexes( GROUP_PKG_NAME, $indices );
 
 // ### Sequences
 $sequences = array (
-	'groups_rolls_roll_id_seq' => array( 'start' => 4 )
+	'groups_roles_role_id_seq' => array( 'start' => 4 )
 );
 $gBitInstaller->registerSchemaSequences( GROUP_PKG_NAME, $sequences );
 
@@ -69,11 +69,11 @@ $gBitInstaller->registerSchemaDefault( GROUP_PKG_NAME, array(
 	//      "INSERT INTO `".BIT_DB_PREFIX."bit_group_types` (`type`) VALUES ('Group')",
 ) );
 
-// ### Default group level rolls and permissions
+// ### Default group level roles and permissions
 $gBitInstaller->registerSchemaDefault( LIBERTY_PKG_NAME, array(
-	"INSERT INTO `".BIT_DB_PREFIX."groups_rolls` (`roll_id`,`roll_name`, `roll_desc`) VALUES (1, 'admin', 'Group Administrators')",
-	"INSERT INTO `".BIT_DB_PREFIX."groups_rolls` (`roll_id`,`roll_name`, `roll_desc`) VALUES (2, 'editors', 'Group Managers')",
-	"INSERT INTO `".BIT_DB_PREFIX."groups_rolls` (`roll_id`,`roll_name`, `roll_desc`) VALUES (3, 'registered', 'Group Members')",
+	"INSERT INTO `".BIT_DB_PREFIX."groups_roles` (`role_id`,`role_name`, `role_desc`) VALUES (1, 'admin', 'Group Administrators')",
+	"INSERT INTO `".BIT_DB_PREFIX."groups_roles` (`role_id`,`role_name`, `role_desc`) VALUES (2, 'editors', 'Group Managers')",
+	"INSERT INTO `".BIT_DB_PREFIX."groups_roles` (`role_id`,`role_name`, `role_desc`) VALUES (3, 'registered', 'Group Members')",
 	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_content_admin', 'Can admin group content')",
 	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_content_create', 'Can create group content')",
 	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_content_submit', 'Can submit content to group for inclusion')",

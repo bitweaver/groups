@@ -5,8 +5,8 @@
 			<tr>
 				<th style="width:1%"></th>
 				<th>{tr}Permissions{/tr}</th>
-				{foreach from=$groupRolls item=roll name=roll}
-					<th><abbr title="{$roll.roll_name}">{if $smarty.foreach.rolls.total > 8}{$roll.roll_id}{else}{$roll.roll_desc}{/if}</abbr></th>
+				{foreach from=$groupRolls item=role name=role}
+					<th><abbr title="{$role.role_name}">{if $smarty.foreach.roles.total > 8}{$role.role_id}{else}{$role.role_desc}{/if}</abbr></th>
 				{/foreach}
 			</tr>
 		{/capture}
@@ -16,9 +16,9 @@
 			<tr class="{cycle values="odd,even"}{if $unassignedPerms.$p} warning{/if}">
 				<td>{if $unassignedPerms.$p}{biticon iname=dialog-warning iexplian="Unassigned Permission"}{/if}</td>
 				<td>{$perm.perm_desc}</td>
-				{foreach from=$groupRolls item=roll}
+				{foreach from=$groupRolls item=role}
 					<td style="text-align:center;">
-						<input type="checkbox" value="{$perm.perm_name}" name="perms[{$roll.roll_id}][{$perm.perm_name}]" title="{$roll.roll_name}" {if $roll.perms.$p}checked="checked"{/if}/>
+						<input type="checkbox" value="{$perm.perm_name}" name="perms[{$role.role_id}][{$perm.perm_name}]" title="{$role.role_name}" {if $role.perms.$p}checked="checked"{/if}/>
 					</td>
 				{/foreach}
 			</tr>
