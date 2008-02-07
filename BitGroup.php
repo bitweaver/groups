@@ -326,18 +326,41 @@ class BitGroup extends LibertyAttachable {
 		return $ret;
 	}
 
-	function getAllRolls() {
+	function getRoles() {
         $sql = "SELECT gr.* FROM `".BIT_DB_PREFIX."groups_roles` gr 
                 ORDER BY gr.`role_name` ASC";
-        return $this->mDb->getAssoc( $sql );
+        $ret = array();
+        if ( $rolls = $this->mDb->query( $sql ) ){
+            while( $row = $rolls->fetchRow() ) {
+				$roleId = $row['role_id'];
+				$ret[$roleId] = $row;
+				$ret[$roleId]['perms'] = array();
+				if ( @BitBase::verifyId( $this->mContentId ) ){
+					$ret[$roleId]['perms'] = $this->getRolesPerms( array( 'content_id' => $this->mContentId ));
+				}
+            }
+        }
+		return $ret;
 	}
 
-	function getAllRollsPerms() {
-		$ret = NULL;
-		$sql = "SELECT gp.* FROM `".BIT_DB_PREFIX."groups_permissions` gp
+	/**
+	 * @param array group_content_id, if unset, all groups are perms are returned
+	 **/
+	function getRolesPerms( $pParamHash = NULL ) {
+		$result = array();
+		$bindVars = array();
+		$whereSql = $selectSql = $fromSql = '';
+		if( @BitBase::verifyId( $pParamHash['content_id'] )) {
+			$selectSql = ', rp.`perm_value` AS `hasPerm` ';
+			$fromSql = ' INNER JOIN `'.BIT_DB_PREFIX.'groups_roles_perms_map` rp ON ( rp.`perm_name` = gp.`perm_name` ) ';
+			$whereSql .= " WHERE ugp.`group_content_id`=?";
+			$bindVars[] = $pParamHash['contet_id'];
+		}
+		$sql = "SELECT gp.* $selectSql
+		   		FROM `".BIT_DB_PREFIX."groups_permissions` gp $fromSql $whereSql
 				ORDER BY gp.`perm_name` ASC";
-		$result = $this->mDb->query( $sql );
-		return $result->fields;
+		$result = $this->mDb->getAssoc( $sql, $bindVars );
+		return $result;
 	}
 
 	function assignPermissionToRoll() {

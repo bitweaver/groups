@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.3 2008/02/06 21:28:51 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.4 2008/02/07 02:14:40 wjames5 Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -86,21 +86,21 @@ $formGroupOptions = array(
 );
 $gBitSmarty->assign('formGroupOptions', $formGroupOptions);
 
-$formGroupRollsOptions = array(
+$formGroupRolesOptions = array(
 	"stuff" => array(
 		'label' => 'Set stuff',
 		'note' => 'When you set stuff it does what you want',
 	),
 );
-$gBitSmarty->assign('formGroupRollsOptions', $formGroupRollsOptions);
+$gBitSmarty->assign('formGroupRolesOptions', $formGroupRolesOptions);
 
 // Get all rolls - used in access control options
-$groupRolls = $gContent->getAllRolls();
-$gBitSmarty->assign('groupRolls', $groupRolls );
+$groupRoles = $gContent->getRoles();
+$gBitSmarty->assign('groupRoles', $groupRoles );
 
 // Get all perms - used in access control options
-$groupRollsPerms = $gContent->getAllRollsPerms();
-$gBitSmarty->assign('groupRollsPerms', $groupRollsPerms );
+$allRolesPerms = $gContent->getRolesPerms();
+$gBitSmarty->assign('allRolesPerms', $allRolesPerms );
 
 // Display the template
 $gBitSystem->display( 'bitpackage:group/edit_group.tpl', tra('Group') );
