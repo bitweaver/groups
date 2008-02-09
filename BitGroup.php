@@ -250,10 +250,10 @@ class BitGroup extends LibertyAttachable {
 					$this->mDb->CompleteTrans();
 				}
 				else {
-					$this->mDb->RollbackTrans();
+					$this->mDb->RolebackTrans();
 				}
 			} else {
-				$this->mDb->RollbackTrans();
+				$this->mDb->RolebackTrans();
 			}
 		}
 		return $ret;
@@ -342,7 +342,7 @@ class BitGroup extends LibertyAttachable {
 	}
 
 	/**
-	 * @param array group_content_id, if unset, all groups are perms are returned
+	 * @param array group_content_id, if unset, all role perm types are returned
 	 **/
 	function getRolesPerms( $pParamHash = NULL ) {
 		$result = array();
@@ -361,10 +361,10 @@ class BitGroup extends LibertyAttachable {
 		return $result;
 	}
 
-	function assignPermissionToRoll() {
+	function assignPermissionToRole() {
 	}
 
-	function removePermissionFromRoll() {
+	function removePermissionFromRole() {
 	}
 
 	function getMemberPermsForGroup(){
