@@ -11,14 +11,13 @@ require_once(GROUP_PKG_PATH.'lookup_group_inc.php' );
 // Now check permissions to access this page
 $gBitSystem->verifyPermission('p_group_view' );
 
-// @todo verify user has perms to access group and perm to access member list
+// @todo verify user has perm to access member list
 
-$groupInfo = $gBitUser->getGroupInfo( $_REQUEST["group_id"] );
-$gBitSmarty->assign_by_ref( 'groupInfo', $groupInfo );
+// get the groups members
 $groupMembers = $gBitUser->get_group_users( $_REQUEST["group_id"] );
 $gBitSmarty->assign_by_ref( 'groupMembers', $groupMembers );
 
 // display
-$gBitSystem->setBrowserTitle( tra( 'Group Members' ).': '.$groupInfo['group_name'] );
-$gBitSystem->display( "bitpackage:users/group_list_members.tpl" );
+$gBitSystem->setBrowserTitle( $gContent->getTitle() ." ".  tra( 'Group Members' ) );
+$gBitSystem->display( "bitpackage:group/list_members.tpl" );
 ?>
