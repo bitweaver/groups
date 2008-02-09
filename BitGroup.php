@@ -293,8 +293,11 @@ class BitGroup extends LibertyAttachable {
 			$bindVars[] = '%' . strtoupper( $find ). '%';
 		}
 
-		$query = "SELECT ts.*, lc.`content_id`, lc.`title`, lc.`data` $selectSql
-			FROM `".BIT_DB_PREFIX."groups` ts INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = ts.`content_id` ) $joinSql
+		$query = "SELECT ts.*, lc.`content_id`, lcds.`data` AS `summary`, lc.`title`, lc.`data` $selectSql
+			FROM `".BIT_DB_PREFIX."groups` ts 
+			INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = ts.`content_id` ) 
+			LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_data` lcds ON (lc.`content_id` = lcds.`content_id` AND lcds.`data_type`='summary')
+			$joinSql
 			WHERE lc.`content_type_guid` = ? $whereSql
 			ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 		$query_cant = "select count(*)

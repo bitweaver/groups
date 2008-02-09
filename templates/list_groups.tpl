@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/Attic/list_groups.tpl,v 1.2 2008/02/04 19:09:10 nickpalmer Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/Attic/list_groups.tpl,v 1.3 2008/02/09 21:29:45 wjames5 Exp $ *}
 {strip}
 <div class="floaticon">{bithelp}</div>
 
@@ -40,15 +40,15 @@
 				{foreach item=group from=$groupsList}
 					<tr class="{cycle values="even,odd"}">
 						{if $gBitSystem->isFeatureActive( 'group_list_group_id' )}
-							<td><a href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$group.group_id|escape:"url"}" title="{$group.group_id}">{$group.group_id}</a></td>
+							<td>{$group.group_id}</td>
 						{/if}
 
 						{if $gBitSystem->isFeatureActive( 'group_list_title' )}
-							<td>{$group.title|escape}</td>
+							<td><a href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$group.group_id|escape:"url"}" title="{$group.group_id}">{$group.title|escape}</a></td>
 						{/if}
 
 						{if $gBitSystem->isFeatureActive( 'group_list_description' )}
-							<td>{$group.description|escape}</td>
+							<td>{$group.summary|escape}</td>
 						{/if}
 
 						{if $gBitSystem->isFeatureActive( 'group_list_data' )}
