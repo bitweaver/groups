@@ -232,8 +232,6 @@ class BitGroup extends LibertyAttachable {
 		// Merge errors from the group checks
 		$this->mErrors = array_merge($gBitUser->mErrors, $this->mErrors);
 
-		vd($pParamHash);
-
 		return( count( $this->mErrors )== 0 );
 	}
 
@@ -351,10 +349,10 @@ class BitGroup extends LibertyAttachable {
 		$bindVars = array();
 		$whereSql = $selectSql = $fromSql = '';
 		if( @BitBase::verifyId( $pParamHash['content_id'] )) {
-			$selectSql = ', rp.`perm_value` AS `hasPerm` ';
+			$selectSql = ', rp.`perm_name` AS `hasPerm` ';
 			$fromSql = ' INNER JOIN `'.BIT_DB_PREFIX.'groups_roles_perms_map` rp ON ( rp.`perm_name` = gp.`perm_name` ) ';
-			$whereSql .= " WHERE ugp.`group_content_id`=?";
-			$bindVars[] = $pParamHash['contet_id'];
+			$whereSql .= " WHERE rp.`group_content_id`=?";
+			$bindVars[] = $pParamHash['content_id'];
 		}
 		$sql = "SELECT gp.* $selectSql
 		   		FROM `".BIT_DB_PREFIX."groups_permissions` gp $fromSql $whereSql
