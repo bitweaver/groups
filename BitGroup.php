@@ -250,10 +250,10 @@ class BitGroup extends LibertyAttachable {
 					$this->mDb->CompleteTrans();
 				}
 				else {
-					$this->mDb->RolebackTrans();
+					$this->mDb->RollbackTrans();
 				}
 			} else {
-				$this->mDb->RolebackTrans();
+				$this->mDb->RollbackTrans();
 			}
 		}
 		return $ret;
@@ -361,7 +361,7 @@ class BitGroup extends LibertyAttachable {
 		return $result;
 	}
 
-	function assignPermissionToRole() {
+	function assignPermissionToRole( $perm, $pRoleId, $pGroupId ) {
 	}
 
 	function removePermissionFromRole() {
