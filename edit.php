@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.4 2008/02/07 02:14:40 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.5 2008/02/09 20:03:04 wjames5 Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -41,6 +41,11 @@ else {
   	$gContent->invokeServices( 'content_edit_function' );
 }
 
+// Get all rolls - used in access control options
+$groupRoles = $gContent->getRoles();
+// Get all perms - used in access control options
+$allRolesPerms = $gContent->getRolesPerms();
+
 // Pro
 // Check if the page has changed
 if( !empty( $_REQUEST["save_group"] ) ) {
@@ -49,6 +54,21 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 	// to avoid error messages. This can happen if some features are
 	// disabled
 	if( $gContent->store( $_REQUEST['group'] ) ) {
+
+		// if that went ok store role permissions for the group
+		foreach( array_keys( $groupRoles ) as $roleId ) {
+			// don't store role_id 1 which is reserved for admin. no point in storing admin perms.
+			if ( $roleId != 1 ){
+				foreach( array_keys( $allRolesPerms ) as $perm ) {
+					if( !empty( $_REQUEST['perms'][$roleId][$perm] )) {
+						$gContent->assignPermissionToRole( $perm, $roleId, $gContent->mContentId );
+					} else {
+						$gContent->removePermissionFromRole( $perm, $roleId, $gContent->mContentId );
+					}
+				}
+			}
+		}
+
 		header( "Location: ".$gContent->getDisplayUrl() );
 		die;
 	} else {
@@ -94,12 +114,8 @@ $formGroupRolesOptions = array(
 );
 $gBitSmarty->assign('formGroupRolesOptions', $formGroupRolesOptions);
 
-// Get all rolls - used in access control options
-$groupRoles = $gContent->getRoles();
 $gBitSmarty->assign('groupRoles', $groupRoles );
 
-// Get all perms - used in access control options
-$allRolesPerms = $gContent->getRolesPerms();
 $gBitSmarty->assign('allRolesPerms', $allRolesPerms );
 
 // Display the template

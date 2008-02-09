@@ -23,7 +23,7 @@ $tables = array(
 	",
 
 	'groups_roles_perms_map' => "
-		group_content_id I4 PRIMARY,
+		group_content_id I4 NOTNULL,
 		perm_name C(30) NOTNULL,
 		role_id I4 NOTNULL
 		CONSTRAINT ', CONSTRAINT `groups_roles_perms_map_group_content_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)

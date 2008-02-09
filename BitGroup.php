@@ -361,10 +361,17 @@ class BitGroup extends LibertyAttachable {
 		return $result;
 	}
 
-	function assignPermissionToRole( $perm, $pRoleId, $pGroupId ) {
+	function assignPermissionToRole( $perm, $pRoleId, $pContentId ) {
+		$this->removePermissionFromRole( $perm, $pRoleId, $pContentId );
+        $query = "INSERT INTO `".BIT_DB_PREFIX."groups_roles_perms_map`( `perm_name`, `role_id`, `group_content_id` ) VALUES(?, ?, ?)";
+        $result = $this->mDb->query($query, array($perm, $pRoleId, $pContentId));
+        return TRUE;
 	}
 
-	function removePermissionFromRole() {
+	function removePermissionFromRole( $perm, $pRoleId, $pContentId ) {
+        $query = "delete from `".BIT_DB_PREFIX."groups_roles_perms_map` where `perm_name` = ?  and `role_id` = ? and `group_content_id` = ?";
+        $result = $this->mDb->query($query, array($perm, $pRoleId, $pContentId));
+        return true;
 	}
 
 	function getMemberPermsForGroup(){
