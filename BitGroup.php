@@ -400,7 +400,7 @@ class BitGroup extends LibertyAttachable {
 
 			// Are they a member as well?
 			if ( array_key_exists((int)$this->mGroupId, $gBitUser->mGroups ) ) {
-				$this->mGroupMemberRoles[] = GROUPS_ROLES_MEMBER;
+				$this->mGroupMemberRoles[] = GROUPS_ROLE_MEMBER;
 			}
 
 			// Now figure which set of permissions to load
