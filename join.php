@@ -11,6 +11,9 @@ require_once(GROUP_PKG_PATH.'lookup_group_inc.php' );
 $gContent->verifyViewPermission();
 
 // verify this group is public
+if ( $gContent->mInfo['view_content_public'] != "y" ){
+	$gBitSystem->fatalError( tra( 'This is not a public group, you must be invited to join.' ));	
+}
 
 // make sure the user is registered
 if ( !$gBitUser->isRegistered() ){
@@ -20,6 +23,17 @@ if ( !$gBitUser->isRegistered() ){
 // if join is confirmed then go for it
 if( !empty( $_REQUEST["join_group"] ) ) {
 	// @TODO join process
+	// if group is free to join then do it
+	if ( $gContent->mInfo['is_public'] == "y" ){
+		if ( $gBitUser->addUserToGroup( $gBitUser->mUserId, $gContent->mGroupId ) ){
+			header( "Location: ".$gContent->getDisplayUrl() );
+			die;
+		}
+	}else{
+		// otherwise send the request to moderation
+		// @TODO hook to moderation
+		vd( '@TODO if group is not public to join then send to moderation' );
+	}
 }
 
 // display
