@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.5 2008/02/09 20:03:04 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.6 2008/02/10 00:37:35 wjames5 Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -10,10 +10,11 @@ require_once( '../bit_setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage( 'group' );
 
+require_once(GROUP_PKG_PATH.'lookup_group_inc.php' );
+
 // Now check permissions to access this page
 $gBitSystem->verifyPermission('p_group_edit' );
 
-require_once(GROUP_PKG_PATH.'lookup_group_inc.php' );
 
 if( isset( $_REQUEST['group']["title"] ) ) {
 	$gContent->mInfo["title"] = $_REQUEST['group']["title"];

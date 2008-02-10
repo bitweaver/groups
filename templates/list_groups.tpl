@@ -1,10 +1,8 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/Attic/list_groups.tpl,v 1.3 2008/02/09 21:29:45 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/Attic/list_groups.tpl,v 1.4 2008/02/10 00:37:36 wjames5 Exp $ *}
 {strip}
-<div class="floaticon">{bithelp}</div>
-
 <div class="listing group">
 	<div class="header">
-		<h1>{tr}Group Records{/tr}</h1>
+		<h1>{tr}Groups{/tr}</h1>
 	</div>
 
 	<div class="body">
