@@ -408,7 +408,7 @@ class BitGroup extends LibertyAttachable {
 				// We might consider dropping this one and just check admin role.
 				$this->mGroupMemberPermissions = $this->mDb->getArray("SELECT perm_name FROM `".BIT_DB_PREFIX."groups_permissions`");
 			} else {
-				$query = "SELECT DISTINCT(rp.`perm_name`) FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rp ON (p.`perm_name` = rp.`perm_name`) WHERE rp.`group_content_id` = ? AND rp.`role_id` IN (".implode( ',',array_fill( 0,count( $find ),'?' ) )." )";
+				$query = "SELECT DISTINCT(rp.`perm_name`) FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rp ON (p.`perm_name` = rp.`perm_name`) WHERE rp.`group_content_id` = ? AND rp.`role_id` IN (".implode( ',',array_fill( 0,count( $this->mGroupMemberRoles ),'?' ) )." )";
 				$bindVars[] = $this->mContentId;
 				$bindVars = array_merge($bindVars, $this->mGroupMemberRoles);
 				$this->mGroupMemberPermissions = $this->mDb->getArray($query, $bindVars);
