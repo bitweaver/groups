@@ -7,6 +7,7 @@
 		<div class="content">
 			{form enctype="multipart/form-data" id="editmemberroles"}
 			{legend legend="Member Administration"}
+				<input type="hidden" name="group[group_id]" value="{$gContent->mInfo.group_id}" />
 				<p>{tr}You can give your group members different roles, and then assign different administrative userissions to those roles in your Group Settings{/tr}</p>
 				<div class="row">
 					<table class="data">

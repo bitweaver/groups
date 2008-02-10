@@ -458,11 +458,14 @@ class BitGroup extends LibertyAttachable {
 	}
 
 	function getMemberRoles( $pUserId ){
-		$ret = NULL;
+		$ret = array();
 		if ( !empty($pUserId) && $this->verifyId( $this->mContentId  ) ){
-			$query = "SELECT ru.`role_id` from `".BIT_DB_PREFIX."groups_roles_users_map` ru WHERE ru.`group_content_id` = ? AND ru.`user_id` = ?";
+			$query = "SELECT ru.`role_id` from `".BIT_DB_PREFIX."groups_roles_users_map` ru WHERE ru.`group_content_id` = ? AND ru.`user_id` = ? ORDER BY ru.`role_id` ASC";
 			$bindVars = array ( $this->mContentId , $pUserId );
-			$ret = $this->mDb->getArray( $query, $bindVars );
+			$result = $this->mDb->getArray( $query, $bindVars );
+			foreach( $result as $role ){
+				$ret[] = $role['role_id'];
+			}
 		}
 		return $ret;
 	}
