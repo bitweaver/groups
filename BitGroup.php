@@ -348,7 +348,7 @@ class BitGroup extends LibertyAttachable {
 				$ret[$roleId] = $row;
 				$ret[$roleId]['perms'] = array();
 				if ( @BitBase::verifyId( $this->mContentId ) ){
-					$ret[$roleId]['perms'] = $this->getRolesPerms( array( 'content_id' => $this->mContentId ));
+					$ret[$roleId]['perms'] = $this->getRolesPerms( array( 'content_id' => $this->mContentId, 'role_id' => $roleId ));
 				}
             }
         }
@@ -363,10 +363,11 @@ class BitGroup extends LibertyAttachable {
 		$bindVars = array();
 		$whereSql = $selectSql = $fromSql = '';
 		if( @BitBase::verifyId( $pParamHash['content_id'] )) {
-			$selectSql = ', rp.`perm_name` AS `hasPerm` ';
+		//	$selectSql = ', rp.`perm_name` AS `hasPerm` ';
 			$fromSql = ' INNER JOIN `'.BIT_DB_PREFIX.'groups_roles_perms_map` rp ON ( rp.`perm_name` = gp.`perm_name` ) ';
-			$whereSql .= " WHERE rp.`group_content_id`=?";
+			$whereSql .= " WHERE rp.`group_content_id`=? AND rp.`role_id` = ?";
 			$bindVars[] = $pParamHash['content_id'];
+			$bindVars[] = $pParamHash['role_id'];
 		}
 		$sql = "SELECT gp.* $selectSql
 		   		FROM `".BIT_DB_PREFIX."groups_permissions` gp $fromSql $whereSql
@@ -433,5 +434,6 @@ class BitGroup extends LibertyAttachable {
 			}
 		}
 	}
+
 }
 ?>
