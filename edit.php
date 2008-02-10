@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.7 2008/02/10 02:34:30 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.8 2008/02/10 17:24:14 wjames5 Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -14,7 +14,6 @@ require_once(GROUP_PKG_PATH.'lookup_group_inc.php' );
 
 // Now check permissions to access this page
 $gBitSystem->verifyPermission('p_group_edit' );
-
 
 if( isset( $_REQUEST['group']["title"] ) ) {
 	$gContent->mInfo["title"] = $_REQUEST['group']["title"];
@@ -44,8 +43,11 @@ else {
 
 // Get all rolls - used in access control options
 $groupRoles = $gContent->getRoles();
+$gBitSmarty->assign('groupRoles', $groupRoles );
+
 // Get all perms - used in access control options
 $allRolesPerms = $gContent->getRolesPerms();
+$gBitSmarty->assign('allRolesPerms', $allRolesPerms );
 
 // Pro
 // Check if the page has changed
@@ -77,39 +79,8 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 	}
 }
 
-// What options do groups support?
-$formGroupOptions = array(
-	"view_content_public" => array(
-		'label' => 'Publicly Viewable',
-		'note' => 'Is this group and its content publically viewable?',
-		'default' => 'y',
-	),
-	"is_public" => array(
-		'label' => 'Public Membership',
-		'note' => 'Is anyone free to join this group? Unchecking this box means an invitation will be required to join this group',
-		'default' => 'y',
-	),
-	"mod_msg" => array(
-		'label' => 'Moderate Messages',
-		'note' => 'When checked all messages to this group will be held for moderation before being displayed.',
-		'default' => 'n',
-	),
-	"mod_content" => array(
-		'label' => 'Moderate Content',
-		'note' => 'When checked any content created (like pages or blog posts) wiil be held for moderation before being displayed',
-		'default' => 'n',
-	),
-	"admin_content_strict" => array(
-		'label' => 'Admin Edits All',
-		'note' => 'Can the administrator edit any content assigned to the group?',
-		'default' => 'n',
-	),
-);
-$gBitSmarty->assign('formGroupOptions', $formGroupOptions);
-
-$gBitSmarty->assign('groupRoles', $groupRoles );
-
-$gBitSmarty->assign('allRolesPerms', $allRolesPerms );
+// get options hash
+require_once(GROUP_PKG_PATH.'options_inc.php'); 
 
 // Display the template
 $gBitSystem->display( 'bitpackage:group/edit_group.tpl', tra('Group') );
