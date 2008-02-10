@@ -74,12 +74,13 @@ class BitGroup extends LibertyAttachable {
 			array_push( $bindVars, $lookupId = @BitBase::verifyId( $this->mGroupId ) ? $this->mGroupId : $this->mContentId );
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
-			$query = "SELECT s.*, lc.*, lcds.`data` AS `summary`, " .
+			$query = "SELECT s.*, lc.*, lcds.`data` AS `summary`, ug.*, " .
 			"uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name, " .
 			"uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name " .
 			"$selectSql " .
 			"FROM `".BIT_DB_PREFIX."groups` s " .
 			"INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = s.`content_id` ) $joinSql" .
+			"INNER JOIN `".BIT_DB_PREFIX."users_groups` ug ON( ug.`group_id` = s.`group_id` ) " .
 			"LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_data` lcds ON (lc.`content_id` = lcds.`content_id` AND lcds.`data_type`='summary')" .	
 			"LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON( uue.`user_id` = lc.`modifier_user_id` )" .
 			"LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON( uuc.`user_id` = lc.`user_id` )" .
@@ -127,8 +128,7 @@ class BitGroup extends LibertyAttachable {
 			if( $this->mGroupId ) {
 				$locId = array( "group_id" => $pParamHash['group_id'] );
 				$result = $this->mDb->associateUpdate( $table, $pParamHash['group_pkg_store'], $locId );
-			}
-			else {
+			}else {
 				// Get content
 				$pParamHash['group_pkg_store']['content_id'] = $pParamHash['content_id'];
 				$pParamHash['group_pkg_store']['group_id'] = $pParamHash['group_store']['group_id'];
