@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.6 2008/02/10 00:37:35 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.7 2008/02/10 02:34:30 wjames5 Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -106,14 +106,6 @@ $formGroupOptions = array(
 	),
 );
 $gBitSmarty->assign('formGroupOptions', $formGroupOptions);
-
-$formGroupRolesOptions = array(
-	"stuff" => array(
-		'label' => 'Set stuff',
-		'note' => 'When you set stuff it does what you want',
-	),
-);
-$gBitSmarty->assign('formGroupRolesOptions', $formGroupRolesOptions);
 
 $gBitSmarty->assign('groupRoles', $groupRoles );
 
