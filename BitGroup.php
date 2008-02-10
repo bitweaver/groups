@@ -96,7 +96,8 @@ class BitGroup extends LibertyAttachable {
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
 				$this->mInfo['parsed_data'] = $this->parseData();
 				
-				$this->getMemberRolesAndPermsForGroup();
+				// @TODO function has problems, uncomment when fixed
+				// $this->getMemberRolesAndPermsForGroup();
 
 				LibertyAttachable::load();
 			}
@@ -385,6 +386,11 @@ class BitGroup extends LibertyAttachable {
         return true;
 	}
 
+	/**
+	 * @TODO this function is missing a number of references
+	 * GROUPS_ROLES_MEMBER is not defined
+	 * $find is not defined
+	 **/
 	function getMemberRolesAndPermsForGroup(){
 		global $gBitUser;
 
@@ -393,11 +399,11 @@ class BitGroup extends LibertyAttachable {
 			$this->mGroupMemberRoles = $this->mDb->getArray( "SELECT `role_id` from `".BIT_DB_PREFIX."groups_roles_users_map` WHERE `group_content_id` = ? AND user_id = ?", array($this->mContentId, $gBitUser->mUserId));
 
 			// Are they a member as well?
-			if (in_array($gBitUser->mGroups, $this->mGroupId)) {
+			if ( array_key_exists((int)$this->mGroupId, $gBitUser->mGroups ) ) {
 				$this->mGroupMemberRoles[] = GROUPS_ROLES_MEMBER;
 			}
 
-			// No figure which set of permissions to load
+			// Now figure which set of permissions to load
 			if ( in_array(GROUPS_ROLE_ADMIN, $this->mGroupMemberRoles) ) {
 				// We might consider dropping this one and just check admin role.
 				$this->mGroupMemberPermissions = $this->mDb->getArray("SELECT perm_name FROM `".BIT_DB_PREFIX."groups_permissions`");
