@@ -119,7 +119,7 @@ class BitGroup extends LibertyAttachable {
 	* @access public
 	**/
 	function store( &$pParamHash ) {
-		global $gBitUser;
+		global $gBitUser, $gBitSystem;
 		$this->mDb->StartTrans();
 
 		// Verify and then store group and content.
@@ -136,8 +136,10 @@ class BitGroup extends LibertyAttachable {
 				$result = $this->mDb->associateInsert( $table, $pParamHash['group_pkg_store'] );
 				// Make sure this user is in the group
 				$gBitUser->addUserToGroup( $gBitUser->mUserId, $this->mGroupId );
+				// Autogenerate a board for this group
+				if ( $gBitSystem->isPackageActive( 'boards' ) ){
+				}
 			}
-
 
 			$this->mDb->CompleteTrans();
 			$this->load();
@@ -386,10 +388,26 @@ class BitGroup extends LibertyAttachable {
         return true;
 	}
 
+	function assignUserRoleToGroup( $pRoleId, $pUserId, $pContentId ){
+		$this->removeUserRoleFromGroup( $pRoleId, $pUserId, $pContentId );
+        $query = "INSERT INTO `".BIT_DB_PREFIX."groups_roles_users_map`( `role_id`, `user_id`, `group_content_id` ) VALUES(?, ?, ?)";
+        $result = $this->mDb->query($query, array($pRoleId, $pUserId, $pContentId));
+        return TRUE;
+	}
+
+	function removeUserRoleFromGroup( $pRoleId, $pUserId, $pContentId ){
+        $query = "delete from `".BIT_DB_PREFIX."groups_roles_users_map` where `role_id` = ?  and `user_id` = ? and `group_content_id` = ?";
+        $result = $this->mDb->query($query, array($pRoleId, $pUserId, $pContentId));
+        return true;
+	}
+
 	/**
-	 * @TODO this function is missing a number of references
-	 * GROUPS_ROLES_MEMBER is not defined
-	 * $find is not defined
+	 * getMemberRolesAndPermsForGroup
+	 * this gets the permissions the user has for their roles in the group. 
+	 * perms here should not be confused with perms in users package, 
+	 * and the pemissions check routines in liberty, they are unrelated
+	 *
+	 * @TODO final query needs amending table p is not defined in ON clause 
 	 **/
 	function getMemberRolesAndPermsForGroup(){
 		global $gBitUser;

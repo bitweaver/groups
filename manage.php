@@ -8,14 +8,22 @@ $gBitSystem->verifyPackage( 'group' );
 // load group
 require_once(GROUP_PKG_PATH.'lookup_group_inc.php' );
 
-// Now check permissions to access this page
-$gBitSystem->verifyPermission('p_group_view' );
+// must be owner or admin to edit an existing group 
+if( $gContent->isValid() ) {
+	$gContent->verifyEditPermission();
+}else{
+	$gBitSystem->fatalError( tra( 'The Group, whose membership you are attempting to administratei, does not exist' ));
+}
 
-// @todo verify user has to admin member list
-
-// get the groups members
+// Get all the groups members
+// @TODO use pagination
+// @TODO need a way to get the additional roles of members
 $groupMembers = $gBitUser->get_group_users( $_REQUEST["group_id"] );
 $gBitSmarty->assign_by_ref( 'groupMembers', $groupMembers );
+
+// Get all possible roles
+$groupRoles = $gContent->getRoles();
+$gBitSmarty->assign('groupRoles', $groupRoles );
 
 // display
 $gBitSystem->setBrowserTitle( $gContent->getTitle() ." ".  tra( 'Group Members' ) );
