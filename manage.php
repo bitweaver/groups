@@ -12,13 +12,12 @@ require_once(GROUP_PKG_PATH.'lookup_group_inc.php' );
 if( $gContent->isValid() ) {
 	$gContent->verifyEditPermission();
 }else{
-	$gBitSystem->fatalError( tra( 'The Group, whose membership you are attempting to administratei, does not exist' ));
+	$gBitSystem->fatalError( tra( 'The Group, whose membership you are attempting to administrate, does not exist' ));
 }
 
 // Get all the groups members
 // @TODO use pagination
-// @TODO need a way to get the additional roles of members
-$groupMembers = $gBitUser->get_group_users( $_REQUEST["group_id"] );
+$groupMembers = $gContent->getMembers();
 $gBitSmarty->assign_by_ref( 'groupMembers', $groupMembers );
 
 // Get all possible roles

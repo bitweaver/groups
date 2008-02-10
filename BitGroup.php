@@ -342,8 +342,8 @@ class BitGroup extends LibertyAttachable {
         $sql = "SELECT gr.* FROM `".BIT_DB_PREFIX."groups_roles` gr 
                 ORDER BY gr.`role_name` ASC";
         $ret = array();
-        if ( $rolls = $this->mDb->query( $sql ) ){
-            while( $row = $rolls->fetchRow() ) {
+        if ( $roles = $this->mDb->query( $sql ) ){
+            while( $row = $roles->fetchRow() ) {
 				$roleId = $row['role_id'];
 				$ret[$roleId] = $row;
 				$ret[$roleId]['perms'] = array();
@@ -433,6 +433,38 @@ class BitGroup extends LibertyAttachable {
 				$this->mGroupMemberPermissions = $this->mDb->getArray($query, $bindVars);
 			}
 		}
+	}
+
+	function getMembers(){
+		$ret = array();
+		if ( $this->verifyId( $this->mGroupId ) ){
+			$query = "SELECT uu.`user_id` AS hash_key, uu.`login`, uu.`real_name`, uu.`user_id` 
+						FROM `".BIT_DB_PREFIX."users_users` uu 
+						INNER JOIN `".BIT_DB_PREFIX."users_groups_map` ug ON (uu.`user_id`=ug.`user_id`) 
+						WHERE `group_id`=?";
+			$bindVars = array( $this->mGroupId );
+			if ( $users = $this->mDb->query( $query, $bindVars ) ){
+				while( $row = $users->fetchRow() ) {
+					$login = $row['login'];
+					$ret[$login] = $row;
+					$ret[$login]['roles'] = array();
+					if ( @BitBase::verifyId( $this->mContentId ) ){
+						$ret[$login]['roles'] = $this->getMemberRoles( $row['user_id'] );
+					}
+				}
+			}
+		}
+		return $ret;
+	}
+
+	function getMemberRoles( $pUserId ){
+		$ret = NULL;
+		if ( !empty($pUserId) && $this->verifyId( $this->mContentId  ) ){
+			$query = "SELECT ru.`role_id` from `".BIT_DB_PREFIX."groups_roles_users_map` ru WHERE ru.`group_content_id` = ? AND ru.`user_id` = ?";
+			$bindVars = array ( $this->mContentId , $pUserId );
+			$ret = $this->mDb->getArray( $query, $bindVars );
+		}
+		return $ret;
 	}
 
 }

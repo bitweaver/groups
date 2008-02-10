@@ -9,12 +9,16 @@ $gBitSystem->verifyPackage( 'group' );
 require_once(GROUP_PKG_PATH.'lookup_group_inc.php' );
 
 // Now check permissions to access this page
-$gBitSystem->verifyPermission('p_group_view' );
+if( $gContent->isValid() ) {
+	$gContent->verifyViewPermission();
+	// @todo verify user has perm to access member list
+}else{
+	$gBitSystem->fatalError( tra( 'The Group you requested does not exist' ));
+}
 
-// @todo verify user has perm to access member list
-
-// get the groups members
-$groupMembers = $gBitUser->get_group_users( $_REQUEST["group_id"] );
+// Get all the groups members
+// @TODO use pagination
+$groupMembers = $gContent->getMembers();
 $gBitSmarty->assign_by_ref( 'groupMembers', $groupMembers );
 
 // display
