@@ -22,6 +22,7 @@ $tables = array(
 		perm_desc C(250)
 	",
 
+	/* Admin permissions should not go in this table. So no 1 in role_id! */
 	'groups_roles_perms_map' => "
 		group_content_id I4 NOTNULL,
 		perm_name C(30) NOTNULL,
@@ -31,8 +32,9 @@ $tables = array(
 					, CONSTRAINT `groups_roles_perms_map_perm_name` FOREIGN KEY (`perm_name`) REFERENCES `".BIT_DB_PREFIX."users_permissions` (`perm_name`)'
 	",
 
+	/* Users may have more than one role in a given group */
 	'groups_roles_users_map' => "
-		group_content_id I4 PRIMARY, 
+		group_content_id I4 NOTNULL,
 		user_id I4 NOTNULL,
 		role_id I4 NOTNULL
 		CONSTRAINT ', CONSTRAINT `groups_roles_users_map_group_content_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)

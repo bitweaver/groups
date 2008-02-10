@@ -21,6 +21,13 @@ require_once( LIBERTY_PKG_PATH.'LibertyAttachable.php' );
 */
 define( 'BITGROUP_CONTENT_TYPE_GUID', 'bitgroup' );
 
+/*
+ * Defines for basic roles you can't remove
+ */
+define( 'GROUPS_ROLE_ADMIN', 1);
+define( 'GROUPS_ROLE_MANAGER', 2);
+define( 'GROUPS_ROLE_MEMBER', 3);
+
 /**
  * @package group
  */
@@ -89,7 +96,7 @@ class BitGroup extends LibertyAttachable {
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
 				$this->mInfo['parsed_data'] = $this->parseData();
 				
-				$this->getMemberPermsForGroup();
+				$this->getMemberRolesAndPermsForGroup();
 
 				LibertyAttachable::load();
 			}
@@ -378,14 +385,28 @@ class BitGroup extends LibertyAttachable {
         return true;
 	}
 
-	function getMemberPermsForGroup(){
+	function getMemberRolesAndPermsForGroup(){
+		global $gBitUser;
+
 		if ( $this->verifyId( $this->mContentId ) ){
-			$query = "SELECT p.`perm_name`, rp.`role_id`, ru.`role_id` AS user_role_id 
-				FROM `".BIT_DB_PREFIX."groups_permissions` p
-				LEFT JOIN `".BIT_DB_PREFIX."groups_roles_perms_map` rp ON (p.`perm_name` = rp.`perm_name`)
-				LEFT JOIN `".BIT_DB_PREFIX."groups_roles_users_map` ru ON (rp.`group_content_id` = ru.`group_content_id` AND rp.`role_id` = ru.`role_id`) 
-				WHERE rp.`group_content_id` IS NULL OR rp.`group_content_id` = ?";
-			 $this->mGroupMemberPermissions = $this->mDb->getAssoc( $query, array( $this->mContentId ) ); 
+			// Load up the roles for this user
+			$this->mGroupMemberRoles = $this->mDb->getArray( "SELECT `role_id` from `".BIT_DB_PREFIX."groups_roles_users_map` WHERE `group_content_id` = ? AND user_id = ?", array($this->mContentId, $gBitUser->mUserId));
+
+			// Are they a member as well?
+			if (in_array($gBitUser->mGroups, $this->mGroupId)) {
+				$this->mGroupMemberRoles[] = GROUPS_ROLES_MEMBER;
+			}
+
+			// No figure which set of permissions to load
+			if ( in_array(GROUPS_ROLE_ADMIN, $this->mGroupMemberRoles) ) {
+				// We might consider dropping this one and just check admin role.
+				$this->mGroupMemberPermissions = $this->mDb->getArray("SELECT perm_name FROM `".BIT_DB_PREFIX."groups_permissions`");
+			} else {
+				$query = "SELECT DISTINCT(rp.`perm_name`) FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rp ON (p.`perm_name` = rp.`perm_name`) WHERE rp.`group_content_id` = ? AND rp.`role_id` IN (".implode( ',',array_fill( 0,count( $find ),'?' ) )." )";
+				$bindVars[] = $this->mContentId;
+				$bindVars = array_merge($bindVars, $this->mGroupMemberRoles);
+				$this->mGroupMemberPermissions = $this->mDb->getArray($query, $bindVars);
+			}
 		}
 	}
 }
