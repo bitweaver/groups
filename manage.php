@@ -26,5 +26,5 @@ $gBitSmarty->assign('groupRoles', $groupRoles );
 
 // display
 $gBitSystem->setBrowserTitle( $gContent->getTitle() ." ".  tra( 'Group Members' ) );
-$gBitSystem->display( "bitpackage:group/list_members.tpl" );
+$gBitSystem->display( "bitpackage:group/edit_members_roles.tpl" );
 ?>
