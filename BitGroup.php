@@ -139,6 +139,15 @@ class BitGroup extends LibertyAttachable {
 				$gBitUser->addUserToGroup( $gBitUser->mUserId, $this->mGroupId );
 				// Autogenerate a board for this group
 				if ( $gBitSystem->isPackageActive( 'boards' ) ){
+					require_once( BOARDS_PKG_PATH.'BitBoard.php' );
+					$board = new BitBoard();
+					$boardHash = array(
+							"title" => $pParamHash['title']." ".tra('Forum'),
+							"data" => tra('Message board for the ').$pParamHash['title']." ".tra('Group')
+						);
+					if ( $board->store( $boardHash ) ){
+						$this->mapContent( $board->mInfo );
+					}
 				}
 			}
 
