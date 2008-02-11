@@ -97,8 +97,9 @@ class BitGroup extends LibertyAttachable {
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
 				$this->mInfo['parsed_data'] = $this->parseData();
 				
-				// @TODO function has problems, uncomment when fixed
-				// $this->getMemberRolesAndPermsForGroup();
+				// load up role permissions on this group for the requesting user
+				// sets $this->mGroupMemberPermissions
+				$this->getMemberRolesAndPermsForGroup();
 
 				LibertyAttachable::load();
 			}
@@ -407,15 +408,16 @@ class BitGroup extends LibertyAttachable {
 	 * this gets the permissions the user has for their roles in the group. 
 	 * perms here should not be confused with perms in users package, 
 	 * and the pemissions check routines in liberty, they are unrelated
-	 *
-	 * @TODO final query needs amending table p is not defined in ON clause 
 	 **/
 	function getMemberRolesAndPermsForGroup(){
 		global $gBitUser;
 
 		if ( $this->verifyId( $this->mContentId ) ){
 			// Load up the roles for this user
-			$this->mGroupMemberRoles = $this->mDb->getArray( "SELECT `role_id` from `".BIT_DB_PREFIX."groups_roles_users_map` WHERE `group_content_id` = ? AND user_id = ?", array($this->mContentId, $gBitUser->mUserId));
+			$roles = $this->mDb->getArray( "SELECT `role_id` from `".BIT_DB_PREFIX."groups_roles_users_map` WHERE `group_content_id` = ? AND user_id = ?", array($this->mContentId, $gBitUser->mUserId));
+			foreach ( $roles as $role ){
+				$this->mGroupMemberRoles[] = $role['role_id'];
+			}
 
 			// Are they a member as well?
 			if ( array_key_exists((int)$this->mGroupId, $gBitUser->mGroups ) ) {
@@ -427,7 +429,9 @@ class BitGroup extends LibertyAttachable {
 				// We might consider dropping this one and just check admin role.
 				$this->mGroupMemberPermissions = $this->mDb->getArray("SELECT perm_name FROM `".BIT_DB_PREFIX."groups_permissions`");
 			} else {
-				$query = "SELECT DISTINCT(rp.`perm_name`) FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rp ON (p.`perm_name` = rp.`perm_name`) WHERE rp.`group_content_id` = ? AND rp.`role_id` IN (".implode( ',',array_fill( 0,count( $this->mGroupMemberRoles ),'?' ) )." )";
+				$query = "SELECT DISTINCT(rp.`perm_name`)
+							FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rp
+							WHERE rp.`group_content_id` = ? AND rp.`role_id` IN (".implode( ',',array_fill( 0,count( $this->mGroupMemberRoles ),'?' ) )." )";
 				$bindVars[] = $this->mContentId;
 				$bindVars = array_merge($bindVars, $this->mGroupMemberRoles);
 				$this->mGroupMemberPermissions = $this->mDb->getArray($query, $bindVars);
