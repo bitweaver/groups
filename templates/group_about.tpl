@@ -14,12 +14,16 @@
 	<div class="header">
 		<h1>{$gContent->mInfo.title|escape|default:"Group"}</h1>
 		<p>{$gContent->mInfo.summary|escape}</p>
+		<div class="date">
+			{tr}Created by{/tr}: {displayname user=$gContent->mInfo.creator_user user_id=$gContent->mInfo.creator_user_id real_name=$gContent->mInfo.creator_real_name}, {tr}Last modification by{/tr}: {displayname user=$gContent->mInfo.modifier_user user_id=$gContent->mInfo.modifier_user_id real_name=$gContent->mInfo.modifier_real_name}, {$gContent->mInfo.last_modified|bit_long_datetime}
+		</div>
 	</div><!-- end .header -->
 
 	<div class="body">
 		<div class="content">
 			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
-			@TODO display recent forum topics here as well as recent new group content
+			{$gContent->mInfo.parsed_data}
+			<p>@TODO add: Member count, homepage link, group email address for msgs, access summary, rss feed for msgs, content types</p>
 		</div><!-- end .content -->
 	</div><!-- end .body -->
 </div><!-- end .group -->

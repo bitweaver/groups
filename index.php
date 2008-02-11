@@ -1,6 +1,6 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.6 2008/02/11 01:47:30 wjames5 Exp $
-// Copyright (c) 2004 bitweaver Group
+// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.7 2008/02/11 02:15:05 wjames5 Exp $
+// Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
 
@@ -24,9 +24,11 @@ if( !isset( $_REQUEST['group_id'] ) ) {
 require_once( GROUP_PKG_PATH.'lookup_group_inc.php' );
 
 // Now check permissions to access this page
-$gContent->verifyViewPermission();
-
-
+if( $gContent->isValid() ) {
+	$gContent->verifyViewPermission();
+} else {
+	$gBitSystem->verifyPermission( 'p_group_view' );
+}
 
 if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 	// if no group is requested, if no default is set, or the group requested is not valid we deliver a splash page about groups
