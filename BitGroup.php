@@ -413,6 +413,8 @@ class BitGroup extends LibertyAttachable {
 		global $gBitUser;
 
 		if ( $this->verifyId( $this->mContentId ) ){
+			$this->mGroupMemberRoles = array();
+			$this->mGroupMemberPermissions = array();
 			// Load up the roles for this user
 			$roles = $this->mDb->getArray( "SELECT `role_id` from `".BIT_DB_PREFIX."groups_roles_users_map` WHERE `group_content_id` = ? AND user_id = ?", array($this->mContentId, $gBitUser->mUserId));
 			foreach ( $roles as $role ){
@@ -428,7 +430,7 @@ class BitGroup extends LibertyAttachable {
 			if ( in_array(GROUPS_ROLE_ADMIN, $this->mGroupMemberRoles) ) {
 				// We might consider dropping this one and just check admin role.
 				$this->mGroupMemberPermissions = $this->mDb->getArray("SELECT perm_name FROM `".BIT_DB_PREFIX."groups_permissions`");
-			} else {
+			} elseif( !empty( $this->mGroupMemberRoles ) ){
 				$query = "SELECT DISTINCT(rp.`perm_name`)
 							FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rp
 							WHERE rp.`group_content_id` = ? AND rp.`role_id` IN (".implode( ',',array_fill( 0,count( $this->mGroupMemberRoles ),'?' ) )." )";
