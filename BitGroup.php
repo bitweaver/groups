@@ -146,7 +146,7 @@ class BitGroup extends LibertyAttachable {
 							"data" => tra('Message board for the ').$pParamHash['title']." ".tra('Group')
 						);
 					if ( $board->store( $boardHash ) ){
-						$this->mapContent( $board->mInfo );
+						$this->linkContent( $board->mInfo );
 					}
 				}
 			}
