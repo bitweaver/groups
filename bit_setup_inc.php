@@ -15,5 +15,11 @@ if( $gBitSystem->isPackageActive( 'group' ) ) {
 		'menu_template' => 'bitpackage:group/menu_group.tpl',
 	);
 	$gBitSystem->registerAppMenu( $menuHash );
+
+	$gLibertySystem->registerService( LIBERTY_SERVICE_GROUP, GROUP_PKG_NAME, array(
+		'module_display_function'  => 'group_module_display',
+	) );
+
+	require_once( 'BitGroup.php' );
 }
 ?>

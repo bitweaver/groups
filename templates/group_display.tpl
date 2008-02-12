@@ -19,8 +19,8 @@
 	<div class="body">
 		<div class="content">
 			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
-			@TODO display recent forum topics here as well as recent new group content
 		</div><!-- end .content -->
 	</div><!-- end .body -->
+	{$boardBlock}
 </div><!-- end .group -->
 {include file="bitpackage:liberty/services_inc.tpl" serviceLocation='view' serviceHash=$gContent->mInfo}

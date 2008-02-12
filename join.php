@@ -31,8 +31,8 @@ if( !empty( $_REQUEST["join_group"] ) ) {
 		}
 	}else{
 		// otherwise send the request to moderation
-		// @TODO hook to moderation
-		vd( '@TODO if group is not public to join then send to moderation' );
+		$gMderationSystem->requestModeration('groups', 'join', NULL, $gContent->mGroupId, $gContent->mContentId);
+		// @TOOD display some page letting user know their membership is awaiting moderation
 	}
 }
 

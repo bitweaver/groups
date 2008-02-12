@@ -38,6 +38,8 @@ class BitGroup extends LibertyAttachable {
 	*/
 	var $mGroupId;
 
+
+
 	/**
 	* During initialisation, be sure to call our base constructors
 	**/
@@ -58,6 +60,40 @@ class BitGroup extends LibertyAttachable {
 		$this->mViewContentPerm  = 'p_group_view';
 		$this->mEditContentPerm  = 'p_group_edit';
 		$this->mAdminContentPerm = 'p_group_admin';
+		
+		/**
+		* Moderation hooks
+		*/
+		/* @TODO this is unhappy about the function reference. 
+		 * also seems function declaration here is weird, and 
+		 * should be moved out of constructor definition.
+		global $gBitSystem;
+		if( $gBitSystem->isPackageActive('moderation') ) {
+			global $gModerationSystem;
+			// What are our transitions
+			$groupTransitions = array( "join" =>
+									  array (MODERATION_PENDING =>
+											 array(MODERATION_APPROVED,
+												   MODERATION_REJECTED),
+											 MODERATION_REJECTED => MODERATION_DELETE,
+											 MODERATION_APPROVED => MODERATION_DELETE,
+											 )
+									 );
+
+			function groups_moderation_callback(&$pModeration) {
+				if ($pModeration['type'] == 'join') {
+					if ($pModeration['state'] == MODERATION_APPROVED) {
+						// Add the user to the group
+						$gBitUser->addUserToGroup( $gBitUser->mUserId, $gContent->mGroupId );
+					}
+				}
+				return TRUE;
+			}
+
+			// Register our moderation transitions
+			$gModerationSystem->registerModerationListener('groups', groups_moderation_callback, $groupTransitions);
+		}
+		*/
 	}
 
 	/**
@@ -302,6 +338,12 @@ class BitGroup extends LibertyAttachable {
 
 		// this will set $find, $sort_mode, $max_records and $offset
 		extract( $pParamHash );
+		
+		if( isset( $pParamHash['user_id'] )){
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."users_groups_map` ugm ON (g.`group_id` = ugm.`group_id`)";
+			$whereSql .= " AND ugm.`user_id` = ?";
+			$bindVars[] = $pParamHash['user_id'];
+		}
 
 		if( is_array( $find ) ) {
 			// you can use an array of pages
@@ -313,19 +355,25 @@ class BitGroup extends LibertyAttachable {
 			$bindVars[] = '%' . strtoupper( $find ). '%';
 		}
 
-		$query = "SELECT ts.*, lc.`content_id`, lcds.`data` AS `summary`, lc.`title`, lc.`data` $selectSql
-			FROM `".BIT_DB_PREFIX."groups` ts 
-			INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = ts.`content_id` ) 
+		$query = "SELECT g.*, lc.`content_id`, lcds.`data` AS `summary`, lc.`title`, lc.`data`, ug.* $selectSql
+			FROM `".BIT_DB_PREFIX."groups` g 
+			INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = g.`content_id` ) 
+			INNER JOIN `".BIT_DB_PREFIX."users_groups` ug ON( ug.`group_id` = g.`group_id` ) 
 			LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_data` lcds ON (lc.`content_id` = lcds.`content_id` AND lcds.`data_type`='summary')
 			$joinSql
 			WHERE lc.`content_type_guid` = ? $whereSql
 			ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 		$query_cant = "select count(*)
-				FROM `".BIT_DB_PREFIX."groups` ts INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = ts.`content_id` ) $joinSql
+				FROM `".BIT_DB_PREFIX."groups` g 
+				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = g.`content_id` )
+				INNER JOIN `".BIT_DB_PREFIX."users_groups` ug ON( ug.`group_id` = g.`group_id` ) 
+			   	$joinSql
 			WHERE lc.`content_type_guid` = ? $whereSql";
 		$result = $this->mDb->query( $query, $bindVars, $max_records, $offset );
 		$ret = array();
+		$memberCantSql = "SELECT COUNT(*) FROM `".BIT_DB_PREFIX."users_groups_map` WHERE `group_id` = ?";
 		while( $res = $result->fetchRow() ) {
+			$res['num_members'] = $this->mDb->getOne($memberCantSql, array( $res['group_id'] ));
 			$ret[] = $res;
 		}
 		$pParamHash["cant"] = $this->mDb->getOne( $query_cant, $bindVars );
@@ -484,6 +532,12 @@ class BitGroup extends LibertyAttachable {
 		}
 		return $ret;
 	}
+}
 
+function group_module_display(&$pParamHash){
+	global $gBitThemes, $gBitSmarty, $gBitSystem;
+	if( TRUE ) {
+		/* @TODO group services on group linked content */
+	}
 }
 ?>
