@@ -28,7 +28,8 @@ define( 'GROUPS_ROLE_ADMIN', 1);
 define( 'GROUPS_ROLE_MANAGER', 2);
 define( 'GROUPS_ROLE_MEMBER', 3);
 
-if( $gBitSystem->isPackageActive('moderation') ) {
+if( $gBitSystem->isPackageActive('moderation') &&
+	!defined('groups_moderation_callback') ) {
 	global $gModerationSystem;
 
 	require_once(MODERATION_PKG_PATH.'ModerationSystem.php');
