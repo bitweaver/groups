@@ -1,6 +1,6 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.2 2008/02/04 19:09:10 nickpalmer Exp $
-// Copyright (c) 2005 bitweaver Group
+// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.3 2008/02/13 15:07:50 wjames5 Exp $
+// Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
 
