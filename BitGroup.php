@@ -41,6 +41,13 @@ if( $gBitSystem->isPackageActive('moderation') ) {
 									  MODERATION_REJECTED => MODERATION_DELETE,
 									  MODERATION_APPROVED => MODERATION_DELETE,
 									  ),
+							   "invite" =>
+							   array (MODERATION_PENDING =>
+									  array(MODERATION_APPROVED,
+											MODERATION_REJECTED),
+									  MODERATION_REJECTED => MODERATION_DELETE,
+									  MODERATION_APPROVED => MODERATION_DELETE,
+									  ),
 							   "add content" =>
 							   array (MODERATION_PENDING =>
 									  array(MODERATION_APPROVED,
@@ -57,6 +64,14 @@ if( $gBitSystem->isPackageActive('moderation') ) {
 			if ($pModeration['status'] == MODERATION_APPROVED) {
 				// Add the user to the group
 				$gBitUser->addUserToGroup( $pModeration['source_user_id'], $pModeration['moderator_group_id'] );
+			}
+		}
+		else if ($pModeration['type'] == 'invite') {
+			if ($pModerationStatus['status'] == MODERATION_APPROVED) {
+				// Add the user to the group
+				$group = new BitGroup(NULL, $pModeration['content_id']);
+				$group->load();
+				$gBitUser->addUserToGroup( $pModeration['moderator_id'], $group->mGroupId);
 			}
 		}
 		else if ($pModeration['type'] == 'add content') {
