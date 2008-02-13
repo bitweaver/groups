@@ -106,40 +106,6 @@ class BitGroup extends LibertyAttachable {
 		$this->mViewContentPerm  = 'p_group_view';
 		$this->mEditContentPerm  = 'p_group_edit';
 		$this->mAdminContentPerm = 'p_group_admin';
-		
-		/**
-		* Moderation hooks
-		*/
-		/* @TODO this is unhappy about the function reference. 
-		 * also seems function declaration here is weird, and 
-		 * should be moved out of constructor definition.
-		global $gBitSystem;
-		if( $gBitSystem->isPackageActive('moderation') ) {
-			global $gModerationSystem;
-			// What are our transitions
-			$groupTransitions = array( "join" =>
-									  array (MODERATION_PENDING =>
-											 array(MODERATION_APPROVED,
-												   MODERATION_REJECTED),
-											 MODERATION_REJECTED => MODERATION_DELETE,
-											 MODERATION_APPROVED => MODERATION_DELETE,
-											 )
-									 );
-
-			function groups_moderation_callback(&$pModeration) {
-				if ($pModeration['type'] == 'join') {
-					if ($pModeration['state'] == MODERATION_APPROVED) {
-						// Add the user to the group
-						$gBitUser->addUserToGroup( $gBitUser->mUserId, $gContent->mGroupId );
-					}
-				}
-				return TRUE;
-			}
-
-			// Register our moderation transitions
-			$gModerationSystem->registerModerationListener('groups', groups_moderation_callback, $groupTransitions);
-		}
-		*/
 	}
 
 	/**
