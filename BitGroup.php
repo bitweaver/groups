@@ -40,7 +40,14 @@ if( $gBitSystem->isPackageActive('moderation') ) {
 											MODERATION_REJECTED),
 									  MODERATION_REJECTED => MODERATION_DELETE,
 									  MODERATION_APPROVED => MODERATION_DELETE,
-									  )
+									  ),
+							   "add content" =>
+							   array (MODERATION_PENDING =>
+									  array(MODERATION_APPROVED,
+											MODERATION_REJECTED),
+									  MODERATION_REJECTED => MODERATION_DELETE,
+									  MODERATION_APPROVED => MODERATION_DELETE,
+									  ),
 							   );
 
 	function groups_moderation_callback(&$pModeration) {
@@ -50,6 +57,11 @@ if( $gBitSystem->isPackageActive('moderation') ) {
 			if ($pModeration['status'] == MODERATION_APPROVED) {
 				// Add the user to the group
 				$gBitUser->addUserToGroup( $pModeration['source_user_id'], $pModeration['moderator_group_id'] );
+			}
+		}
+		else if ($pModeration['type'] == 'add content') {
+			if ($pModeration['status'] == MODERATION_APPROVED) {
+				// @TODO: Map in the content
 			}
 		}
 
