@@ -28,6 +28,14 @@ define( 'GROUPS_ROLE_ADMIN', 1);
 define( 'GROUPS_ROLE_MANAGER', 2);
 define( 'GROUPS_ROLE_MEMBER', 3);
 
+/**
+ * load up moderation
+ * we need to include its bit_setup_inc incase groups gets loaded first
+ */
+if ( is_file( '../moderation/bit_setup_inc.php' ) ){
+	require_once( '../moderation/bit_setup_inc.php' );
+}
+
 if( $gBitSystem->isPackageActive('moderation') &&
 	!defined('groups_moderation_callback') ) {
 	global $gModerationSystem;
