@@ -28,6 +28,37 @@ define( 'GROUPS_ROLE_ADMIN', 1);
 define( 'GROUPS_ROLE_MANAGER', 2);
 define( 'GROUPS_ROLE_MEMBER', 3);
 
+if( $gBitSystem->isPackageActive('moderation') ) {
+	global $gModerationSystem;
+
+	require_once(MODERATION_PKG_PATH.'ModerationSystem.php');
+
+	// What are our transitions
+	$groupTransitions = array( "join" =>
+							   array (MODERATION_PENDING =>
+									  array(MODERATION_APPROVED,
+											MODERATION_REJECTED),
+									  MODERATION_REJECTED => MODERATION_DELETE,
+									  MODERATION_APPROVED => MODERATION_DELETE,
+									  )
+							   );
+
+	function groups_moderation_callback(&$pModeration) {
+		if ($pModeration['type'] == 'join') {
+			if ($pModeration['state'] == MODERATION_APPROVED) {
+				// Add the user to the group
+			}
+		}
+
+		return TRUE;
+	}
+
+	// Register our moderation transitions
+	$gModerationSystem->registerModerationListener('groups',
+												   'groups_moderation_callback',
+												   $groupTransitions);
+}
+
 /**
  * @package group
  */
