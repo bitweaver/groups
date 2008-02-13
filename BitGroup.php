@@ -44,9 +44,12 @@ if( $gBitSystem->isPackageActive('moderation') ) {
 							   );
 
 	function groups_moderation_callback(&$pModeration) {
+		global $gBitUser;
+
 		if ($pModeration['type'] == 'join') {
-			if ($pModeration['state'] == MODERATION_APPROVED) {
+			if ($pModeration['status'] == MODERATION_APPROVED) {
 				// Add the user to the group
+				$gBitUser->addUserToGroup( $pModeration['source_user_id'], $pModeration['moderator_group_id'] );
 			}
 		}
 
@@ -54,7 +57,7 @@ if( $gBitSystem->isPackageActive('moderation') ) {
 	}
 
 	// Register our moderation transitions
-	$gModerationSystem->registerModerationListener('groups',
+	$gModerationSystem->registerModerationListener('group',
 												   'groups_moderation_callback',
 												   $groupTransitions);
 }

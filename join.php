@@ -31,7 +31,7 @@ if( !empty( $_REQUEST["join_group"] ) ) {
 		}
 	}else{
 		// otherwise send the request to moderation
-		$gMderationSystem->requestModeration('groups', 'join', NULL, $gContent->mGroupId, $gContent->mContentId);
+		$gModerationSystem->requestModeration('group', 'join', NULL, $gContent->mGroupId, $gContent->mContentId);
 		// @TOOD display some page letting user know their membership is awaiting moderation
 	}
 }
