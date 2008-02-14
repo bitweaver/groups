@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.8 2008/02/12 18:01:06 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.9 2008/02/14 21:28:28 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -44,7 +44,7 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 }else{
 	// load up the attached board
 	$listHash = array(
-		"link_content_id" => $gContent->mContentId,
+		"connect_group_content_id" => $gContent->mContentId,
 		"content_type_guid" => "bitboard"
 		);
 	$list = $gContent->getContentList( $listHash );
