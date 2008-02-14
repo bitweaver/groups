@@ -334,13 +334,14 @@ class BitGroup extends LibertyAttachable {
 	* This function removes a group entry
 	**/
 	function expunge() {
+		global $gBitUser;
 		$ret = FALSE;
 		if( $this->isValid() ) {
 			$this->mDb->StartTrans();
 			$query = "DELETE FROM `".BIT_DB_PREFIX."groups` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
 			if( LibertyAttachable::expunge() ) {
-				if( $gBitUser->removeGroup($this->mGroupId) ) {
+				if( $gBitUser->remove_group($this->mGroupId) ) {
 					$ret = TRUE;
 					$this->mDb->CompleteTrans();
 				}
@@ -580,10 +581,10 @@ class BitGroup extends LibertyAttachable {
 	 **/
 	function linkContent( $pParamHash ) {
 		if( $this->isValid() && isset( $pParamHash['content_id'] ) && $this->verifyId( $pParamHash['content_id'] ) ){
-			if( $this->mDb->getOne( "SELECT `group_content_id` FROM `".BIT_DB_PREFIX."group_content_cnxn_map` WHERE `group_content_id`=? AND `to_content_id`=?", array( $this->mContentId, $pParamHash['content_id'] ) ) ) {
-				$query = "UPDATE `".BIT_DB_PREFIX."group_content_cnxn_map` SET `to_title`= ? WHERE `group_content_id` = ? AND to_content_id` = ? ";
+			if( $this->mDb->getOne( "SELECT `group_content_id` FROM `".BIT_DB_PREFIX."groups_content_cnxn_map` WHERE `group_content_id`=? AND `to_content_id`=?", array( $this->mContentId, $pParamHash['content_id'] ) ) ) {
+				$query = "UPDATE `".BIT_DB_PREFIX."groups_content_cnxn_map` SET `to_title`= ? WHERE `group_content_id` = ? AND to_content_id` = ? ";
 			} else {
-				$query = "INSERT INTO `".BIT_DB_PREFIX."group_content_cnxn_map` ( `to_title`, `group_content_id`, `to_content_id` ) VALUES (?,?,?)";
+				$query = "INSERT INTO `".BIT_DB_PREFIX."groups_content_cnxn_map` ( `to_title`, `group_content_id`, `to_content_id` ) VALUES (?,?,?)";
 			}
 			if ( isset($pParamHash['title']) ){
 				$toTitle = $pParamHash['title'];
@@ -606,7 +607,7 @@ class BitGroup extends LibertyAttachable {
 	 **/
 	function unlinkContent( $pParamHash ) {
 		if( $this->isValid()  && isset( $pParamHash['content_id'] ) && $this->verifyId( $pParamHash['content_id'] ) ) {
-			$this->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."group_content_cnxn_map` WHERE `group_content_id`=? AND `to_content_id`=?", array( $this->mContentId, $pPramaHash['content_id'] ) );
+			$this->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."groups_content_cnxn_map` WHERE `group_content_id`=? AND `to_content_id`=?", array( $this->mContentId, $pPramaHash['content_id'] ) );
 		}
 		return( count( $this->mErrors ) == 0 );
 	}
@@ -624,7 +625,7 @@ function group_content_list_sql( &$pObject, $pParamHash=NULL ) {
 	global $gBitSystem;
 	$ret = array();
 	if ( $gBitSystem->isPackageActive( 'group' ) && $pObject->verifyId( $pParamHash['connect_group_content_id'] ) ){
-		$ret['join_sql'] = " INNER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( lc.`content_id` = gccm.`group_content_id` )";
+		$ret['join_sql'] = " INNER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( lc.`content_id` = gccm.`to_content_id` )";
 		$ret['where_sql'] = " AND gccm.`group_content_id` = ? ";
 		$ret['bind_vars'][] = (int)$pParamHash['connect_group_content_id'];
 	}
@@ -656,11 +657,11 @@ function group_content_store( &$pObject, &$pParamHash ) {
 	return( $errors );
 }
 
-function group_content_expunge( &$pObjecti, &$pParamHash ) {
-	global $gBitSystem;
+function group_content_expunge( &$pObject, &$pParamHash ) {
+	global $gBitSystem, $gBitDb;
 	$errors = NULL;
 	if( $gBitSystem->isPackageActive( 'group' ) ) {
-		$groups = $gBitDb->geArray( "SELECT g.`group_id` FROM `".BIT_DB_PREFIX."groups` LEFT JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( gccm.`group_content_id` = g.`content_id` ) WHERE gccm.`to_content_id` = ?", array( $pObject->mContentId ) );
+		$groups = $gBitDb->getArray( "SELECT g.`group_id` FROM `".BIT_DB_PREFIX."groups` g INNER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( gccm.`group_content_id` = g.`content_id` ) WHERE gccm.`to_content_id` = ?", array( $pObject->mContentId ) );
 		foreach( $groups as $group ){
 			$group = new BitGroup( $group['group_id'] );
 			$unlinkHash = array( "content_id"=>$pObject->mContentId );
