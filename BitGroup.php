@@ -211,6 +211,7 @@ class BitGroup extends LibertyAttachable {
 				$gBitUser->addUserToGroup( $gBitUser->mUserId, $this->mGroupId );
 				// Autogenerate a board for this group
 				if ( $gBitSystem->isPackageActive( 'boards' ) ){
+					vd( "make a board" );
 					require_once( BOARDS_PKG_PATH.'BitBoard.php' );
 					$board = new BitBoard();
 					$boardHash = array(
@@ -218,6 +219,7 @@ class BitGroup extends LibertyAttachable {
 							"data" => tra('Message board for the ').$pParamHash['title']." ".tra('Group')
 						);
 					if ( $board->store( $boardHash ) ){
+					vd( "link it" );
 						$this->linkContent( $board->mInfo );
 					}
 				}
@@ -568,6 +570,61 @@ class BitGroup extends LibertyAttachable {
 		}
 		return $ret;
 	}
+
+
+	/**
+	 * linkContent
+	 *
+	 * @access public
+	 * @return if errors
+	 **/
+	function linkContent( $pParamHash ) {
+		if( $this->isValid() && isset( $pParamHash['content_id'] ) && $this->verifyId( $pParamHash['content_id'] ) ){
+			if( $this->mDb->getOne( "SELECT `group_content_id` FROM `".BIT_DB_PREFIX."group_content_cnxn_map` WHERE `group_content_id`=? AND `to_content_id`=?", array( $this->mContentId, $pParamHash['content_id'] ) ) ) {
+				$query = "UPDATE `".BIT_DB_PREFIX."group_content_cnxn_map` SET `to_title`= ? WHERE `group_content_id` = ? AND to_content_id` = ? ";
+			} else {
+				$query = "INSERT INTO `".BIT_DB_PREFIX."group_content_cnxn_map` ( `to_title`, `group_content_id`, `to_content_id` ) VALUES (?,?,?)";
+			}
+			if ( isset($pParamHash['title']) ){
+				$toTitle = $pParamHash['title'];
+			}else{
+				$toContent = new LibertyContent( $pParamHash['content_id'] );
+				$toContent->load();
+				$toTitle = $toContent->getTitle();
+			}
+			$result = $this->mDb->query( $query, array( $toTitle, $this->mContentId, $pParamHash['content_id'] ) );
+		}
+		return( count( $this->mErrors ) == 0 );
+	}
+	
+	/**
+	 * unlinkContent
+	 *
+	 * @access public
+	 * @return if errors
+	 **/
+	function unlinkContent( $pParamHash ) {
+		if( $this->isValid()  && isset( $pParamHash['content_id'] ) && $this->verifyId( $pParamHash['content_id'] ) ) {
+			$this->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."group_content_cnxn_map` WHERE `group_content_id`=? AND `to_content_id`=?", array( $this->mContentId, $pPramaHash['content_id'] ) );
+		}
+		return( count( $this->mErrors ) == 0 );
+	}
+
+
+	/**
+	 * unlinkContent
+	 *
+	 * @access public
+	 **/
+	function getLinkedContent( $pListHash ){
+		if( !empty( $pListHash['content_type_guid'] ) && is_string( $pListHash['content_type_guid'] ) ) {
+			$whereSql .= ' AND `content_type_guid`=? ';
+			$bindVars[] = $pListHash['content_type_guid'];
+		} elseif( !empty( $pListHash['content_type_guid'] ) && is_array( $pListHash['content_type_guid'] ) ) {
+			$whereSql .= " AND lc.`content_type_guid` IN ( ".implode( ',',array_fill ( 0, count( $pListHash['content_type_guid'] ),'?' ) )." )";
+			$bindVars = array_merge( $bindVars, $pListHash['content_type_guid'] );
+		}
+
 }
 
 function group_module_display(&$pParamHash){
