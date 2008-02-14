@@ -43,14 +43,14 @@ $tables = array(
 	",
 
 	/* liberty content connection table. content created for in the group */
-	'group_content_cnxn_map' => "
+	'groups_content_cnxn_map' => "
 		group_content_id I4 PRIMARY,
 		to_content_id I4 PRIMARY,
 		to_title C(160),
 		pos F
 		CONSTRAINT '
-			, CONSTRAINT `group_group_content_id_ref` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
-			, CONSTRAINT `group_to_content_id_ref` FOREIGN KEY (`to_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)'
+			, CONSTRAINT `groups_group_content_id_ref` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
+			, CONSTRAINT `groups_to_content_id_ref` FOREIGN KEY (`to_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)'
 	",
 );
 

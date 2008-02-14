@@ -602,6 +602,7 @@ class BitGroup extends LibertyAttachable {
 	 *
 	 * @access public
 	 * @return if errors
+	 * @TODO write this to work as a static function so we dont have to load up multiple groups to expunge a content item from all
 	 **/
 	function unlinkContent( $pParamHash ) {
 		if( $this->isValid()  && isset( $pParamHash['content_id'] ) && $this->verifyId( $pParamHash['content_id'] ) ) {
@@ -609,21 +610,6 @@ class BitGroup extends LibertyAttachable {
 		}
 		return( count( $this->mErrors ) == 0 );
 	}
-
-
-	/**
-	 * unlinkContent
-	 *
-	 * @access public
-	 **/
-	function getLinkedContent( $pListHash ){
-		if( !empty( $pListHash['content_type_guid'] ) && is_string( $pListHash['content_type_guid'] ) ) {
-			$whereSql .= ' AND `content_type_guid`=? ';
-			$bindVars[] = $pListHash['content_type_guid'];
-		} elseif( !empty( $pListHash['content_type_guid'] ) && is_array( $pListHash['content_type_guid'] ) ) {
-			$whereSql .= " AND lc.`content_type_guid` IN ( ".implode( ',',array_fill ( 0, count( $pListHash['content_type_guid'] ),'?' ) )." )";
-			$bindVars = array_merge( $bindVars, $pListHash['content_type_guid'] );
-		}
 
 }
 
@@ -633,4 +619,57 @@ function group_module_display(&$pParamHash){
 		/* @TODO group services on group linked content */
 	}
 }
+
+function group_content_list_sql( &$pObject, $pParamHash=NULL ) {
+	global $gBitSystem;
+	$ret = array();
+	if ( $gBitSystem->isPackageActive( 'group' ) && $pObject->verifyId( $pParamHash['connect_group_content_id'] ) ){
+		$ret['join_sql'] = " INNER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( lc.`content_id` = gccm.`group_content_id` )";
+		$ret['where_sql'] = " AND gccm.`group_content_id` = ? ";
+		$ret['bind_vars'][] = (int)$pParamHash['connect_group_content_id'];
+	}
+	return $ret;
+}
+
+function group_content_preview( &$pObject) {
+	global $gBitSystem;
+	if ( $gBitSystem->isPackageActive( 'group' ) ) {		
+		if (isset($_REQUEST['connect_group_content_id'])) {
+			$pObject->mInfo['connect_group_content_id'] = $_REQUEST['connect_group_content_id'];
+		}
+	}
+}
+
+function group_content_store( &$pObject, &$pParamHash ) {
+	global $gBitSystem;
+	$errors = NULL;
+	if( $gBitSystem->isPackageActive( 'group' ) && isset( $pParamHash['connect_group_content_id'] ) ) {
+		$group = new BitGroup( $pParamHash['connect_group_content_id'] );
+		$linkHash = array( 
+						"content_id"=>$pObject->mContentId,
+						"title"=> $pObject->mInfo['title']
+					);
+		if ( !$group->linkContent( $linkHash ) ) {
+			$errors=$group->mErrors;
+		}
+	}
+	return( $errors );
+}
+
+function group_content_expunge( &$pObjecti, &$pParamHash ) {
+	global $gBitSystem;
+	$errors = NULL;
+	if( $gBitSystem->isPackageActive( 'group' ) ) {
+		$groups = $gBitDb->geArray( "SELECT g.`group_id` FROM `".BIT_DB_PREFIX."groups` LEFT JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( gccm.`group_content_id` = g.`content_id` ) WHERE gccm.`to_content_id` = ?", array( $pObject->mContentId ) );
+		foreach( $groups as $group ){
+			$group = new BitGroup( $group['group_id'] );
+			$unlinkHash = array( "content_id"=>$pObject->mContentId );
+			if ( !$group->unlinkContent( $unlinkHash ) ) {
+				$errors=$group->mErrors;
+			}
+		}
+	}
+	return( $errors );
+}
+
 ?>

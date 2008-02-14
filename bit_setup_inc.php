@@ -18,6 +18,10 @@ if( $gBitSystem->isPackageActive( 'group' ) ) {
 
 	$gLibertySystem->registerService( LIBERTY_SERVICE_GROUP, GROUP_PKG_NAME, array(
 		'module_display_function'  => 'group_module_display',
+		'content_list_sql_function' => 'group_content_list_sql',
+		'content_preview_function'  => 'group_content_preview',
+		'content_store_function'  => 'group_content_store',
+		'content_expunge_function'  => 'group_content_expunge',
 	) );
 
 	require_once( 'BitGroup.php' );
