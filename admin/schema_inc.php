@@ -49,8 +49,16 @@ $tables = array(
 		to_title C(160),
 		pos F
 		CONSTRAINT '
-			, CONSTRAINT `groups_group_content_id_ref` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
-			, CONSTRAINT `groups_to_content_id_ref` FOREIGN KEY (`to_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)'
+			, CONSTRAINT `groups_content_cnxn_group_content_id_ref` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
+			, CONSTRAINT `groups_content_cnxn_to_content_id_ref` FOREIGN KEY (`to_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)'
+	",
+
+	/* content types group members can create for their group */
+	'groups_content_types' => "
+		group_content_id I4 PRIMARY,
+		content_type_guid C(16) PRIMARY
+		CONSTRAINT ', CONSTRAINT `groups_content_types_group_content_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
+					, CONSTRAINT `groups_content_types_type_guid` FOREIGN KEY (`content_type_guid`) REFERENCES `".BIT_DB_PREFIX."liberty_content_types` (`content_type_guid`)'
 	",
 );
 
