@@ -86,12 +86,8 @@ $sequences = array (
 );
 $gBitInstaller->registerSchemaSequences( GROUP_PKG_NAME, $sequences );
 
-$gBitInstaller->registerSchemaDefault( GROUP_PKG_NAME, array(
-	//      "INSERT INTO `".BIT_DB_PREFIX."bit_group_types` (`type`) VALUES ('Group')",
-) );
-
 // ### Default group level roles and permissions
-$gBitInstaller->registerSchemaDefault( LIBERTY_PKG_NAME, array(
+$gBitInstaller->registerSchemaDefault( GROUP_PKG_NAME, array(
 	"INSERT INTO `".BIT_DB_PREFIX."groups_roles` (`role_id`,`role_name`, `role_desc`) VALUES (1, 'admin', 'Group Administrators')",
 	"INSERT INTO `".BIT_DB_PREFIX."groups_roles` (`role_id`,`role_name`, `role_desc`) VALUES (2, 'editors', 'Group Managers')",
 	"INSERT INTO `".BIT_DB_PREFIX."groups_roles` (`role_id`,`role_name`, `role_desc`) VALUES (3, 'registered', 'Group Members')",
