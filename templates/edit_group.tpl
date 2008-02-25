@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.6 2008/02/09 20:30:16 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.7 2008/02/25 20:00:23 nickpalmer Exp $ *}
 {strip}
 <div class="floaticon">{bithelp}</div>
 
@@ -19,6 +19,11 @@
 			{/if}
 		</h1>
 	</div>
+
+ 	{if $errors}
+ 		{formfeedback warning=`$errors`}
+ 	{/if}
+
 
 	<div class="body">
 		{form enctype="multipart/form-data" id="editgroupform"}
