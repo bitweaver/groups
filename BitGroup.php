@@ -153,7 +153,7 @@ class BitGroup extends LibertyAttachable {
 			"FROM `".BIT_DB_PREFIX."groups` s " .
 			"INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = s.`content_id` ) $joinSql" .
 			"INNER JOIN `".BIT_DB_PREFIX."users_groups` ug ON( ug.`group_id` = s.`group_id` ) " .
-			"LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_data` lcds ON (lc.`content_id` = lcds.`content_id` AND lcds.`data_type`='summary')" .	
+			"LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_data` lcds ON (lc.`content_id` = lcds.`content_id` AND lcds.`data_type`='summary')" .
 			"LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON( uue.`user_id` = lc.`modifier_user_id` )" .
 			"LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON( uuc.`user_id` = lc.`user_id` )" .
 			"WHERE s.`$lookupColumn`=? $whereSql";
@@ -624,7 +624,7 @@ function group_module_display(&$pParamHash){
 function group_content_list_sql( &$pObject, $pParamHash=NULL ) {
 	global $gBitSystem;
 	$ret = array();
-	if ( $gBitSystem->isPackageActive( 'group' ) && $pObject->verifyId( $pParamHash['connect_group_content_id'] ) ){
+	if ( $gBitSystem->isPackageActive( 'group' ) && !empty($pParamHash['conneect_group_content_id']) && $pObject->verifyId( $pParamHash['connect_group_content_id'] ) ){
 		$ret['join_sql'] = " INNER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( lc.`content_id` = gccm.`to_content_id` )";
 		$ret['where_sql'] = " AND gccm.`group_content_id` = ? ";
 		$ret['bind_vars'][] = (int)$pParamHash['connect_group_content_id'];
