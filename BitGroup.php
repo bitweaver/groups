@@ -120,7 +120,7 @@ class BitGroup extends LibertyAttachable {
 		$this->mContentTypeGuid = BITGROUP_CONTENT_TYPE_GUID;
 		$this->registerContentType( BITGROUP_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => BITGROUP_CONTENT_TYPE_GUID,
-			'content_description' => 'Group package with bare essentials',
+			'content_description' => 'Group',
 			'handler_class' => 'BitGroup',
 			'handler_package' => 'group',
 			'handler_file' => 'BitGroup.php',
