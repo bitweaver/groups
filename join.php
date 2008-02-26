@@ -29,10 +29,13 @@ if( !empty( $_REQUEST["join_group"] ) ) {
 			header( "Location: ".$gContent->getDisplayUrl() );
 			die;
 		}
-	}else{
+	} else if( $gBitSystem->isPackageActive('moderation') ){
 		// otherwise send the request to moderation
 		$gModerationSystem->requestModeration('group', 'join', NULL, $gContent->mGroupId, $gContent->mContentId);
 		// @TOOD display some page letting user know their membership is awaiting moderation
+	}
+	else {
+		$gBitSmarty->assign('errors', tra("This group is not public. You may not join."));
 	}
 }
 

@@ -2,6 +2,9 @@
 <div class="join group">
 	<div class="header">
 		<h1>Join</h1>
+	 	{if $errors}
+ 			{formfeedback warning=`$errors`}
+	 	{/if}
 		{form enctype="multipart/form-data" id="joingroupform"}
 		{legend legend="How do you want to read this group?"}
 			<input type="hidden" name="group_id" value="{$gContent->mInfo.group_id}" />
