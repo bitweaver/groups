@@ -224,10 +224,25 @@ class BitGroup extends LibertyAttachable {
 					}
 				}
 			}
+			// Store the roles permissions
+			$rolesPerms = $this->getRolesPerms();
+			if( isset($pParamHash['perms'] ) ) {
+				foreach( $pParamHash['perms'] as $role => $permissions ) {
+					foreach( $rolesPerms as $perm => $desc ) {
+						if( isset($pParamHash['perms'][$role][$perm]) ) {
+							$this->assignPermissionToRole( $perm, $role, $this->mContentId );
+						}
+						else {
+							$this->removePermissionFromRole( $perm, $role, $this->mContentId );
+						}
+					}
+				}
+			}
 
 			$this->mDb->CompleteTrans();
 			$this->load();
 		}
+
 		return( count( $this->mErrors )== 0 );
 	}
 
@@ -304,14 +319,16 @@ class BitGroup extends LibertyAttachable {
 		}
 
 		// Setup the group home URL
-		$pParamHash['home'] = GROUP_PKG_URL.urlencode($pParamHash['name']);
+		if( !empty($pParamHash['name']) ) {
+			$pParamHash['home'] = GROUP_PKG_URL.urlencode($pParamHash['name']);
+		}
 
 		// Do we have after_registration data?
-		if( !empty($pParamHash['after_registration']) ) {
+		if( !empty($pParamHash['after_registration']) && !empty($pParamHash['name']) ) {
 			$pParamHash['data_store']['after_registration'] = $pParamHash['after_registration'];
 			$pParamHash['after_registration_page'] = $pParamHash['home'] = GROUP_PKG_URL.'registered/'.$pParamHash['name'];
 		}
-		else {
+		else if ( !empty($pParamHash['name']) ){
 			$pParamHash['data_store']['after_registration'] = NULL;
 			$pParamHash['after_registration_page'] = GROUP_PKG_URL.urlencode($pParamHash['name']);
 		}

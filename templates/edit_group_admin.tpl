@@ -17,7 +17,7 @@
 				<td>{$perm}</td>
 				{foreach from=$groupRoles item=role}
 					<td style="text-align:center;">
-						<input type="checkbox" value="{$perm}" name="perms[{$role.role_id}][{$p}]" title="{$role.role_name}"
+						<input type="checkbox" name="group[perms][{$role.role_id}][{$p}]" title="{$role.role_name}"
 							{if $role.role_id eq 1 } checked="checked" disabled="disabled" {elseif $role.perms.$p} checked="checked" {/if}/>
 					</td>
 				{/foreach}

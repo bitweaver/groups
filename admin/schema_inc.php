@@ -29,7 +29,7 @@ $tables = array(
 		role_id I4 NOTNULL
 		CONSTRAINT ', CONSTRAINT `groups_roles_perms_map_group_content_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
 					, CONSTRAINT `groups_roles_perms_map_role_id` FOREIGN KEY (`role_id`) REFERENCES `".BIT_DB_PREFIX."groups_roles` (`role_id`)
-					, CONSTRAINT `groups_roles_perms_map_perm_name` FOREIGN KEY (`perm_name`) REFERENCES `".BIT_DB_PREFIX."users_permissions` (`perm_name`)'
+					, CONSTRAINT `groups_roles_perms_map_perm_name` FOREIGN KEY (`perm_name`) REFERENCES `".BIT_DB_PREFIX."groups_permissions` (`perm_name`)'
 	",
 
 	/* Users may have more than one role in a given group */
