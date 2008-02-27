@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.10 2008/02/27 01:55:23 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.11 2008/02/27 01:59:52 wjames5 Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -69,11 +69,8 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 
 
 // allow selection of what content each group can create
-/* content types that would not make sense to allow
- * too bad this sucks and is statically defined
- * maybe the list of allowables should be a group pkg admin setting
- */
-$exclude = array( 'tikisticky', 'pigeonholes', 'bitboard', 'bituser', 'bitgroup', 'bitcomment' );
+// @TODO create exclude list from admin allowed list
+$exclude = array( 'bitboard', 'bitgroup' );
 $contentMappable = array();
 foreach( $gLibertySystem->mContentTypes as $cType ) {
     if( !in_array( $cType['content_type_guid'], $exclude ) ) {
