@@ -1,24 +1,14 @@
 {strip}
 {form}
 	{jstabs}
-		{jstab title="Home Group"}
-			{legend legend="Home Group"}
-				<input type="hidden" name="page" value="{$page}" />
+		{jstab title="Group Options"}
+			{legend legend="Group Content"}
 				<div class="row">
-					{formlabel label="Home Group (main group)" for="homeGroup"}
+					{formlabel label="Allowed Content Types"}
 					{forminput}
-						<select name="homeGroup" id="homeGroup">
-							{section name=ix loop=$groups}
-								<option value="{$groups[ix].group_id|escape}" {if $groups[ix].group_id eq $home_group}selected="selected"{/if}>{$groups[ix].title|escape|truncate:20:"...":true}</option>
-							{sectionelse}
-								<option>{tr}No records found{/tr}</option>
-							{/section}
-						</select>
+						{html_checkboxes options=$formGroupContent.guids name=group_content separator="<br />" checked=$formGroupContent.checked}
+						{formhelp note="You can select what content types groups can create and associate with their group. This creates a default list of allowed content. Additionally, groups can't individually limit from this list what content types their group members can create.."}
 					{/forminput}
-				</div>
-
-				<div class="row submit">
-					<input type="submit" name="homeTabSubmit" value="{tr}Change preferences{/tr}" />
 				</div>
 			{/legend}
 		{/jstab}
@@ -35,12 +25,11 @@
 						{/forminput}
 					</div>
 				{/foreach}
-
-				<div class="row submit">
-					<input type="submit" name="listTabSubmit" value="{tr}Change preferences{/tr}" />
-				</div>
 			{/legend}
 		{/jstab}
 	{/jstabs}
+	<div class="row submit">
+		<input type="submit" name="group_preferences" value="{tr}Change Preferences{/tr}" />
+	</div>
 {/form}
 {/strip}

@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.7 2008/02/25 20:00:23 nickpalmer Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.8 2008/02/27 01:55:23 wjames5 Exp $ *}
 {strip}
 <div class="floaticon">{bithelp}</div>
 
@@ -6,7 +6,7 @@
 	{if $preview}
 		<h2>Preview {$gContent->mInfo.title|escape}</h2>
 		<div class="preview">
-			{include file="bitpackage:group/group_display.tpl" page=`$gContent->mInfo.group_id`}
+			{include file="bitpackage:group/group_about.tpl" page=`$gContent->mInfo.group_id`}
 		</div>
 	{/if}
 

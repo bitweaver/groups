@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.9 2008/02/10 19:46:23 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.10 2008/02/27 01:55:23 wjames5 Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -19,29 +19,13 @@ if( $gContent->isValid() ) {
 	$gBitSystem->verifyPermission( 'p_group_edit' );
 }
 
-if( isset( $_REQUEST['group']["title"] ) ) {
-	$gContent->mInfo["title"] = $_REQUEST['group']["title"];
-}
-
-if( isset( $_REQUEST['group']["description"] ) ) {
-	$gContent->mInfo["description"] = $_REQUEST['group']["description"];
-}
-
-if( isset( $_REQUEST["format_guid"] ) ) {
-	$gContent->mInfo['format_guid'] = $_REQUEST["format_guid"];
-}
-
-if( isset( $_REQUEST['group']["edit"] ) ) {
-	$gContent->mInfo["data"] = $_REQUEST['group']["edit"];
-	$gContent->mInfo['parsed_data'] = $gContent->parseData();
-}
 
 // If we are in preview mode then preview it!
 if( isset( $_REQUEST["preview"] ) ) {
+    $gContent->preparePreview( $_REQUEST );
 	$gBitSmarty->assign('preview', 'y');
 	$gContent->invokeServices('content_preview_function');
-}
-else {
+}else {
   	$gContent->invokeServices( 'content_edit_function' );
 }
 
@@ -81,6 +65,20 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 	} else {
 		$gBitSmarty->assign_by_ref( 'errors', $gContent->mErrors );
 	}
+}
+
+
+// allow selection of what content each group can create
+/* content types that would not make sense to allow
+ * too bad this sucks and is statically defined
+ * maybe the list of allowables should be a group pkg admin setting
+ */
+$exclude = array( 'tikisticky', 'pigeonholes', 'bitboard', 'bituser', 'bitgroup', 'bitcomment' );
+$contentMappable = array();
+foreach( $gLibertySystem->mContentTypes as $cType ) {
+    if( !in_array( $cType['content_type_guid'], $exclude ) ) {
+        $contentMappable[] = $cType['content_description'];
+    }
 }
 
 // get options hash

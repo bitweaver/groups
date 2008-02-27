@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.3 2008/02/13 15:07:50 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.4 2008/02/27 01:55:23 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -32,15 +32,31 @@ $formGroupLists = array(
 );
 $gBitSmarty->assign( 'formGroupLists',$formGroupLists );
 
-$processForm = set_tab();
 
-if( $processForm ) {
+// get installed content types
+foreach( $gLibertySystem->mContentTypes as $cType ) {
+	$formGroupContent['guids']['group_content_'.$cType['content_type_guid']]  = $cType['content_description'];
+}
+
+// store the prefs
+if( !empty( $_REQUEST['group_preferences'] ) ) {
 	$groupToggles = array_merge( $formGroupLists );
 	foreach( $groupToggles as $item => $data ) {
-		simple_set_toggle( $item, 'group' );
+		simple_set_toggle( $item, GROUP_PKG_NAME );
 	}
 
+	foreach( array_keys( $formGroupContent['guids'] ) as $types ) {
+		$gBitSystem->storeConfig( $types, ( ( !empty( $_REQUEST['group_content'] ) && in_array( $types, $_REQUEST['group_content'] ) ) ? 'y' : NULL ), GROUP_PKG_NAME );
+	}
 }
+
+// check the correct packages in the package selection
+foreach( $gLibertySystem->mContentTypes as $cType ) {
+	if( $gBitSystem->getConfig( 'group_content_'.$cType['content_type_guid'] ) ) {
+		$formGroupContent['checked'][] = 'group_content_'.$cType['content_type_guid'];
+	}
+}
+$gBitSmarty->assign( 'formGroupContent', $formGroupContent );
 
 $group = new BitGroup();
 $groups = $group->getList( $_REQUEST );
