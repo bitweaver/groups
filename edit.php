@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.11 2008/02/27 01:59:52 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.12 2008/02/27 18:03:46 wjames5 Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -19,6 +19,15 @@ if( $gContent->isValid() ) {
 	$gBitSystem->verifyPermission( 'p_group_edit' );
 }
 
+// get content types groups can associate with their group
+// @TODO create exclude list from admin allowed list
+$exclude = array( 'bitboard', 'bitgroup', 'bitcomment' );
+$formGroupContent = array();
+foreach( $gLibertySystem->mContentTypes as $cType ) {
+    if( !in_array( $cType['content_type_guid'], $exclude ) && $gBitSystem->getConfig( 'group_content_'.$cType['content_type_guid'] ) ) {
+		$formGroupContent['guids'][$cType['content_type_guid']]  = $cType['content_description'];
+    }
+}
 
 // If we are in preview mode then preview it!
 if( isset( $_REQUEST["preview"] ) ) {
@@ -37,8 +46,7 @@ $gBitSmarty->assign('groupRoles', $groupRoles );
 $allRolesPerms = $gContent->getRolesPerms();
 $gBitSmarty->assign('allRolesPerms', $allRolesPerms );
 
-// Pro
-// Check if the page has changed
+// If we are saving
 if( !empty( $_REQUEST["save_group"] ) ) {
 
 	// Check if all Request values are delivered, and if not, set them
@@ -60,6 +68,18 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 			}
 		}
 
+		// store content types group can create
+		$groupContentTypes = array_keys( $formGroupContent['guids'] );
+		// we check the full list so that if the admin options changed we automagically clean up the group
+		foreach( $gLibertySystem->mContentTypes as $cType ) {
+			$type = $cType['content_type_guid'];
+			if ( !empty( $_REQUEST['group_content'] ) && in_array( $type, $_REQUEST['group_content'] ) && in_array( $type, $groupContentTypes ) ) {
+				$gContent->storeContentTypePref( $type );
+			}else{
+				$gContent->expungeContentTypePref( $type );
+			}
+		}
+
 		header( "Location: ".$gContent->getDisplayUrl() );
 		die;
 	} else {
@@ -67,16 +87,11 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 	}
 }
 
-
-// allow selection of what content each group can create
-// @TODO create exclude list from admin allowed list
-$exclude = array( 'bitboard', 'bitgroup' );
-$contentMappable = array();
-foreach( $gLibertySystem->mContentTypes as $cType ) {
-    if( !in_array( $cType['content_type_guid'], $exclude ) ) {
-        $contentMappable[] = $cType['content_description'];
-    }
-}
+/* Check which content types this group allows
+ * we ask for a fresh list since it might have changed
+ */
+$formGroupContent['checked'] = $gContent->getContentTypePrefs();
+$gBitSmarty->assign( 'formGroupContent', $formGroupContent );
 
 // get options hash
 require_once(GROUP_PKG_PATH.'options_inc.php'); 

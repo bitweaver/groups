@@ -10,4 +10,13 @@
 		</div>
 	{/foreach}
 {/legend}
+{legend legend="Group Content"}
+	<div class="row">
+		{formlabel label="Allowed Content Types"}
+		{forminput}
+			{html_checkboxes options=$formGroupContent.guids name=group_content separator="<br />" checked=$formGroupContent.checked}
+			{formhelp note="You can select what content types your group members can create and associate with their group."}
+		{/forminput}
+	</div>
+{/legend}
 {/strip}

@@ -168,6 +168,8 @@ class BitGroup extends LibertyAttachable {
 				$this->mInfo['editor'] =( isset( $result->fields['modifier_real_name'] )? $result->fields['modifier_real_name'] : $result->fields['modifier_user'] );
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
 				$this->mInfo['parsed_data'] = $this->parseData();
+
+				$this->mContentTypePrefs = $this->getContentTypePrefs();
 				
 				// load up role permissions on this group for the requesting user
 				// sets $this->mGroupMemberPermissions
@@ -211,7 +213,6 @@ class BitGroup extends LibertyAttachable {
 				$gBitUser->addUserToGroup( $gBitUser->mUserId, $this->mGroupId );
 				// Autogenerate a board for this group
 				if ( $gBitSystem->isPackageActive( 'boards' ) ){
-					vd( "make a board" );
 					require_once( BOARDS_PKG_PATH.'BitBoard.php' );
 					$board = new BitBoard();
 					$boardHash = array(
@@ -219,7 +220,6 @@ class BitGroup extends LibertyAttachable {
 							"data" => tra('Message board for the ').$pParamHash['title']." ".tra('Group')
 						);
 					if ( $board->store( $boardHash ) ){
-					vd( "link it" );
 						$this->linkContent( $board->mInfo );
 					}
 				}
@@ -627,6 +627,45 @@ class BitGroup extends LibertyAttachable {
 			$this->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."groups_content_cnxn_map` WHERE `group_content_id`=? AND `to_content_id`=?", array( $this->mContentId, $pPramaHash['content_id'] ) );
 		}
 		return( count( $this->mErrors ) == 0 );
+	}
+
+
+	/**
+	 * storeContentTypePref
+	 *
+	 * maps content type guid to a group to allow a group to create that content type
+	 **/ 
+	function storeContentTypePref( $pContentTypeGuid ){
+		if ( $this->isValid() && isset( $pContentTypeGuid ) ){
+			$query = "INSERT INTO `".BIT_DB_PREFIX."groups_content_types`( `group_content_id`, `content_type_guid` ) VALUES(?, ?)"; 
+			$result = $this->mDb->query($query, array( $this->mContentId, $pContentTypeGuid ));
+		}
+		return( count( $this->mErrors ) == 0 );
+	}
+
+	/**
+	 * expungeContentTypePref
+	 *
+	 * removes a content type from the list of content types a group can create. does not expunge any existing content of the type being removed.
+	 **/
+	function expungeContentTypePref( $pContentTypeGuid ){
+		$bindVars = array( $this->mContentId, $pContentTypeGuid );
+		if ( $this->isValid() && isset( $pContentTypeGuid ) && $this->mDb->getOne("SELECT `group_content_id` FROM `".BIT_DB_PREFIX."groups_content_types` WHERE `group_content_id`=? AND `content_type_guid`=?", $bindVars ) ){
+			$query = "DELETE FROM `".BIT_DB_PREFIX."groups_content_types` WHERE `group_content_id`=? AND `content_type_guid`=?"; 
+			$result = $this->mDb->query($query, $bindVars);
+		}
+		return( count( $this->mErrors ) == 0 );
+	}
+
+	function getContentTypePrefs(){
+		$ret = array();
+		if ( $this->isValid() ){
+			$result = $this->mDb->query( "SELECT `content_type_guid` FROM  `".BIT_DB_PREFIX."groups_content_types` WHERE `group_content_id`=?", $this->mContentId );  
+			while( $res = $result->fetchRow() ) {
+				$ret[] = $res['content_type_guid'];
+			}
+		}
+		return $ret;
 	}
 
 }
