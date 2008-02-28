@@ -225,6 +225,7 @@ class BitGroup extends LibertyAttachable {
 				}
 			}
 			// Store the roles permissions
+			/* I dont think we need this here as perms are assigned after store in edit.php, and that excludes admin storage -wjames5
 			$rolesPerms = $this->getRolesPerms();
 			if( isset($pParamHash['perms'] ) ) {
 				foreach( $pParamHash['perms'] as $role => $permissions ) {
@@ -238,6 +239,7 @@ class BitGroup extends LibertyAttachable {
 					}
 				}
 			}
+			*/
 
 			$this->mDb->CompleteTrans();
 			$this->load();
