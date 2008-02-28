@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.14 2008/02/28 05:45:12 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.15 2008/02/28 16:35:38 wjames5 Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -81,43 +81,80 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 		// make sure the list is up to date after storing any prefs
 		$gContent->mContentTypePrefs = $gContent->getContentTypePrefs();
 
+
+		//------ set access permissions for the group and group related content ------//
+
+		/* @TODO we should only do this if the is_public status has changed,
+		 * otherwise we will screw up access on any content that has been made public in private groups
+		 * and we'll be setting custom perms over and over needlessly
+		 */
+
 		// get list of user groups and their perms
 		$allGroups = $gBitUser->getAllGroups( $listHash );
-
-		// if group is not publicly viewable set custom perms to limit access to it and its linked content
-		if ( $gContent->mInfo['view_content_public'] != 'y' ){
-			// for each group if it has default view perm for groups revoke it
-			foreach( $allGroups as $groupId => $group ){
-				$groupPerms = array_keys( $group['perms'] );
-				if (  $groupId != 1 && in_array(  $gContent->mViewContentPerm, $groupPerms ) ){
+		// set view perms for our group
+		foreach( $allGroups as $groupId => $group ){
+			$groupPerms = array_keys( $group['perms'] );
+			if ( $groupId != 1 && $groupId != $gContent->mGroupId && in_array( $gContent->mViewContentPerm, $groupPerms ) ){
+				if ( $gContent->mInfo['view_content_public'] != 'y' ){
 					// revoke
 					$gContent->storePermission( $groupId, $gContent->mViewContentPerm, TRUE );
-				}
-			}
-			// assign custom view perm for our group
-			$gContent->storePermission( $gContent->mGroupId, $gContent->mViewContentPerm );
-			// @TODO assign custom view perms for our group's linked content
-				// get all group linked content
-					// foreach content
-						// foreach user group
-						// if has content view perm by default and is not our group
-							// revoke default view for the group on that content
-						// else
-							// assign view to our group 
-		}else{
-		// otherwise remove custom perms
-			// for each group if it has default view perm for groups restore it
-			foreach( $allGroups as $groupId => $group ){
-				$groupPerms = array_keys( $group['perms'] );
-				if (  $groupId != 1 && in_array(  $gContent->mViewContentPerm, $groupPerms ) ){
-					// revoke
+				}else{
+					// unrevoke if revoked
 					$gContent->removePermission( $groupId, $gContent->mViewContentPerm );
 				}
 			}
+		}
+		
+		// assign a custom perm for our group if private else remove it if not needed
+		if ( $gContent->mInfo['view_content_public'] != 'y' ){
+			// assign custom view perm for our group
+			$gContent->storePermission( $gContent->mGroupId, $gContent->mViewContentPerm );
+		}else{
 			// remove custom view perm for our group since its not needed
 			$gContent->removePermission( $gContent->mGroupId, $gContent->mViewContentPerm );
-			// @TODO remove custom view perms for our group's linked content
 		}
+            
+		// assign custom view perms for our group's linked content
+		// we need this to get all view perms
+		require_once(  LIBERTYSECURE_PKG_PATH.'libertysecure_lib.php' );
+		// get all group linked content
+		$listHash = array( "connect_group_content_id" => $gContent->mContentId );
+		$list = $gContent->getContentList( $listHash );
+		// for each content item set custom view perms
+		foreach( $list['data'] as $content ){
+			$typeGuid = $content['content_type_guid'];
+			if ( !isset( $gLibertySystem->mContentTypes[$typeGuid]['content_perms'] ) ){
+				$gLibertySystem->mContentTypes[$typeGuid]['content_perms'] = secure_get_content_permissions( $typeGuid );
+			}
+			if ( isset( $gLibertySystem->mContentTypes[$typeGuid]['content_perms']['view'] ) ){
+				$viewPerm =  $gLibertySystem->mContentTypes[$typeGuid]['content_perms']['view'];
+				// foreach user group
+				foreach( $allGroups as $groupId => $group ){
+					$groupPerms = array_keys( $group['perms'] );
+					// if group has content view perm by default and is not admin and not our group
+					if ( $groupId != 1 && $groupId != $gContent->mGroupId  && in_array( $viewPerm, $groupPerms ) ){
+						if ( $gContent->mInfo['view_content_public'] != 'y' ){
+							// revoke
+							$gContent->storePermission( $groupId, $viewPerm, TRUE );
+						}else{
+							// unrevoke if revoked
+							$gContent->removePermission( $groupId, $viewPerm );
+						}
+					}
+				}
+				
+				// set custom perm for our group
+				if ( $gContent->mInfo['view_content_public'] != 'y' ){
+					// assign view to our group 
+					$gContent->storePermission( $gContent->mGroupId, $viewPerm );
+				}else{
+					// remove custom view perm for our group since its not needed
+					$gContent->removePermission( $gContent->mGroupId, $viewPerm );
+				}
+			}
+		}
+
+		//----- end set access perms -----//
 
 		header( "Location: ".$gContent->getDisplayUrl() );
 		die;

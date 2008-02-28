@@ -688,7 +688,7 @@ function group_module_display(&$pParamHash){
 function group_content_list_sql( &$pObject, $pParamHash=NULL ) {
 	global $gBitSystem;
 	$ret = array();
-	if ( $gBitSystem->isPackageActive( 'group' ) && !empty($pParamHash['conneect_group_content_id']) && $pObject->verifyId( $pParamHash['connect_group_content_id'] ) ){
+	if ( $gBitSystem->isPackageActive( 'group' ) && !empty($pParamHash['connect_group_content_id']) && $pObject->verifyId( $pParamHash['connect_group_content_id'] ) ){
 		$ret['join_sql'] = " INNER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( lc.`content_id` = gccm.`to_content_id` )";
 		$ret['where_sql'] = " AND gccm.`group_content_id` = ? ";
 		$ret['bind_vars'][] = (int)$pParamHash['connect_group_content_id'];
