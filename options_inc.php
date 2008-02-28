@@ -11,7 +11,7 @@ $formGroupOptions = array(
 		'note' => 'Is anyone free to join this group? Unchecking this box means an invitation will be required to join this group',
 		'default' => 'y',
 	),
-	"mod_msg" => array(
+	"mod_msgs" => array(
 		'label' => 'Moderate Messages',
 		'note' => 'When checked all messages to this group will be held for moderation before being displayed.',
 		'default' => 'n',

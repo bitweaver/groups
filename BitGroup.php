@@ -333,6 +333,11 @@ class BitGroup extends LibertyAttachable {
 			$pParamHash['after_registration_page'] = GROUP_PKG_URL.urlencode($pParamHash['name']);
 		}
 
+		$pParamHash['group_pkg_store']['view_content_public'] = !empty( $pParamHash['view_content_public'] )?$pParamHash['view_content_public']:'n';
+		$pParamHash['group_pkg_store']['mod_msgs'] = !empty( $pParamHash['mod_msgs'] )?$pParamHash['mod_msgs']:'n';
+		$pParamHash['group_pkg_store']['mod_content'] = !empty( $pParamHash['mod_content'] )?$pParamHash['mod_content']:'n';
+		$pParamHash['group_pkg_store']['admin_content_strict'] = !empty( $pParamHash['admin_content_strict'] )?$pParamHash['admin_content_strict']:'n';
+
 		// Make sure we don't set is_default or batch_set_default for security
 		if( isset($pParamHash['is_default']) || isset($pParamHash['batch_set_default']) ) {
 			$this->mErrors['default'] = tra('Attempt to set group as default group or batch set default. This is not allowed.');
