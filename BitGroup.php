@@ -636,11 +636,12 @@ class BitGroup extends LibertyAttachable {
 	 * maps content type guid to a group to allow a group to create that content type
 	 **/ 
 	function storeContentTypePref( $pContentTypeGuid ){
-		if ( $this->isValid() && isset( $pContentTypeGuid ) ){
+		$bindVars = array( $this->mContentId, $pContentTypeGuid );
+		if ( $this->isValid() && isset( $pContentTypeGuid ) && !$this->mDb->getOne("SELECT `group_content_id` FROM `".BIT_DB_PREFIX."groups_content_types` WHERE `group_content_id`=? AND `content_type_guid`=?", $bindVars ) ){
 			$query = "INSERT INTO `".BIT_DB_PREFIX."groups_content_types`( `group_content_id`, `content_type_guid` ) VALUES(?, ?)"; 
-			$result = $this->mDb->query($query, array( $this->mContentId, $pContentTypeGuid ));
+			$result = $this->mDb->query($query, $bindVars);
 		}
-		return( count( $this->mErrors ) == 0 );
+		return TRUE;
 	}
 
 	/**
@@ -654,7 +655,7 @@ class BitGroup extends LibertyAttachable {
 			$query = "DELETE FROM `".BIT_DB_PREFIX."groups_content_types` WHERE `group_content_id`=? AND `content_type_guid`=?"; 
 			$result = $this->mDb->query($query, $bindVars);
 		}
-		return( count( $this->mErrors ) == 0 );
+		return TRUE;
 	}
 
 	function getContentTypePrefs(){
