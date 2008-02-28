@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.13 2008/02/28 04:07:54 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.14 2008/02/28 05:45:12 wjames5 Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -78,29 +78,42 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 				$gContent->expungeContentTypePref( $type );
 			}
 		}
+		// make sure the list is up to date after storing any prefs
+		$gContent->mContentTypePrefs = $gContent->getContentTypePrefs();
+
+		// get list of user groups and their perms
+		$allGroups = $gBitUser->getAllGroups( $listHash );
 
 		// if group is not publicly viewable set custom perms to limit access to it and its linked content
 		if ( $gContent->mInfo['view_content_public'] != 'y' ){
-			// @TODO get list of groups and their perms
-			// $userGroups = 
-			// @TODO for each group if it has default view perm for groups revoke it
-			/*
-			foreach( $userGroups as $group ){
-				if (  $group has view perm ) ){
-					$groupId = $group['group_id'];
+			// for each group if it has default view perm for groups revoke it
+			foreach( $allGroups as $groupId => $group ){
+				$groupPerms = array_keys( $group['perms'] );
+				if (  $groupId != 1 && in_array(  $gContent->mViewContentPerm, $groupPerms ) ){
 					// revoke
 					$gContent->storePermission( $groupId, $gContent->mViewContentPerm, TRUE );
 				}
 			}
-			*/
 			// assign custom view perm for our group
 			$gContent->storePermission( $gContent->mGroupId, $gContent->mViewContentPerm );
 			// @TODO assign custom view perms for our group's linked content
-				// revoke default view
-				// assign view to group 
+				// get all group linked content
+					// foreach content
+						// foreach user group
+						// if has content view perm by default and is not our group
+							// revoke default view for the group on that content
+						// else
+							// assign view to our group 
 		}else{
-			// otherwise remove custom perms
-			// @TODO for each group if it has default view perm for groups restore it
+		// otherwise remove custom perms
+			// for each group if it has default view perm for groups restore it
+			foreach( $allGroups as $groupId => $group ){
+				$groupPerms = array_keys( $group['perms'] );
+				if (  $groupId != 1 && in_array(  $gContent->mViewContentPerm, $groupPerms ) ){
+					// revoke
+					$gContent->removePermission( $groupId, $gContent->mViewContentPerm );
+				}
+			}
 			// remove custom view perm for our group since its not needed
 			$gContent->removePermission( $gContent->mGroupId, $gContent->mViewContentPerm );
 			// @TODO remove custom view perms for our group's linked content
