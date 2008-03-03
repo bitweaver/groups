@@ -17,12 +17,18 @@ if ( $gContent->mInfo['view_content_public'] != "y" ){
 
 // make sure the user is registered
 if ( !$gBitUser->isRegistered() ){
-	$gBitSystem->fatalError( tra( 'You must be registed to join groups.' ));	
+	// fatal out ot login/register page
+	$gBitSystem->fatalPermission( NULL );
+}
+
+// if the user is already in the group ignore them and send them back to the group home page
+if ( $gBitUser->isInGroup( $gContent->mGroupId ) ){
+	header( "Location: ".$gContent->getDisplayUrl() );
+	die;
 }
 
 // if join is confirmed then go for it
 if( !empty( $_REQUEST["join_group"] ) ) {
-	// @TODO join process
 	// if group is free to join then do it
 	if ( $gContent->mInfo['is_public'] == "y" ){
 		if ( $gBitUser->addUserToGroup( $gBitUser->mUserId, $gContent->mGroupId ) ){
@@ -33,8 +39,7 @@ if( !empty( $_REQUEST["join_group"] ) ) {
 		// otherwise send the request to moderation
 		$gModerationSystem->requestModeration('group', 'join', NULL, $gContent->mGroupId, $gContent->mContentId);
 		// @TOOD display some page letting user know their membership is awaiting moderation
-	}
-	else {
+	} else {
 		$gBitSmarty->assign('errors', tra("This group is not public. You may not join."));
 	}
 }
