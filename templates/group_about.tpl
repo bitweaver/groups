@@ -12,18 +12,41 @@
 	</div><!-- end .floaticon -->
 
 	<div class="header">
-		<h1>{$gContent->mInfo.title|escape|default:"Group"}</h1>
-		<p>{$gContent->mInfo.summary|escape}</p>
-		<div class="date">
-			{tr}Created by{/tr}: {displayname user=$gContent->mInfo.creator_user user_id=$gContent->mInfo.creator_user_id real_name=$gContent->mInfo.creator_real_name}, {tr}Last modification by{/tr}: {displayname user=$gContent->mInfo.modifier_user user_id=$gContent->mInfo.modifier_user_id real_name=$gContent->mInfo.modifier_real_name}, {$gContent->mInfo.last_modified|bit_long_datetime}
-		</div>
+		<h1>{$gContent->mInfo.title|escape}</h1>
 	</div><!-- end .header -->
 
 	<div class="body">
 		<div class="content">
-			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
-			{$gContent->mInfo.parsed_data}
-			<p>@TODO add: Member count, homepage link, group email address for msgs, access summary, rss feed for msgs, content types</p>
+			<h2>About this group</h2>
+			<div class="row">
+				{formlabel label="Members"}
+				<div class="forminput">{$gContent->mInfo.num_members}</div>
+			</div>
+			<div class="row">
+				{formlabel label="Description"}
+				<div class="forminput">{$gContent->mInfo.parsed_data}</div>
+			</div>
+			<div class="row">
+				{formlabel label="Created by"}
+				<div class="forminput">{displayname user=$gContent->mInfo.creator_user user_id=$gContent->mInfo.creator_user_id real_name=$gContent->mInfo.creator_real_name} on <strong>{$gContent->mInfo.created|bit_long_date}</strong></div>
+			</div>
+			<div class="row">
+				{formlabel label="Homepage URL"}
+				<div class="forminput"><a href="{$smarty.const.BIT_BASE_URI}{$gContent->getDisplayUrl()}">{$smarty.const.BIT_BASE_URI}{$gContent->getDisplayUrl()}</a></div>
+			</div>
+			{if $gBitUser->isInGroup( $gContent->mGroupId )}
+			<div class="row">
+				{formlabel label="Group Email Address"}
+				<div class="forminput">
+					@TODO put related board email address here
+					{formhelp note="You can post messages to this groups's forum by sending mail to this address"}
+				</div>
+			</div>
+			{/if}
+			<div class="row">
+				{formlabel label="RSS Feed"}
+				<div class="forminput">@TODO link to board messages feed here</div>
+			</div>
 		</div><!-- end .content -->
 	</div><!-- end .body -->
 </div><!-- end .group -->

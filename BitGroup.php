@@ -168,6 +168,7 @@ class BitGroup extends LibertyAttachable {
 				$this->mInfo['editor'] =( isset( $result->fields['modifier_real_name'] )? $result->fields['modifier_real_name'] : $result->fields['modifier_user'] );
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
 				$this->mInfo['parsed_data'] = $this->parseData();
+				$this->mInfo['num_members'] = $this->getMembersCount( $this->mGroupId );
 
 				$this->mContentTypePrefs = $this->getContentTypePrefs();
 				
@@ -434,9 +435,8 @@ class BitGroup extends LibertyAttachable {
 			WHERE lc.`content_type_guid` = ? $whereSql";
 		$result = $this->mDb->query( $query, $bindVars, $max_records, $offset );
 		$ret = array();
-		$memberCantSql = "SELECT COUNT(*) FROM `".BIT_DB_PREFIX."users_groups_map` WHERE `group_id` = ?";
 		while( $res = $result->fetchRow() ) {
-			$res['num_members'] = $this->mDb->getOne($memberCantSql, array( $res['group_id'] ));
+			$res['num_members'] = $this->getMembersCount( $res['group_id'] );
 			$ret[] = $res;
 		}
 		$pParamHash["cant"] = $this->mDb->getOne( $query_cant, $bindVars );
@@ -581,6 +581,18 @@ class BitGroup extends LibertyAttachable {
 			}
 		}
 		return $ret;
+	}
+
+	/* getMembersCount
+	 * gets the number of members in a group.
+	 */
+	function getMembersCount( $pGroupId ){
+		$result = NULL;
+		if( @$this->verifyId( $pGroupId ) ) {
+			$memberCantSql = "SELECT COUNT(*) FROM `".BIT_DB_PREFIX."users_groups_map` WHERE `group_id` = ?";
+			$result = $this->mDb->getOne($memberCantSql, array( $pGroupId ));
+		}
+		return $result;
 	}
 
 	function getMemberRoles( $pUserId ){
