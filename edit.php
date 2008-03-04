@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.17 2008/03/04 16:49:52 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.18 2008/03/04 17:23:01 wjames5 Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -158,7 +158,6 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 					}
 				}
 			}
-			die;
 		}
 		//----- end set access perms -----//
 
