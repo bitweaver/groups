@@ -17,9 +17,7 @@
 			<li><a class="item" href="" title="comingsoon">{tr}Content{/tr}</a></li>
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}files.php?group_id={$gContent->mGroupId}" title="comingsoon">{tr}Files{/tr}</a></li>
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}about.php?group_id={$gContent->mGroupId}" title="comingsoon">{tr}About this group{/tr}</a></li>
-			{if !$gBitUser->isInGroup( $gContent->mGroupId )}
-				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}join.php?group_id={$gContent->mGroupId}" title="comingsoon">{tr}Join this group{/tr}</a></li>
-			{/if}
+			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}join.php?group_id={$gContent->mGroupId}" title="comingsoon">{if !$gBitUser->isInGroup( $gContent->mGroupId )}{tr}Join this group{/tr}{else}{tr}Edit my membership{/tr}{/if}</a></li>
 			{if $gBitUser->isAdmin() }
 				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}manage.php?group_id={$gContent->mGroupId}" title="comingsoon">{tr}Manage members{/tr}</a></li>
 			{/if}
