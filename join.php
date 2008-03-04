@@ -45,5 +45,5 @@ if( !empty( $_REQUEST["join_group"] ) ) {
 }
 
 // display
-$gBitSystem->display( 'bitpackage:group/join_group.tpl', tra('Join')." ".$gContent->getTitle() );
+$gBitSystem->display( 'bitpackage:group/user_prefs.tpl', tra('Join')." ".$gContent->getTitle() );
 ?>
