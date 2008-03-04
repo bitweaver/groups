@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.16 2008/02/28 17:35:59 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.17 2008/03/04 16:49:52 wjames5 Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -127,6 +127,7 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 			// for each content item set custom view perms
 			foreach( $list['data'] as $content ){
 				$typeGuid = $content['content_type_guid'];
+				$contentId = $content['content_id'];
 				if ( !isset( $gLibertySystem->mContentTypes[$typeGuid]['content_perms'] ) ){
 					$gLibertySystem->mContentTypes[$typeGuid]['content_perms'] = secure_get_content_permissions( $typeGuid );
 				}
@@ -139,10 +140,10 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 						if ( $groupId != 1 && $groupId != $gContent->mGroupId  && in_array( $viewPerm, $groupPerms ) ){
 							if ( $gContent->mInfo['view_content_public'] != 'y' ){
 								// revoke
-								$gContent->storePermission( $groupId, $viewPerm, TRUE );
+								$gContent->storePermission( $groupId, $viewPerm, TRUE, $contentId);
 							}else{
 								// unrevoke if revoked
-								$gContent->removePermission( $groupId, $viewPerm );
+								$gContent->removePermission( $groupId, $viewPerm, $contentId );
 							}
 						}
 					}
@@ -150,13 +151,14 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 					// set custom perm for our group
 					if ( $gContent->mInfo['view_content_public'] != 'y' ){
 						// assign view to our group 
-						$gContent->storePermission( $gContent->mGroupId, $viewPerm );
+						$gContent->storePermission( $gContent->mGroupId, $viewPerm, FALSE, $contentId );
 					}else{
 						// remove custom view perm for our group since its not needed
-						$gContent->removePermission( $gContent->mGroupId, $viewPerm );
+						$gContent->removePermission( $gContent->mGroupId, $viewPerm, $contentId );
 					}
 				}
 			}
+			die;
 		}
 		//----- end set access perms -----//
 
