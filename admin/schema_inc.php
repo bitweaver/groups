@@ -104,7 +104,7 @@ $gBitInstaller->registerSchemaDefault( GROUP_PKG_NAME, array(
 // ### Default UserPermissions
 $gBitInstaller->registerUserPermissions( GROUP_PKG_NAME, array(
 	array( 'p_group_admin', 'Can admin group', 'admin', GROUP_PKG_NAME ),
-	array( 'p_group_edit', 'Can edit any group', 'registered', GROUP_PKG_NAME ),
+	array( 'p_group_edit', 'Can edit any group', 'admin', GROUP_PKG_NAME ),
 	array( 'p_group_view', 'Can view group', 'basic',  GROUP_PKG_NAME ),
 	array( 'p_group_remove', 'Can delete group', 'admin',  GROUP_PKG_NAME ),
 ) );
