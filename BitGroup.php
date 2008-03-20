@@ -749,4 +749,12 @@ function group_content_expunge( &$pObject, &$pParamHash ) {
 	return( $errors );
 }
 
+function group_content_user_perms( &$pObject ) {
+	global $gBitUser;
+	$userId = $gBitUser->mUserId;
+	$contentId = $pObject->mContentId;
+	$hash = $pObject->mUserContentPerms[$userId][$contentId];
+	// @todo modify this hash based on users role in the group
+}
+
 ?>
