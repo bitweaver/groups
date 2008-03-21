@@ -749,12 +749,39 @@ function group_content_expunge( &$pObject, &$pParamHash ) {
 	return( $errors );
 }
 
-function group_content_user_perms( &$pObject ) {
+function group_content_user_perms( &$pObject, $pParamHash ) {
 	global $gBitUser;
 	$userId = $gBitUser->mUserId;
 	$contentId = $pObject->mContentId;
-	$hash = $pObject->mUserContentPerms[$userId][$contentId];
-	// @todo modify this hash based on users role in the group
+
+	// Need a different query for groups
+	if ( $pObject->mContentTypeGuid == BITGROUP_CONTENT_TYPE_GUID ) {
+
+		$query = "SELECT rpm.`perm_name` AS `hash_key`, rpm.`perm_name`, g.`group_id` FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rpm ".
+			"LEFT JOIN `".BIT_DB_PREFIX."groups_roles_users_map` rum ON ( rpm.`role_id` = rum.`role_id` ) ".
+			"LEFT JOIN `".BIT_DB_PREFIX."groups` g ON (rpm.`group_content_id` = g.`content_id` ) ".
+			"WHERE rpm.`group_content_id` = ? AND rum.`user_id` = ?";
+
+	} else {
+
+		$query = "SELECT rpm.`perm_name` AS `hash_key`, rpm.`perm_name`, g.`group_id` FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rpm ".
+			"LEFT JOIN `".BIT_DB_PREFIX."groups` g ON (rpm.`group_content_id` = g.`content_id` ) ".
+			"LEFT JOIN `".BIT_DB_PREFIX."groups_roles_users_map` rum ON (g.`content_id` = rum.`group_content_id` ) ".
+			"LEFT JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` ccm ON (rpm.`group_content_id` = ccm.`group_content_id` ) ".
+			"WHERE  ccm.`to_content_id` = ? AND rum.`user_id` = ?";
+
+	}
+
+	$perms = $pObject->mDb->getAssoc($query, array($contentId, $userId));
+	if ( !isset($pObject->mUserContentPerms) ) {
+		$pObject->mUserContentPerms = $perms;
+	}
+	else if ( !empty($perms) ){
+		$pObject->mUserContentPerms = array_merge($pObject->mUserContentPerms, $perms);
+	}
+	else {
+		$pObject->mUserContentPerms = array();
+	}
 }
 
 ?>
