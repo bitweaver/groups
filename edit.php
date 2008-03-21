@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.18 2008/03/04 17:23:01 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.19 2008/03/21 18:19:58 nickpalmer Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -61,7 +61,7 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 			// don't store role_id 1 which is reserved for admin. no point in storing admin perms.
 			if ( $roleId != 1 ){
 				foreach( array_keys( $allRolesPerms ) as $perm ) {
-					if( !empty( $_REQUEST['perms'][$roleId][$perm] )) {
+					if( !empty( $_REQUEST['group']['perms'][$roleId][$perm] )) {
 						$gContent->assignPermissionToRole( $perm, $roleId, $gContent->mContentId );
 					} else {
 						$gContent->removePermissionFromRole( $perm, $roleId, $gContent->mContentId );
@@ -71,7 +71,7 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 		}
 
 		// store content types group can create
-		$groupContentTypes = array_keys( $formGroupContent['guids'] );
+		//		$groupContentTypes = array_keys( $formGroupContent['guids'] );
 		// we check the full list so that if the admin options changed we automagically clean up the group
 		foreach( $gLibertySystem->mContentTypes as $cType ) {
 			$type = $cType['content_type_guid'];
