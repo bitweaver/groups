@@ -365,6 +365,15 @@ class BitGroup extends LibertyAttachable {
 			$this->mDb->StartTrans();
 			$query = "DELETE FROM `".BIT_DB_PREFIX."groups` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
+			$query = "DELETE FROM `".BIT_DB_PREFIX."groups_roles_perms_map` WHERE `group_content_id` = ?";
+			$result = $this->mDb->query( $query, array( $this->mContentId ) );
+			$query = "DELETE FROM `".BIT_DB_PREFIX."groups_roles_users_map` WHERE `group_content_id` = ?";
+			$result = $this->mDb->query( $query, array( $this->mContentId ) );
+			$query = "DELETE FROM `".BIT_DB_PREFIX."groups_content_cnxn_map` WHERE `group_content_id` = ?";
+			$result = $this->mDb->query( $query, array( $this->mContentId ) );
+			$query = "DELETE FROM `".BIT_DB_PREFIX."groups_content_types` WHERE `group_content_id` = ?";
+			$result = $this->mDb->query( $query, array( $this->mContentId ) );
+			// TODO: Should we expunge the forum and all comments as well?
 			if( LibertyAttachable::expunge() ) {
 				if( $gBitUser->remove_group($this->mGroupId) ) {
 					$ret = TRUE;
