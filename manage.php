@@ -31,9 +31,9 @@ if( !empty( $_REQUEST["save_roles"] ) ) {
 			foreach( $groupMembers as $user ) {
 				$userId = $user['user_id'];
 				if( !empty( $_REQUEST['users'][$roleId][$userId] )) {
-					$gContent->assignUserRoleToGroup( $roleId, $userId, $gContent->mContentId );
+					$gContent->assignUserRoleToGroup( $roleId, $userId );
 				} else {
-					$gContent->removeUserRoleFromGroup( $roleId, $userId, $gContent->mContentId );
+					$gContent->removeUserRoleFromGroup( $roleId, $userId );
 				}
 			}
 		}

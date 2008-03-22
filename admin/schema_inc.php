@@ -24,6 +24,7 @@ $tables = array(
 
 	/* Admin permissions should not go in this table. So no 1 in role_id! */
 	'groups_roles_perms_map' => "
+		group_id I4 NOTNULL,
 		group_content_id I4 NOTNULL,
 		perm_name C(30) NOTNULL,
 		role_id I4 NOTNULL
@@ -34,6 +35,7 @@ $tables = array(
 
 	/* Users may have more than one role in a given group */
 	'groups_roles_users_map' => "
+		group_id I4 NOTNULL,
 		group_content_id I4 NOTNULL,
 		user_id I4 NOTNULL,
 		role_id I4 NOTNULL
@@ -77,6 +79,14 @@ $gBitInstaller->registerPackageInfo( GROUP_PKG_NAME, array(
 $indices = array(
 	'groups_group_id_idx' => array('table' => 'groups', 'cols' => 'group_id', 'opts' => NULL ),
 	'groups_content_id_idx' => array( 'table' => 'groups', 'cols' => 'content_id', 'opts' => array( 'UNIQUE' ) ),
+	'groups_roles_perms_group_idx' => array( 'table' => 'groups_roles_perms_map', 'cols' => 'group_id', 'opts' => NULL ),
+	'groups_roles_perms_content_idx' => array( 'table' => 'groups_roles_perms_map', 'cols' => 'group_content_id', 'opts' => NULL ),
+	'groups_roles_perms_perm_idx' => array( 'table' => 'groups_roles_perms_map', 'cols' => 'perm_name', 'opts' => NULL ),
+	'groups_roles_perms_role_idx' => array( 'table' => 'groups_roles_perms_map', 'cols' => 'role_id', 'opts' => NULL ),
+	'groups_roles_users_group_idx' => array( 'table' => 'groups_roles_users_map', 'cols' => 'group_id', 'opts' => NULL ),
+	'groups_roles_users_content_idx' => array( 'table' => 'groups_roles_users_map', 'cols' => 'group_content_id', 'opts' => NULL ),
+	'groups_roles_users_user_idx' => array( 'table' => 'groups_roles_users_map', 'cols' => 'user_id', 'opts' => NULL ),
+	'groups_roles_users_role_idx' => array( 'table' => 'groups_roles_users_map', 'cols' => 'role_id', 'opts' => NULL ),
 );
 $gBitInstaller->registerSchemaIndexes( GROUP_PKG_NAME, $indices );
 

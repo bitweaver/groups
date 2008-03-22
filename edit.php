@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.20 2008/03/22 10:36:12 nickpalmer Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.21 2008/03/22 11:18:24 nickpalmer Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -62,15 +62,15 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 				// TODO: This could be made a LOT more efficient with one query.
 				foreach( array_keys( $allRolesPerms ) as $perm ) {
 					// Assign all permissions to admins.
-					$gContent->assignPermissionToRole($perm, $roleId, $gContent->mContentId);
+					$gContent->assignPermissionToRole($perm, $roleId);
 				}
 			}
 			else {
 				foreach( array_keys( $allRolesPerms ) as $perm ) {
 					if( !empty( $_REQUEST['group']['perms'][$roleId][$perm] )) {
-						$gContent->assignPermissionToRole( $perm, $roleId, $gContent->mContentId );
+						$gContent->assignPermissionToRole( $perm, $roleId);
 					} else {
-						$gContent->removePermissionFromRole( $perm, $roleId, $gContent->mContentId );
+						$gContent->removePermissionFromRole( $perm, $roleId);
 					}
 				}
 			}

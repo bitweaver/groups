@@ -384,7 +384,7 @@ class BitGroup extends LibertyAttachable {
 	* Make sure group is loaded and valid
 	**/
 	function isValid() {
-		return( $this->verifyId( $this->mGroupId ) );
+		return( $this->verifyId( $this->mGroupId ) && $this->verifyId( $this->mContentId ) );
 	}
 
 	/**
@@ -497,30 +497,42 @@ class BitGroup extends LibertyAttachable {
 		return $result;
 	}
 
-	function assignPermissionToRole( $perm, $pRoleId, $pContentId ) {
-		$this->removePermissionFromRole( $perm, $pRoleId, $pContentId );
-        $query = "INSERT INTO `".BIT_DB_PREFIX."groups_roles_perms_map`( `perm_name`, `role_id`, `group_content_id` ) VALUES(?, ?, ?)";
-        $result = $this->mDb->query($query, array($perm, $pRoleId, $pContentId));
-        return TRUE;
+	function assignPermissionToRole( $perm, $pRoleId ) {
+		if( $this->isValid() ) {
+			$this->removePermissionFromRole( $perm, $pRoleId );
+			$query = "INSERT INTO `".BIT_DB_PREFIX."groups_roles_perms_map`( `perm_name`, `role_id`, `group_content_id`, `group_id` ) VALUES(?, ?, ?, ?)";
+			$result = $this->mDb->query($query, array($perm, $pRoleId, $this->mContentId, $this->mGroupId));
+			return TRUE;
+		}
+		return FALSE;
 	}
 
-	function removePermissionFromRole( $perm, $pRoleId, $pContentId ) {
-        $query = "delete from `".BIT_DB_PREFIX."groups_roles_perms_map` where `perm_name` = ?  and `role_id` = ? and `group_content_id` = ?";
-        $result = $this->mDb->query($query, array($perm, $pRoleId, $pContentId));
-        return true;
+	function removePermissionFromRole( $perm, $pRoleId ) {
+		if( $this->isValid() ) {
+			$query = "delete from `".BIT_DB_PREFIX."groups_roles_perms_map` where `perm_name` = ?  and `role_id` = ? and `group_content_id` = ?";
+			$result = $this->mDb->query($query, array($perm, $pRoleId, $this->mContentId));
+			return TRUE;
+		}
+		return FALSE;
 	}
 
-	function assignUserRoleToGroup( $pRoleId, $pUserId, $pContentId ){
-		$this->removeUserRoleFromGroup( $pRoleId, $pUserId, $pContentId );
-        $query = "INSERT INTO `".BIT_DB_PREFIX."groups_roles_users_map`( `role_id`, `user_id`, `group_content_id` ) VALUES(?, ?, ?)";
-        $result = $this->mDb->query($query, array($pRoleId, $pUserId, $pContentId));
-        return TRUE;
+	function assignUserRoleToGroup( $pRoleId, $pUserId ){
+		if( $this->isValid() ) {
+			$this->removeUserRoleFromGroup( $pRoleId, $pUserId );
+			$query = "INSERT INTO `".BIT_DB_PREFIX."groups_roles_users_map`( `role_id`, `user_id`, `group_content_id`, `group_id` ) VALUES(?, ?, ?, ?)";
+			$result = $this->mDb->query($query, array($pRoleId, $pUserId, $this->mContentId, $this->mGroupId));
+			return TRUE;
+		}
+		return FALSE;
 	}
 
-	function removeUserRoleFromGroup( $pRoleId, $pUserId, $pContentId ){
-        $query = "delete from `".BIT_DB_PREFIX."groups_roles_users_map` where `role_id` = ?  and `user_id` = ? and `group_content_id` = ?";
-        $result = $this->mDb->query($query, array($pRoleId, $pUserId, $pContentId));
-        return true;
+	function removeUserRoleFromGroup( $pRoleId, $pUserId ){
+		if( $this->isValid() ) {
+			$query = "delete from `".BIT_DB_PREFIX."groups_roles_users_map` where `role_id` = ?  and `user_id` = ? and `group_content_id` = ?";
+			$result = $this->mDb->query($query, array($pRoleId, $pUserId, $this->mContentId));
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 	/**
@@ -757,22 +769,23 @@ function group_content_user_perms( &$pObject, $pParamHash ) {
 	// Need a different query for groups
 	if ( $pObject->mContentTypeGuid == BITGROUP_CONTENT_TYPE_GUID ) {
 
-		$query = "SELECT rpm.`perm_name` AS `hash_key`, rpm.`perm_name`, g.`group_id` FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rpm ".
+		$query = "SELECT rpm.`perm_name` AS `hash_key`, rpm.`perm_name`, g.`group_id`, ugm.`user_id`  FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rpm ".
 			"LEFT JOIN `".BIT_DB_PREFIX."groups_roles_users_map` rum ON ( rpm.`role_id` = rum.`role_id` ) ".
 			"LEFT JOIN `".BIT_DB_PREFIX."groups` g ON (rpm.`group_content_id` = g.`content_id` ) ".
-			"WHERE rpm.`group_content_id` = ? AND rum.`user_id` = ?";
+			"LEFT OUTER JOIN `".BIT_DB_PREFIX."users_groups_map` ugm ON (g.`group_id` = ugm.`group_id` AND ugm.`user_id` = ?) ".
+			"WHERE rpm.`group_content_id` = ? AND (rum.`user_id` = ? OR rpm.`role_id` = 3)";
 
 	} else {
 
-		$query = "SELECT rpm.`perm_name` AS `hash_key`, rpm.`perm_name`, g.`group_id` FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rpm ".
-			"LEFT JOIN `".BIT_DB_PREFIX."groups` g ON (rpm.`group_content_id` = g.`content_id` ) ".
-			"LEFT JOIN `".BIT_DB_PREFIX."groups_roles_users_map` rum ON (g.`content_id` = rum.`group_content_id` ) ".
+		$query = "SELECT rpm.`perm_name` AS `hash_key`, rpm.`perm_name`, rpm.`group_id` FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rpm ".
+			"LEFT JOIN `".BIT_DB_PREFIX."groups_roles_users_map` rum ON (rpm.`group_content_id` = rum.`group_content_id` ) ".
 			"LEFT JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` ccm ON (rpm.`group_content_id` = ccm.`group_content_id` ) ".
-			"WHERE  ccm.`to_content_id` = ? AND rum.`user_id` = ?";
+			"LEFT OUTER JOIN `".BIT_DB_PREFIX."users_groups_map` ugm ON (rpm.`group_id` = ugm.`group_id` AND ugm.`user_id` = ?) ".
+			"WHERE  ccm.`to_content_id` = ? AND (rum.`user_id` = ? OR rpm.`role_id` = 3)";
 
 	}
 
-	$perms = $pObject->mDb->getAssoc($query, array($contentId, $userId));
+	$perms = $pObject->mDb->getAssoc($query, array($userId, $contentId, $userId));
 	if ( !isset($pObject->mUserContentPerms) ) {
 		$pObject->mUserContentPerms = $perms;
 	}
@@ -782,6 +795,7 @@ function group_content_user_perms( &$pObject, $pParamHash ) {
 	else {
 		$pObject->mUserContentPerms = array();
 	}
+
 }
 
 ?>
