@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.19 2008/03/21 18:19:58 nickpalmer Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.20 2008/03/22 10:36:12 nickpalmer Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -58,8 +58,14 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 
 		// if that went ok store role permissions for the group
 		foreach( array_keys( $groupRoles ) as $roleId ) {
-			// don't store role_id 1 which is reserved for admin. no point in storing admin perms.
-			if ( $roleId != 1 ){
+			if ( $roleId == 1 ) {
+				// TODO: This could be made a LOT more efficient with one query.
+				foreach( array_keys( $allRolesPerms ) as $perm ) {
+					// Assign all permissions to admins.
+					$gContent->assignPermissionToRole($perm, $roleId, $gContent->mContentId);
+				}
+			}
+			else {
 				foreach( array_keys( $allRolesPerms ) as $perm ) {
 					if( !empty( $_REQUEST['group']['perms'][$roleId][$perm] )) {
 						$gContent->assignPermissionToRole( $perm, $roleId, $gContent->mContentId );
