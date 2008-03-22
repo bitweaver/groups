@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.10 2008/03/03 21:27:54 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.11 2008/03/22 10:25:24 nickpalmer Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -29,8 +29,6 @@ if( $gContent->isValid() ) {
 } else {
 	$gBitSystem->verifyPermission( 'p_group_view' );
 }
-// hackish but needed to hide group menu if perm check above fails
-$gBitSmarty->assign( 'viewable', true );
 
 if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 	// if no group is requested, if no default is set, or the group requested is not valid we deliver a splash page about groups

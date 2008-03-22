@@ -9,7 +9,7 @@
 		{if $gBitUser->hasPermission( 'p_group_edit' ) }
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}edit.php">{tr}Create Group{/tr}</a></li>
 		{/if}
-		{if $gContent->mGroupId && $viewable}
+		{if $gContent->mGroupId && $gContent->hasUserPermission( 'p_group_view', TRUE, TRUE)}
 			<li><hr/><h3>{$gContent->getTitle()}</h3></li>
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$gContent->mGroupId}" title="comingsoon">{tr}Home{/tr}</a></li>
 			<li><a class="item" href="" title="comingsoon">{tr}Forum{/tr}</a></li>
