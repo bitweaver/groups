@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.13 2008/03/24 19:04:28 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.14 2008/03/24 19:15:03 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -79,25 +79,6 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 		$topics = $topic->getList( $topicsHash );
 		$gBitSmarty->assign_by_ref( 'topics', $topics );
 		$gBitSmarty->assign( 'board_id', $list['data'][0]['board_id'] );
-
-		/*
-		$gBitSmarty->assign_by_ref( 'board', $board );
-
-		$commentsParentId=$board->mContentId;
-		$comments_return_url=  BOARDS_PKG_URL."index.php?b=".urlencode($board->mBitBoardId);
-
-		// require_once (LIBERTY_PKG_PATH.'comments_inc.php');
-
-		$threads = new BitBoardTopic();
-		$threadsListHash = array( "b" => $board->mBitBoardId );
-		$threadList = $threads->getList( $threadsListHash );
-		$gBitSmarty->assign_by_ref( 'threadList', $threadList );
-		$gBitSmarty->assign_by_ref( 'listInfo', $_REQUEST['listInfo'] );
-
-		$boardBlock = $gBitSmarty->fetch( 'bitpackage:boards/list_topics.tpl' );
-		$gBitSmarty->assign_by_ref( 'boardBlock', $boardBlock);
-		$gBitSmarty->assign_by_ref( 'gContent', $gContent );
-		*/
 	}
 
 	$gContent->addHit();
