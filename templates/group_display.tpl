@@ -63,7 +63,7 @@
 			{foreachelse}
 				{tr}No records found{/tr}
 			{/foreach}
-
+			{/if}
 			{if $contentList}
 				<h2>Group Content</h2>
 				<table class="data">

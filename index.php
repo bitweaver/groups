@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.14 2008/03/24 19:15:03 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.15 2008/03/24 22:44:32 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -48,11 +48,26 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 	$gBitSystem->display( 'bitpackage:group/group_home.tpl', tra( 'Groups' ) );
 }else{
 	// we have a valid group - lets get its associated content
+	// get a list of content types this group allows
+	$contentTypeGuids = $gContent->getContentTypePrefs();
+	$allowedContentTypes = array();
+	foreach( $gLibertySystem->mContentTypes as $cType ) {
+		if( in_array( $cType['content_type_guid'], $contentTypeGuids ) ) {
+			$allowedContentTypes[$cType['content_type_guid']]  = $cType['content_description'];
+		}
+	}
+	$gBitSmarty->assign( 'allowedContentTypes', $allowedContentTypes );
+
 	// recent content
 	$contentListHash = array(
 		"connect_group_content_id" => $gContent->mContentId,
 		"exclude_content_type_guid" => "bitboard",
 		);
+	// if a content_type has been requested the user just wants a list of that
+	if ( isset( $_REQUEST['content_type'] ) ){
+		$contentListHash['content_type_guid'] =  $_REQUEST['content_type'];
+		$gBitSmarty->assign( "reqContentType", $allowedContentTypes[$_REQUEST['content_type']] );
+	}
 	$contentList = $gContent->getContentList( $contentListHash );
 	$gBitSmarty->assign_by_ref( "contentList", $contentList['data'] );
 
@@ -64,25 +79,30 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 		);
 	$list = $gContent->getContentList( $listHash );
 	if ( $list['cant'] ){
-		/*  boards package dependancy
-		 *  we're only expecting one board to be associated with the group.
-		 *  if more than one is to be allowed then maybe some support for handling 
-		 *  that would need to be added here. for now we get only the discussion
-		 *  topics of the oldest board, which is automagically created when the group
-		 *  is created.
-		 */
-		require_once( BOARDS_PKG_PATH.'BitBoardTopic.php' );
-		$topicsHash = array( 
-			"content_id" =>  $list['data'][0]['content_id'],
-	   	);  
-		$topic = new BitBoardTopic();
-		$topics = $topic->getList( $topicsHash );
-		$gBitSmarty->assign_by_ref( 'topics', $topics );
 		$gBitSmarty->assign( 'board_id', $list['data'][0]['board_id'] );
+		
+		// if a content_type has been requested the user just wants a list of that - no discussion topics
+		if ( empty( $_REQUEST['content_type'] ) ){
+			/*  boards package dependancy
+			 *  we're only expecting one board to be associated with the group.
+			 *  if more than one is to be allowed then maybe some support for handling 
+			 *  that would need to be added here. for now we get only the discussion
+			 *  topics of the oldest board, which is automagically created when the group
+			 *  is created.
+			 */
+			require_once( BOARDS_PKG_PATH.'BitBoardTopic.php' );
+			$topicsHash = array( 
+				"content_id" =>  $list['data'][0]['content_id'],
+			);  
+			$topic = new BitBoardTopic();
+			$topics = $topic->getList( $topicsHash );
+			$gBitSmarty->assign_by_ref( 'topics', $topics );
+		}
 	}
 
 	$gContent->addHit();
 	// Display the template
+	// @TODO probably want to use a center display so that we can force use of something like the blog posts roll if just that associated content type is requested
 	$gBitSystem->display( 'bitpackage:group/group_display.tpl', tra( 'Group' ) );
 }
 ?>
