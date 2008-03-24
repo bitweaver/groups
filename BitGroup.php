@@ -721,10 +721,20 @@ function group_module_display(&$pParamHash){
 function group_content_list_sql( &$pObject, $pParamHash=NULL ) {
 	global $gBitSystem;
 	$ret = array();
+	$ret['where_sql'] = "";
 	if ( $gBitSystem->isPackageActive( 'group' ) && !empty($pParamHash['connect_group_content_id']) && $pObject->verifyId( $pParamHash['connect_group_content_id'] ) ){
 		$ret['join_sql'] = " INNER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( lc.`content_id` = gccm.`to_content_id` )";
-		$ret['where_sql'] = " AND gccm.`group_content_id` = ? ";
+		if ( isset($pParamHash['content_type_guid']) && $pParamHash['content_type_guid'] == "bitboard" ){
+			$ret['select_sql'] = " , brd.`board_id`";
+			$ret['join_sql'] .= " INNER JOIN `".BIT_DB_PREFIX."boards` brd ON (lc.`content_id` = brd.`content_id`)";
+		}
+		$ret['where_sql'] .= " AND gccm.`group_content_id` = ? ";
 		$ret['bind_vars'][] = (int)$pParamHash['connect_group_content_id'];
+	}
+
+	if ( isset($pParamHash['exclude_content_type_guid']) ){
+		$ret['where_sql'] .= " AND lc.`content_type_guid` != ?";
+		$ret['bind_vars'][] = $pParamHash['exclude_content_type_guid'];
 	}
 	return $ret;
 }

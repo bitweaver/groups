@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.12 2008/03/24 14:40:30 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.13 2008/03/24 19:04:28 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -47,18 +47,40 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 	$gBitSmarty->assign('recentGroups', $recentGroupsList);
 	$gBitSystem->display( 'bitpackage:group/group_home.tpl', tra( 'Groups' ) );
 }else{
-	// load up the attached board
+	// we have a valid group - lets get its associated content
+	// recent content
+	$contentListHash = array(
+		"connect_group_content_id" => $gContent->mContentId,
+		"exclude_content_type_guid" => "bitboard",
+		);
+	$contentList = $gContent->getContentList( $contentListHash );
+	$gBitSmarty->assign_by_ref( "contentList", $contentList['data'] );
+
+	// topics from related board
 	$listHash = array(
 		"connect_group_content_id" => $gContent->mContentId,
-		"content_type_guid" => "bitboard"
+		"content_type_guid" => "bitboard",
+		"sort_mode" => "created_asc"
 		);
 	$list = $gContent->getContentList( $listHash );
 	if ( $list['cant'] ){
-		// we're only expecting one. if support for more than one is added this needs to change to display a list in the case of many
-		// board package dependancy
-		require_once( BOARDS_PKG_PATH.'BitBoard.php' );
-		$board = new BitBoard( NULL, $list['data'][0]['content_id'] );
-		$board->load();
+		/*  boards package dependancy
+		 *  we're only expecting one board to be associated with the group.
+		 *  if more than one is to be allowed then maybe some support for handling 
+		 *  that would need to be added here. for now we get only the discussion
+		 *  topics of the oldest board, which is automagically created when the group
+		 *  is created.
+		 */
+		require_once( BOARDS_PKG_PATH.'BitBoardTopic.php' );
+		$topicsHash = array( 
+			"content_id" =>  $list['data'][0]['content_id'],
+	   	);  
+		$topic = new BitBoardTopic();
+		$topics = $topic->getList( $topicsHash );
+		$gBitSmarty->assign_by_ref( 'topics', $topics );
+		$gBitSmarty->assign( 'board_id', $list['data'][0]['board_id'] );
+
+		/*
 		$gBitSmarty->assign_by_ref( 'board', $board );
 
 		$commentsParentId=$board->mContentId;
@@ -75,6 +97,7 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 		$boardBlock = $gBitSmarty->fetch( 'bitpackage:boards/list_topics.tpl' );
 		$gBitSmarty->assign_by_ref( 'boardBlock', $boardBlock);
 		$gBitSmarty->assign_by_ref( 'gContent', $gContent );
+		*/
 	}
 
 	$gContent->addHit();
