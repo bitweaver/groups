@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.11 2008/03/22 10:25:24 nickpalmer Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.12 2008/03/24 14:40:30 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -34,12 +34,17 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 	// if no group is requested, if no default is set, or the group requested is not valid we deliver a splash page about groups
 	// get a list of groups the user is a member of
 	if ( $gBitUser->isRegistered() ){
-		$listHash = $_REQUEST;
-		$listHash['user_id'] = $gBitUser->mUserId;
-		$groupList = $gContent->getList( $listHash );
-		$gBitSmarty->assign('groups', $groupList);
+		$memberHash = $_REQUEST;
+		$memberHash['user_id'] = $gBitUser->mUserId;
+		$memberGroupsList = $gContent->getList( $memberHash );
+		$gBitSmarty->assign('memberGroups', $memberGroupsList);
 		$gBitSmarty->assign( 'sort_mode', ( isset($_REQUEST['sort_mode'])?$_REQUEST['sort_mode']:NULL ) );
 	}
+	// get a list of most recently created groups
+	$recentHash = $_REQUEST;
+	$recentHash['sort_mode'] = "created_desc";
+	$recentGroupsList = $gContent->getList( $recentHash );
+	$gBitSmarty->assign('recentGroups', $recentGroupsList);
 	$gBitSystem->display( 'bitpackage:group/group_home.tpl', tra( 'Groups' ) );
 }else{
 	// load up the attached board
