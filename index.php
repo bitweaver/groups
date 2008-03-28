@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.16 2008/03/25 19:49:34 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.17 2008/03/28 21:10:56 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -64,9 +64,9 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 		"exclude_content_type_guid" => "bitboard",
 		);
 	// if a content_type has been requested the user just wants a list of that
-	if ( isset( $_REQUEST['content_type'] ) ){
-		$contentListHash['content_type_guid'] =  $_REQUEST['content_type'];
-		$gBitSmarty->assign( "reqContentType", $allowedContentTypes[$_REQUEST['content_type']] );
+	if ( isset( $_REQUEST['content_type_guid'] ) ){
+		$contentListHash['content_type_guid'] =  $_REQUEST['content_type_guid'];
+		$gBitSmarty->assign( "reqContentType", $allowedContentTypes[$_REQUEST['content_type_guid']] );
 	}
 	$contentList = $gContent->getContentList( $contentListHash );
 	$gBitSmarty->assign_by_ref( "contentList", $contentList['data'] );
@@ -82,7 +82,7 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 		$gBitSmarty->assign( 'board_id', $list['data'][0]['board_id'] );
 		
 		// if a content_type has been requested the user just wants a list of that - no discussion topics
-		if ( empty( $_REQUEST['content_type'] ) ){
+		if ( empty( $_REQUEST['content_type_guid'] ) ){
 			/*  boards package dependancy
 			 *  we're only expecting one board to be associated with the group.
 			 *  if more than one is to be allowed then maybe some support for handling 
@@ -103,42 +103,51 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 	$gContent->addHit();
 	// Display the template
 	// @TODO probably want to use a center display so that we can force use of something like the blog posts roll if just that associated content type is requested
-	if ( isset ( $_REQUEST['content_type'] ) && isset( $gLibertySystem->mContentTypes[$_REQUEST['content_type']] ) ){
+	if ( isset ( $_REQUEST['content_type_guid'] ) && isset( $gLibertySystem->mContentTypes[$_REQUEST['content_type_guid']] ) ){
 		global $gCenterPieces;
 
-		$contentType = $_REQUEST['content_type'];
-		$package = $gLibertySystem->mContentTypes[$contentType]['handler_package'];
-		$contentDesc = $gLibertySystem->mContentTypes[$contentType]['content_description'];
+		$contentType = $_REQUEST['content_type_guid'];
+		$contentTypeHash = $gLibertySystem->mContentTypes[$contentType];
+		$class =  $contentTypeHash['handler_class'];
+		$classFile =  $contentTypeHash['handler_file'];
+		$package = $contentTypeHash['handler_package'];
+		$contentDesc = $contentTypeHash['content_description'];
 
-		/* this is how we might do things if we followed a naming convention
-		 * more likely we'll ask for the class for appropriate tpl info
-		 */
-		/*
-		$gDefaultCenter = 'bitpackage:'.$package.'/center_list_'. $contentType.'.tpl';
-		$gBitSmarty->assign_by_ref( 'gDefaultCenter', $gDefaultCenter );
-		*/
+		$pathVar = strtoupper($package).'_PKG_PATH'; 
+		if( defined( $pathVar ) ) { 
+			
+			$_REQUEST['connect_group_content_id'] = $gContent->mContentId; 
 
-		/* this is a temp demonstration hardcoded in. when we get the appropriate data
-		 * from the class file we'll inject it into a hash something like this -wjames5
-		 */
-		$centerModuleParams = array( 
-			"layout_area" =>  "c",
-			"module_rows" =>  10,
-			"module_rsrc" =>  "bitpackage:blogs/center_list_blog_posts.tpl",
-			"params" => "",
-			"cache_time" => 0,
-			"groups" => null,
-			"pos" => 1,
-			"visible" => TRUE,
-		);
+			require_once( constant( $pathVar ).$classFile );
+		
+			$class = new $class(); 
+			if ( isset( $_REQUEST['content_id'] ) && ( $_REQUEST['content_id'] != $gContent->mContentId ) ){
+				$tpl = $class->getViewTemplate( 'view' );
+			}else{
+				$tpl = $class->getViewTemplate( 'list' );
+			}
 
-		if ( !is_array($gCenterPieces) ){
-			$gCenterPieces = array();
-		}
+			$centerModuleParams = array( 
+				"layout_area" =>  "c",
+				"module_rows" =>  10,
+				"module_rsrc" =>  $tpl,
+				"params" => "",
+				"cache_time" => 0,
+				"groups" => null,
+				"pos" => 1,
+				"visible" => TRUE,
+				"content_type_guid" => $contentType,
+				"content_id" => ( isset( $_REQUEST['content_id'] ) && ( $_REQUEST['content_id'] != $gContent->mContentId ) )?$_REQUEST['content_id']:NULL,
+			);
 
-		array_push( $gCenterPieces, $centerModuleParams );
+			if ( !is_array($gCenterPieces) ){
+				$gCenterPieces = array();
+			}
 
-		$gBitSystem->display( 'bitpackage:kernel/dynamic.tpl', tra('List Group '.$contentDesc.'s') );
+			array_push( $gCenterPieces, $centerModuleParams );
+
+			$gBitSystem->display( 'bitpackage:kernel/dynamic.tpl', tra('List Group '.$contentDesc.'s') );
+	   	}
 	}else{
 		$gBitSystem->display( 'bitpackage:group/group_display.tpl', tra( 'Group' ) );
 	}
