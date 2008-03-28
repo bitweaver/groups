@@ -19,7 +19,7 @@
 			<li><a class="item">{tr}Content{/tr}</a>
 				<ul style="margin-left:10px">
 					{foreach item=name key=type from=$allowedContentTypes}
-					<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$gContent->mGroupId}&content_type={$type}">{$name}s</a></li>
+					<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$gContent->mGroupId}&content_type_guid={$type}">{$name}s</a></li>
 					{/foreach}
 				</ul>
 			</li>
