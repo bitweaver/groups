@@ -12,20 +12,23 @@
 		{if $gContent->mGroupId && $gContent->hasUserPermission( 'p_group_view', TRUE, TRUE)}
 			<li><hr/><h3>{$gContent->getTitle()}</h3></li>
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$gContent->mGroupId}">{tr}Home{/tr}</a></li>
-			<li><a class="item" href="{$smarty.const.BOARDS_PKG_URL}index.php?b={$board_id}" title="post messages">{tr}Forum{/tr}</a></li>
-			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}members.php?group_id={$gContent->mGroupId}" title="view group members">{tr}Members{/tr}</a></li>
+			<li><a class="item" href="{$smarty.const.BOARDS_PKG_URL}index.php?b={$board_id}" title="{tr}post messages{/tr}">{tr}Forum{/tr}</a></li>
+			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}members.php?group_id={$gContent->mGroupId}" title="{tr}view group members{/tr}">{tr}Members{/tr}</a></li>
 
 			{if $allowedContentTypes}
 			<li><a class="item">{tr}Content{/tr}</a>
 				<ul style="margin-left:10px">
 					{foreach item=name key=type from=$allowedContentTypes}
-					<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$gContent->mGroupId}&content_type_guid={$type}">{$name}s</a></li>
+					<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$gContent->mGroupId}&content_type_guid={$type}">{tr}{$name}s{/tr}</a></li>
+						{if $contentTypeEditUrl && $name == $contentTypeDesc}
+						<li><a class="item" href="{$contentTypeEditUrl}">{tr}Add a {$name}{/tr}</a></li>
+						{/if}
 					{/foreach}
 				</ul>
 			</li>
 			{/if}
 
-			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}files.php?group_id={$gContent->mGroupId}" title="view attachments">{tr}Files{/tr}</a></li>
+			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}files.php?group_id={$gContent->mGroupId}" title="{tr}view attachments{/tr}">{tr}Files{/tr}</a></li>
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}about.php?group_id={$gContent->mGroupId}">{tr}About this group{/tr}</a></li>
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}join.php?group_id={$gContent->mGroupId}">{if !$gBitUser->isInGroup( $gContent->mGroupId )}{tr}Join this group{/tr}{else}{tr}Edit my membership{/tr}{/if}</a></li>
 			{if $gBitUser->isAdmin() }

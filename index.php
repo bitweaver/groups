@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.17 2008/03/28 21:10:56 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.18 2008/03/30 17:59:07 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -112,6 +112,7 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 		$classFile =  $contentTypeHash['handler_file'];
 		$package = $contentTypeHash['handler_package'];
 		$contentDesc = $contentTypeHash['content_description'];
+		$gBitSmarty->assign( 'contentTypeDesc', $contentDesc );
 
 		$pathVar = strtoupper($package).'_PKG_PATH'; 
 		if( defined( $pathVar ) ) { 
@@ -137,14 +138,25 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 				"pos" => 1,
 				"visible" => TRUE,
 				"content_type_guid" => $contentType,
-				"content_id" => ( isset( $_REQUEST['content_id'] ) && ( $_REQUEST['content_id'] != $gContent->mContentId ) )?$_REQUEST['content_id']:NULL,
+				"module_params" => array(),
 			);
+
+			if ( isset( $_REQUEST['content_id'] ) && ( $_REQUEST['content_id'] != $gContent->mContentId ) ){
+				$centerModuleParams = $_REQUEST['content_id'];
+			}
 
 			if ( !is_array($gCenterPieces) ){
 				$gCenterPieces = array();
 			}
 
 			array_push( $gCenterPieces, $centerModuleParams );
+
+			// get the menu for this content type and add it to our group menu
+			if ( isset( $gBitSystem->mAppMenu[$package] ) ){
+				// $contentTypeMenu = $gBitSmarty->fetch( $gBitSystem->mAppMenu[$package]['menu_template'] );
+				$contentTypeEditUrl = $class->getEditUrl( NULL, array( "group_id"=>$gContent->mGroupId ) );
+				$gBitSmarty->assign( 'contentTypeEditUrl', $contentTypeEditUrl );
+			}
 
 			$gBitSystem->display( 'bitpackage:kernel/dynamic.tpl', tra('List Group '.$contentDesc.'s') );
 	   	}
