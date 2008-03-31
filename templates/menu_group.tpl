@@ -3,10 +3,10 @@
 		{if $gBitUser->hasPermission( 'p_group_view')}
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}index.php">{tr}Groups Home{/tr}</a></li>
 		{/if}
-		{if $gBitUser->hasPermission( 'p_group_view')  || $gBitUser->hasPermission( 'p_group_remove' ) }
+		{if $gBitUser->hasPermission( 'p_group_view')}
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}list_groups.php">{tr}List Groups{/tr}</a></li>
 		{/if}
-		{if $gBitUser->hasPermission( 'p_group_edit' ) }
+		{if $gBitUser->hasPermission( 'p_group_edit' )}
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}edit.php">{tr}Create Group{/tr}</a></li>
 		{/if}
 		{if $gContent->mGroupId && $gContent->hasUserPermission( 'p_group_view', TRUE, TRUE)}
@@ -31,13 +31,13 @@
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}files.php?group_id={$gContent->mGroupId}" title="{tr}view attachments{/tr}">{tr}Files{/tr}</a></li>
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}about.php?group_id={$gContent->mGroupId}">{tr}About this group{/tr}</a></li>
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}join.php?group_id={$gContent->mGroupId}">{if !$gBitUser->isInGroup( $gContent->mGroupId )}{tr}Join this group{/tr}{else}{tr}Edit my membership{/tr}{/if}</a></li>
-			{if $gBitUser->isAdmin() }
+			{if $gContent->hasAdminPermission() || $gContent->hasUserPermission('p_group_group_members_admin')}
 				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}manage.php?group_id={$gContent->mGroupId}" title="assign roles">{tr}Manage members{/tr}</a></li>
 			{/if}
-			{if $gBitUser->isAdmin() }
+			{if $gContent->hasAdminPermission() }
 				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}invite_members.php?group_id={$gContent->mGroupId}">{tr}Invite members{/tr}</a></li>
 			{/if}
-			{if $gBitUser->isAdmin() || $gBitUser->hasPermission( 'p_group_edit' ) }
+			{if $gContent->hasAdminPermission() || $gBitUser->hasPermission( 'p_group_edit' ) }
 				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}edit.php?group_id={$gContent->mGroupId}">{tr}Group settings{/tr}</a></li>
 			{/if}
 		{/if}
