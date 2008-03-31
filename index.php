@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.18 2008/03/30 17:59:07 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.19 2008/03/31 02:11:46 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -153,8 +153,7 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 
 			// get the menu for this content type and add it to our group menu
 			if ( isset( $gBitSystem->mAppMenu[$package] ) ){
-				// $contentTypeMenu = $gBitSmarty->fetch( $gBitSystem->mAppMenu[$package]['menu_template'] );
-				$contentTypeEditUrl = $class->getEditUrl( NULL, array( "group_id"=>$gContent->mGroupId ) );
+				$contentTypeEditUrl = $class->getEditUrl( NULL, array( "connect_group_content_id"=>$gContent->mContentId ) );
 				$gBitSmarty->assign( 'contentTypeEditUrl', $contentTypeEditUrl );
 			}
 

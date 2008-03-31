@@ -171,8 +171,7 @@ class BitGroup extends LibertyAttachable {
 				$this->mInfo['num_members'] = $this->getMembersCount( $this->mGroupId );
 
 				$this->mContentTypePrefs = $this->getContentTypePrefs();
-				
-				// load up role permissions on this group for the requesting user
+
 				// sets $this->mGroupMemberPermissions
 				$this->getMemberRolesAndPermsForGroup();
 
@@ -646,7 +645,7 @@ class BitGroup extends LibertyAttachable {
 			if ( isset($pParamHash['title']) ){
 				$toTitle = $pParamHash['title'];
 			}else{
-				$toContent = new LibertyContent( $pParamHash['content_id'] );
+				$toContent = LibertyBase::getLibertyObject( $pParamHash['content_id'] );
 				$toContent->load();
 				$toTitle = $toContent->getTitle();
 			}
@@ -698,6 +697,9 @@ class BitGroup extends LibertyAttachable {
 		return TRUE;
 	}
 
+	/**
+	 * gets a list of content type that this group allows to be attached to it
+	 */
 	function getContentTypePrefs(){
 		$ret = array();
 		if ( $this->isValid() ){
@@ -748,14 +750,29 @@ function group_content_preview( &$pObject) {
 	}
 }
 
+function group_content_edit( &$pObject, &$pParamHash ) {
+	global $gBitSystem, $gBitSmarty;
+	$errors = NULL;
+	if( $gBitSystem->isPackageActive( 'group' ) && isset( $_REQUEST['connect_group_content_id'] ) ) {
+		$group = new BitGroup( NULL, $_REQUEST['connect_group_content_id'] );
+		$group->load();
+		// @todo verify user has permission to add content to this group, if not fatal right here
+		if ( in_array( $pObject->mContentTypeGuid, $group->mContentTypePrefs ) ){
+			$gBitSmarty->assign( "connect_group_content_id", $group->mContentId );
+		}
+	}
+}
+
 function group_content_store( &$pObject, &$pParamHash ) {
 	global $gBitSystem;
 	$errors = NULL;
 	if( $gBitSystem->isPackageActive( 'group' ) && isset( $pParamHash['connect_group_content_id'] ) ) {
-		$group = new BitGroup( $pParamHash['connect_group_content_id'] );
+		$group = new BitGroup( NULL, $pParamHash['connect_group_content_id'] );
+		$group->load();
+		// @todo verify user has permission to add content to this group
 		$linkHash = array( 
-						"content_id"=>$pObject->mContentId,
-						"title"=> $pObject->mInfo['title']
+						"content_id"=>$pParamHash['content_id'],
+						"title"=>$pParamHash['title'],
 					);
 		if ( !$group->linkContent( $linkHash ) ) {
 			$errors=$group->mErrors;
