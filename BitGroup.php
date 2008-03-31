@@ -721,6 +721,19 @@ class BitGroup extends LibertyAttachable {
 		}
 		return TRUE;
 	}
+
+	/**
+	 * Groups can pick their own theme. Get it and set it.
+	 */
+	function setGroupStyle( $pContentId=NULL ){
+		global $gBitThemes, $gBitSystem;
+		if ( $theme = $this->getPreference( 'theme', NULL, $pContentId ) ){
+			$gBitThemes->setStyle( $theme );
+		}
+		if ( $theme_var = $this->getPreference( 'theme_variation', NULL, $pContentId ) ){
+			$gBitSystem->setConfig( 'style_variation', $theme_var  );
+		}
+	}
 }
 
 function group_module_display(&$pParamHash){
@@ -757,10 +770,11 @@ function group_content_display( &$pObject, &$pParamHash ) {
 	$group = new BitGroup();
 	$groups = $group->getList( $listHash );
 	if ( count( $groups ) == 1 ){
-		// our content is in only one group
+		// if and only if the content is mapped to one group do we use its theme
 		// load up the group
 		// check that it is not flickr like
 		// apply group layout
+		$group->setGroupStyle( $groups[0]['content_id'] );
 	}
 	//vd( $groups );
 	$gBitSmarty->assign_by_ref( 'contentMemberGroups', $groups );
@@ -782,6 +796,7 @@ function group_content_edit( &$pObject, &$pParamHash ) {
 		$group = new BitGroup( NULL, $_REQUEST['connect_group_content_id'] );
 		$group->load();
 		$group->verifyLinkContentPermission( $pObject );
+		$group->setGroupStyle();
 		$gBitSmarty->assign( "connect_group_content_id", $group->mContentId );
 	}
 }

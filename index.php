@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.19 2008/03/31 02:11:46 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.20 2008/03/31 22:42:50 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -47,6 +47,9 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 	$gBitSmarty->assign('recentGroups', $recentGroupsList);
 	$gBitSystem->display( 'bitpackage:group/group_home.tpl', tra( 'Groups' ) );
 }else{
+	// if it has a custom theme lets theme it
+	$gContent->setGroupStyle();
+	
 	// we have a valid group - lets get its associated content
 	// get a list of content types this group allows
 	$contentTypeGuids = $gContent->getContentTypePrefs();
