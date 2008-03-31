@@ -417,6 +417,12 @@ class BitGroup extends LibertyAttachable {
 			$bindVars[] = $pParamHash['user_id'];
 		}
 
+		if( isset( $pParamHash['mapped_content_id'] )){
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON (g.`content_id` = gccm.`group_content_id`)";
+			$whereSql .= " AND gccm.`to_content_id` = ?";
+			$bindVars[] = $pParamHash['mapped_content_id'];
+		}
+
 		if( is_array( $find ) ) {
 			// you can use an array of pages
 			$whereSql .= " AND lc.`title` IN( ".implode( ',',array_fill( 0,count( $find ),'?' ) )." )";
@@ -711,6 +717,26 @@ class BitGroup extends LibertyAttachable {
 		return $ret;
 	}
 
+	/**
+	 * Verify we can add the requested content type to the requested group. 
+	 * This checks all necessary permissions and group preferences.
+	 *
+	 * @param LibertyContent Object $pContent - the content we wish to add to the group 
+	 */
+	function verifyLinkContentPermission( &$pContent ){
+		global $gBitSystem;
+		if ( !$this->isValid() ){
+			$gBitSystem->setHttpStatus( 404 );
+			$gBitSystem->fatalError( tra("The group you are trying to add content to could not be found.") );
+		}
+		if ( !$this->hasUserPermission( 'p_group_group_content_create' ) ){
+			$gBitSystem->fatalError( tra("Sorry, you do not have permission to add content to the requested group") );
+		}
+		if ( !in_array( $pContent->mContentTypeGuid, $this->mContentTypePrefs ) ){
+			$gBitSystem->fatalError( tra("The content you requested can not be added to the group")." ".$this->mInfo['title'] );
+		}
+		return TRUE;
+	}
 }
 
 function group_module_display(&$pParamHash){
@@ -741,6 +767,22 @@ function group_content_list_sql( &$pObject, $pParamHash=NULL ) {
 	return $ret;
 }
 
+function group_content_display( &$pObject, &$pParamHash ) {
+	global $gBitSmarty;
+	$listHash['mapped_content_id'] = $pObject->mContentId;
+	$group = new BitGroup();
+	$groups = $group->getList( $listHash );
+	if ( count( $groups ) == 1 ){
+		// our content is in only one group
+		// load up the group
+		// check that it is not flickr like
+		// apply group layout
+	}else{
+		// if no or multiple groups we just use a tpl include
+		$gBitSmarty->assign_by_ref( 'contentMemberGroups', $groups );
+	}
+}
+
 function group_content_preview( &$pObject) {
 	global $gBitSystem;
 	if ( $gBitSystem->isPackageActive( 'group' ) ) {		
@@ -753,23 +795,21 @@ function group_content_preview( &$pObject) {
 function group_content_edit( &$pObject, &$pParamHash ) {
 	global $gBitSystem, $gBitSmarty;
 	$errors = NULL;
-	if( $gBitSystem->isPackageActive( 'group' ) && isset( $_REQUEST['connect_group_content_id'] ) ) {
+	if( $gBitSystem->isPackageActive( 'group' ) && !empty( $_REQUEST['connect_group_content_id'] ) ) {
 		$group = new BitGroup( NULL, $_REQUEST['connect_group_content_id'] );
 		$group->load();
-		// @todo verify user has permission to add content to this group, if not fatal right here
-		if ( in_array( $pObject->mContentTypeGuid, $group->mContentTypePrefs ) ){
-			$gBitSmarty->assign( "connect_group_content_id", $group->mContentId );
-		}
+		$group->verifyLinkContentPermission( $pObject );
+		$gBitSmarty->assign( "connect_group_content_id", $group->mContentId );
 	}
 }
 
 function group_content_store( &$pObject, &$pParamHash ) {
 	global $gBitSystem;
 	$errors = NULL;
-	if( $gBitSystem->isPackageActive( 'group' ) && isset( $pParamHash['connect_group_content_id'] ) ) {
+	if( $gBitSystem->isPackageActive( 'group' ) && !empty( $pParamHash['connect_group_content_id'] ) ) {
 		$group = new BitGroup( NULL, $pParamHash['connect_group_content_id'] );
 		$group->load();
-		// @todo verify user has permission to add content to this group
+		$group->verifyLinkContentPermission( $pObject );
 		$linkHash = array( 
 						"content_id"=>$pParamHash['content_id'],
 						"title"=>$pParamHash['title'],

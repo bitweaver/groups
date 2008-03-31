@@ -17,14 +17,15 @@ if( $gBitSystem->isPackageActive( 'group' ) ) {
 	$gBitSystem->registerAppMenu( $menuHash );
 
 	$gLibertySystem->registerService( LIBERTY_SERVICE_GROUP, GROUP_PKG_NAME, array(
-		'module_display_function'  => 'group_module_display',
-		'content_edit_mini_tpl'  => 'bitpackage:group/edit_group_mini_inc.tpl',
-		'content_list_sql_function' => 'group_content_list_sql',
-		'content_preview_function'  => 'group_content_preview',
-		'content_edit_function' => 'group_content_edit',
-		'content_store_function'  => 'group_content_store',
-		'content_expunge_function'  => 'group_content_expunge',
-		'content_user_perms_function' => 'group_content_user_perms',
+		'module_display_function'		=> 'group_module_display',
+		'content_edit_mini_tpl'			=> 'bitpackage:group/edit_group_mini_inc.tpl',
+		'content_display_function'		=> 'group_content_display',
+		'content_list_sql_function'		=> 'group_content_list_sql',
+		'content_preview_function'		=> 'group_content_preview',
+		'content_edit_function'			=> 'group_content_edit',
+		'content_store_function'		=> 'group_content_store',
+		'content_expunge_function'		=> 'group_content_expunge',
+		'content_user_perms_function'	=> 'group_content_user_perms',
 	) );
 
 	require_once( 'BitGroup.php' );
