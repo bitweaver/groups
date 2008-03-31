@@ -11,6 +11,9 @@ require_once(GROUP_PKG_PATH.'lookup_group_inc.php' );
 // Now check permissions to access this page
 if( $gContent->isValid() ) {
 	$gContent->verifyViewPermission();
+	if ( !$gContent->hasUserPermission( 'p_group_group_members_view' ) ){
+		$gBitSystem->fatalError( tra("You do not have permission to see a list of this group's members") );
+	}
 	// @todo verify user has perm to access member list
 }else{
 	$gBitSystem->fatalError( tra( 'The Group you requested does not exist' ));
