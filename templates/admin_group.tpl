@@ -11,6 +11,26 @@
 					{/forminput}
 				</div>
 			{/legend}
+			{legend legend="Display Options"}
+				<p>
+					{tr}Content that is associated with a group or groups can display a list of those groups on the content object's page and in lists. Choose any one or more of the following to display permalinks to groups a content obj is mapped to.{/tr}
+				</p>
+				{foreach from=$formGroupServiceDisplayOptions key=item item=output}
+					<div class="row">
+						{formlabel label=`$output.label` for=$item}
+						{forminput}
+							{if $output.type == 'numeric'}
+								<input size="5" type='text' name="{$item}" id="{$item}" value="{$gBitSystem->getConfig($item,$output.default)}" />
+							{elseif $output.type == 'input'}
+								<input type='text' name="{$item}" id="{$item}" value="{$gBitSystem->getConfig($item,$output.default)}" />
+							{else}
+								{html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item) labels=false id=$item}
+							{/if}
+							{formhelp note=`$output.note` page=`$output.page`}
+						{/forminput}
+					</div>
+				{/foreach}
+			{/legend}
 		{/jstab}
 
 		{jstab title="List Settings"}

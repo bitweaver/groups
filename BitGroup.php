@@ -777,10 +777,9 @@ function group_content_display( &$pObject, &$pParamHash ) {
 		// load up the group
 		// check that it is not flickr like
 		// apply group layout
-	}else{
-		// if no or multiple groups we just use a tpl include
-		$gBitSmarty->assign_by_ref( 'contentMemberGroups', $groups );
 	}
+	//vd( $groups );
+	$gBitSmarty->assign_by_ref( 'contentMemberGroups', $groups );
 }
 
 function group_content_preview( &$pObject) {

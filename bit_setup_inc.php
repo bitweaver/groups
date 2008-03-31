@@ -19,6 +19,9 @@ if( $gBitSystem->isPackageActive( 'group' ) ) {
 	$gLibertySystem->registerService( LIBERTY_SERVICE_GROUP, GROUP_PKG_NAME, array(
 		'module_display_function'		=> 'group_module_display',
 		'content_edit_mini_tpl'			=> 'bitpackage:group/edit_group_mini_inc.tpl',
+		'content_nav_tpl'				=> 'bitpackage:group/view_group_nav.tpl',
+		'content_body_tpl'				=> 'bitpackage:group/view_group_body.tpl',
+		'content_view_tpl'				=> 'bitpackage:group/view_group_view.tpl',
 		'content_display_function'		=> 'group_content_display',
 		'content_list_sql_function'		=> 'group_content_list_sql',
 		'content_preview_function'		=> 'group_content_preview',
