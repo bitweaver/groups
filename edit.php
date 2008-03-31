@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.22 2008/03/24 22:44:32 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.23 2008/03/31 18:34:27 wjames5 Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -100,7 +100,7 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 
 		if ( $gContent->mInfo['view_content_public'] != $publicStatus ){
 			// get list of user groups and their perms
-			$allGroups = $gBitUser->getAllGroups( $listHash );
+			$allGroups = $gBitUser->getAllGroups();
 			// set view perms for our group
 			foreach( $allGroups as $groupId => $group ){
 				$groupPerms = array_keys( $group['perms'] );

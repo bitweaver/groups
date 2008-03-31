@@ -20,7 +20,7 @@
 				<ul style="margin-left:10px">
 					{foreach item=name key=type from=$allowedContentTypes}
 					<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$gContent->mGroupId}&content_type_guid={$type}">{tr}{$name}s{/tr}</a></li>
-						{if $contentTypeEditUrl && $name == $contentTypeDesc && $gContent->hasUserPermission( 'p_group_group_content_create' )}
+					{if $contentTypeEditUrl && $name == $contentTypeDesc && $gContent->hasUserPermission( 'p_group_group_content_create' )}
 						<li><a class="item" href="{$contentTypeEditUrl}">{tr}Add a {$name}{/tr}</a></li>
 						{/if}
 					{/foreach}

@@ -803,19 +803,60 @@ function group_content_edit( &$pObject, &$pParamHash ) {
 }
 
 function group_content_store( &$pObject, &$pParamHash ) {
-	global $gBitSystem;
+	global $gBitSystem, $gLibertySystem, $gBitUser;
 	$errors = NULL;
 	if( $gBitSystem->isPackageActive( 'group' ) && !empty( $pParamHash['connect_group_content_id'] ) ) {
-		$group = new BitGroup( NULL, $pParamHash['connect_group_content_id'] );
-		$group->load();
-		$group->verifyLinkContentPermission( $pObject );
+		$groupContent = new BitGroup( NULL, $pParamHash['connect_group_content_id'] );
+		$groupContent->load();
+		$groupContent->verifyLinkContentPermission( $pObject );
 		$linkHash = array( 
 						"content_id"=>$pParamHash['content_id'],
 						"title"=>$pParamHash['title'],
 					);
-		if ( !$group->linkContent( $linkHash ) ) {
-			$errors=$group->mErrors;
+		if ( !$groupContent->linkContent( $linkHash ) ) {
+			$errors=$groupContent->mErrors;
 		}
+
+		//----- end set access perms -----//
+		/**
+		 * Assign custom view content perm on the object to be mapped based on if group is public or not
+		 *
+		 * @TODO This code is nearly identical to code in edit.php - may want to move into a group class method.
+		 */
+		$typeGuid = $pObject->mType['content_type_guid'];
+		$contentId = $pObject->mContentId;;
+		if ( !isset( $gLibertySystem->mContentTypes[$typeGuid]['content_perms'] ) ){
+			$gLibertySystem->mContentTypes[$typeGuid]['content_perms'] = secure_get_content_permissions( $typeGuid );
+		}
+		if ( isset( $gLibertySystem->mContentTypes[$typeGuid]['content_perms']['view'] ) ){
+			$viewPerm =  $gLibertySystem->mContentTypes[$typeGuid]['content_perms']['view'];
+			// foreach user group
+			$allGroups = $gBitUser->getAllGroups();
+			foreach( $allGroups as $groupId => $group ){
+				$groupPerms = array_keys( $group['perms'] );
+				// if group has content view perm by default and is not admin and not our group
+				if ( $groupId != 1 && $groupId != $groupContent->mGroupId  && in_array( $viewPerm, $groupPerms ) ){
+					if ( $groupContent->mInfo['view_content_public'] != 'y' ){
+						// revoke
+						$groupContent->storePermission( $groupId, $viewPerm, TRUE, $contentId);
+					}else{
+						// unrevoke if revoked
+						$groupContent->removePermission( $groupId, $viewPerm, $contentId );
+					}
+				}
+			}
+			
+			// set custom perm for our group
+			if ( $groupContent->mInfo['view_content_public'] != 'y' ){
+				// assign view to our group 
+				$groupContent->storePermission( $groupContent->mGroupId, $viewPerm, FALSE, $contentId );
+			}else{
+				// remove custom view perm for our group since its not needed
+				$groupContent->removePermission( $groupContent->mGroupId, $viewPerm, $contentId );
+			}
+		}
+		//----- end set access perms -----//
+
 	}
 	return( $errors );
 }
