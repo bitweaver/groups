@@ -1,7 +1,10 @@
 {strip}
-<div class="join group">
+<div class="join display group">
 	<div class="header">
 		<h1>{if !$gBitUser->isInGroup( $gContent->mGroupId )}{tr}Join{/tr}{else}{tr}Preferences{/tr}{/if}</h1>
+	</div><!-- end .header -->
+
+	<div class="body">
 	 	{if $errors}
  			{formfeedback warning=`$errors`}
 	 	{/if}
