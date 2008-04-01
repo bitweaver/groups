@@ -171,6 +171,7 @@ class BitGroup extends LibertyAttachable {
 				$this->mInfo['num_members'] = $this->getMembersCount( $this->mGroupId );
 
 				$this->mContentTypePrefs = $this->getContentTypePrefs();
+				$this->mContentTypeData = $this->getContentTypeData();
 
 				// sets $this->mGroupMemberPermissions
 				$this->getMemberRolesAndPermsForGroup();
@@ -693,12 +694,37 @@ class BitGroup extends LibertyAttachable {
 	function getContentTypePrefs(){
 		$ret = array();
 		if ( $this->isValid() ){
-			$result = $this->mDb->query( "SELECT `content_type_guid` FROM  `".BIT_DB_PREFIX."groups_content_types` WHERE `group_content_id`=?", $this->mContentId );  
-			while( $res = $result->fetchRow() ) {
-				$ret[] = $res['content_type_guid'];
+			if ( !empty( $this->mContentTypePrefs ) ){
+				return $this->mContentTypePrefs;
+			}else{
+				$result = $this->mDb->query( "SELECT `content_type_guid` FROM  `".BIT_DB_PREFIX."groups_content_types` WHERE `group_content_id`=?", $this->mContentId );  
+				while( $res = $result->fetchRow() ) {
+					$ret[] = $res['content_type_guid'];
+				}
 			}
 		}
 		return $ret;
+	}
+
+	/**
+	 * Format a hash of content types and related names
+	 */
+	function getContentTypeData(){
+		global $gLibertySystem;
+		$contentTypeData = array();
+		if ( $this->isValid() ){
+			if ( !empty( $this->mContentTypeData ) ){
+				return $this->mContentTypeData;
+			}else{
+				$contentTypes = $this->getContentTypePrefs();
+				foreach( $gLibertySystem->mContentTypes as $cType ) {
+					if( in_array( $cType['content_type_guid'], $contentTypes ) ) {
+						$contentTypeData[$cType['content_type_guid']]  = $cType['content_description'];
+					}
+				}
+			}
+		}
+		return $contentTypeData;
 	}
 
 	/**

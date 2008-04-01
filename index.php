@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.21 2008/04/01 13:43:30 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.22 2008/04/01 14:36:24 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -52,6 +52,7 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 }else{
 	// we have a valid group - lets get its associated content
 	// get a list of content types this group allows
+	/*
 	$contentTypeGuids = $gContent->getContentTypePrefs();
 	$allowedContentTypes = array();
 	foreach( $gLibertySystem->mContentTypes as $cType ) {
@@ -60,6 +61,8 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 		}
 	}
 	$gBitSmarty->assign( 'allowedContentTypes', $allowedContentTypes );
+*/
+	$allowedContentTypes = $gContent->mContentTypeData;
 
 	// recent content
 	$contentListHash = array(
