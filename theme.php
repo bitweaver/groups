@@ -14,6 +14,9 @@ if( $gContent->isValid() ) {
 	if ( !( $gBitSystem->isFeatureActive( 'group_themes' ) || $gBitSystem->isFeatureActive( 'group_layouts' )) ){
 		$gBitSystem->fatalError( tra( 'Sorry, custom styling groups has been disabled by the site administrator.' ));
 	}
+
+	// if it has a custom theme lets theme it
+	$gContent->setGroupStyle();
 }else{
 	$gBitSystem->fatalError( tra( 'The Group, whose theme you are attempting to administrate, does not exist.' ));
 }

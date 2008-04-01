@@ -13,6 +13,9 @@ if( $gContent->isValid() ) {
 	if( !( $gContent->hasEditPermission() || $gContent->hasUserPermission('p_group_group_members_admin') ) ){
 		$gBitSystem->fatalError( tra( 'You do not have permission to administrate this groups members' ) );
 	}
+
+	// if it has a custom theme lets theme it
+	$gContent->setGroupStyle();
 }else{
 	$gBitSystem->fatalError( tra( 'The Group, whose membership you are attempting to administrate, does not exist' ));
 }

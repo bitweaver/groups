@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.20 2008/03/31 22:42:50 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.21 2008/04/01 13:43:30 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -26,6 +26,9 @@ require_once( GROUP_PKG_PATH.'lookup_group_inc.php' );
 // Now check permissions to access this page
 if( $gContent->isValid() ) {
 	$gContent->verifyViewPermission();
+
+	// if it has a custom theme lets theme it
+	$gContent->setGroupStyle();
 } else {
 	$gBitSystem->verifyPermission( 'p_group_view' );
 }
@@ -47,9 +50,6 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 	$gBitSmarty->assign('recentGroups', $recentGroupsList);
 	$gBitSystem->display( 'bitpackage:group/group_home.tpl', tra( 'Groups' ) );
 }else{
-	// if it has a custom theme lets theme it
-	$gContent->setGroupStyle();
-	
 	// we have a valid group - lets get its associated content
 	// get a list of content types this group allows
 	$contentTypeGuids = $gContent->getContentTypePrefs();

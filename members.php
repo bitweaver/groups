@@ -14,7 +14,9 @@ if( $gContent->isValid() ) {
 	if ( !$gContent->hasUserPermission( 'p_group_group_members_view' ) ){
 		$gBitSystem->fatalError( tra("You do not have permission to see a list of this group's members") );
 	}
-	// @todo verify user has perm to access member list
+
+	// if it has a custom theme lets theme it
+	$gContent->setGroupStyle();
 }else{
 	$gBitSystem->fatalError( tra( 'The Group you requested does not exist' ));
 }

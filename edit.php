@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.23 2008/03/31 18:34:27 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.24 2008/04/01 13:43:29 wjames5 Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -15,6 +15,9 @@ require_once(GROUP_PKG_PATH.'lookup_group_inc.php' );
 // must be owner or admin to edit an existing group 
 if( $gContent->isValid() ) {
 	$gContent->verifyEditPermission();
+
+	// if it has a custom theme lets theme it
+	$gContent->setGroupStyle();
 } else {
 	$gBitSystem->verifyPermission( 'p_group_edit' );
 }

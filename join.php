@@ -21,6 +21,9 @@ if ( !$gBitUser->isRegistered() ){
 	$gBitSystem->fatalPermission( NULL );
 }
 
+// if it has a custom theme lets theme it
+$gContent->setGroupStyle();
+
 // if the user is already in the group
 if( $gBitUser->isInGroup( $gContent->mGroupId ) ){
 	// user is changing their preferences
