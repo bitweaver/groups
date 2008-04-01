@@ -22,6 +22,7 @@ if ( !$linkContent->isValid() ){
 	$gBitSystem->fatalError( "The content you are trying to submit to a group is invalid." );
 }
 
+
 require_once( GROUP_PKG_PATH.'lookup_group_inc.php' );
 
 // Now check permissions to access this page
@@ -34,11 +35,11 @@ if( $gContent->isValid() ) {
 	$gBitSystem->verifyPermission( 'p_group_view' );
 }
 
-// if the content type submitted is not allowed in the group then reject it
-
 // if we dont have a valid group to map the content to then lets offer some options
 if( !$gContent->isValid() ) {
 	// if no group is requested, if no default is set, or the group requested is not valid we deliver a list of groups the user belongs to
+	// @TODO if submitted content is already in one group and $gBitSystem->isFeatureActive('group_admin_content') then deny the request - only allow linking to one group
+	// @TODO limit this list to content group is not linked too.
 	$memberHash = $_REQUEST;
 	$memberHash['user_id'] = $gBitUser->mUserId;
 	$memberGroupsList = $gContent->getList( $memberHash );
@@ -57,6 +58,7 @@ if( !$gContent->isValid() ) {
 }else{
 	// if group is open to content submissions then do it
 	if ( $gContent->mInfo['mod_content']!="y" ){
+		// @TODO if site allows groups to admin content then give a confirmation warning.
 		if ( $gContent->linkContent( array( 'content_id' => $linkContent->mContentId, 'title' => $linkContent->getTitle() ) ) ){
 			header( "Location: ".$gContent->getDisplayUrl()."&content_type_guid=".$linkContent->mContentTypeGuid."&item_id=".$linkContent->mContentId );
 			die;
