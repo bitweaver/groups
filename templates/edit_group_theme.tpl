@@ -2,7 +2,7 @@
 
 <div class="admin themes">
 	<div class="header">
-		<h1> {tr}Group Theme Manager{/tr}</h1>
+		<h1> {tr}Group Styles Manager{/tr}</h1>
 	</div>
 
 	<div class="body">
@@ -16,8 +16,9 @@
 		{/if}
 
 		{jstabs}
-			{jstab title="Site Style"}
-				{legend legend="Pick Group Style"}
+			{if $gBitSystem->isFeatureActive( 'group_themes' )}
+				{jstab title="Theme Options"}
+					{legend legend="Select a Theme"}
 					<ul class="data">
 						{foreach from=$stylesList item=s}
 							<li class="{cycle values='odd,even"} item">
@@ -48,8 +49,16 @@
 							</li>
 						{/foreach}
 					</ul>
-				{/legend}
-			{/jstab}
+					{/legend}
+				{/jstab}
+			{/if}
+			{if $gBitSystem->isFeatureActive( 'group_layouts' )}
+				{jstab title="Layout Options"}
+					{legend legend="Layout Options"}
+						@TODO insert layout options for group here.
+					{/legend}
+				{/jstab}
+			{/if}
 		{/jstabs}
 	</div> <!-- end .body -->
 </div>  <!-- end .themes -->

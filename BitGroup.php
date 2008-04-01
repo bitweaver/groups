@@ -727,11 +727,13 @@ class BitGroup extends LibertyAttachable {
 	 */
 	function setGroupStyle( $pContentId=NULL ){
 		global $gBitThemes, $gBitSystem;
-		if ( $theme = $this->getPreference( 'theme', NULL, $pContentId ) ){
-			$gBitThemes->setStyle( $theme );
-		}
-		if ( $theme_var = $this->getPreference( 'theme_variation', NULL, $pContentId ) ){
-			$gBitSystem->setConfig( 'style_variation', $theme_var  );
+		if ($gBitSystem->isFeatureActive( 'group_themes' )){
+			if ( $theme = $this->getPreference( 'theme', NULL, $pContentId ) ){
+				$gBitThemes->setStyle( $theme );
+			}
+			if ( $theme_var = $this->getPreference( 'theme_variation', NULL, $pContentId ) ){
+				$gBitSystem->setConfig( 'style_variation', $theme_var  );
+			}
 		}
 	}
 }

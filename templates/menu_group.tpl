@@ -42,8 +42,8 @@
 			{if $gContent->hasAdminPermission() || $gBitUser->hasPermission( 'p_group_edit' ) }
 				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}edit.php?group_id={$gContent->mGroupId}">{tr}Group settings{/tr}</a></li>
 			{/if}
-			{if $gContent->hasAdminPermission() || $gBitUser->hasPermission( 'p_group_edit' ) }
-				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}theme.php?group_id={$gContent->mGroupId}">{tr}Group layout{/tr}</a></li>
+			{if ($gBitSystem->isFeatureActive( 'group_themes' ) || $gBitSystem->isFeatureActive( 'group_layouts' )) && ($gContent->hasAdminPermission() || $gBitUser->hasPermission( 'p_group_edit' )) }
+				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}theme.php?group_id={$gContent->mGroupId}">{tr}Group styles{/tr}</a></li>
 			{/if}
 		{/if}
 	</ul>

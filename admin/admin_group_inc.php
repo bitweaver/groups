@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.5 2008/03/31 15:52:41 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.6 2008/04/01 13:20:31 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -11,6 +11,18 @@
 //}
 
 require_once( GROUP_PKG_PATH.'BitGroup.php' );
+
+$formGroupFeatures = array(
+	"group_themes" => array(
+		'label' => 'Group Theming',
+		'note' => 'Enable groups to custom theme their group',
+	),
+	"group_layouts" => array(
+		'label' => 'Group Layouts',
+		'note' => 'Enable groups to customize their layout',
+	),
+);
+$gBitSmarty->assign( 'formGroupFeatures',$formGroupFeatures );
 
 $formGroupLists = array(
 	"group_list_group_id" => array(
@@ -70,7 +82,7 @@ if( !empty( $_REQUEST['group_preferences'] ) ) {
 		}
 	}
 
-	$groupToggles = array_merge( $formGroupLists );
+	$groupToggles = array_merge( $formGroupLists, $formGroupFeatures );
 	foreach( $groupToggles as $item => $data ) {
 		simple_set_toggle( $item, GROUP_PKG_NAME );
 	}
