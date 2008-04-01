@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.22 2008/04/01 14:36:24 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.23 2008/04/01 20:59:10 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -72,7 +72,9 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 	// if a content_type has been requested the user just wants a list of that
 	if ( isset( $_REQUEST['content_type_guid'] ) ){
 		$contentListHash['content_type_guid'] =  $_REQUEST['content_type_guid'];
-		$gBitSmarty->assign( "reqContentType", $allowedContentTypes[$_REQUEST['content_type_guid']] );
+		if ( isset( $allowedContentTypes[$_REQUEST['content_type_guid']] ) ){
+			$gBitSmarty->assign( "reqContentType", $allowedContentTypes[$_REQUEST['content_type_guid']] );
+		}
 	}
 	$contentList = $gContent->getContentList( $contentListHash );
 	$gBitSmarty->assign_by_ref( "contentList", $contentList['data'] );
@@ -128,7 +130,7 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 			require_once( constant( $pathVar ).$classFile );
 		
 			$class = new $class(); 
-			if ( isset( $_REQUEST['content_id'] ) && ( $_REQUEST['content_id'] != $gContent->mContentId ) ){
+			if ( isset( $_REQUEST['item_id'] ) && ( $_REQUEST['item_id'] != $gContent->mContentId ) ){
 				$tpl = $class->getViewTemplate( 'view' );
 			}else{
 				$tpl = $class->getViewTemplate( 'list' );
@@ -147,9 +149,11 @@ if( !isset( $_REQUEST['group_id'] ) || !$gContent->isValid() ) {
 				"module_params" => array(),
 			);
 
-			if ( isset( $_REQUEST['content_id'] ) && ( $_REQUEST['content_id'] != $gContent->mContentId ) ){
-				$centerModuleParams = $_REQUEST['content_id'];
+			if ( isset( $_REQUEST['item_id'] ) && ( $_REQUEST['item_id'] != $gContent->mContentId ) ){
+				$centerModuleParams['content_id'] = $_REQUEST['item_id'];
 			}
+
+			$centerModuleParams['module_params'] = $centerModuleParams;
 
 			if ( !is_array($gCenterPieces) ){
 				$gCenterPieces = array();

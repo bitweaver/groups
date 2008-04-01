@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.6 2008/04/01 13:20:31 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.7 2008/04/01 20:59:10 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -20,6 +20,10 @@ $formGroupFeatures = array(
 	"group_layouts" => array(
 		'label' => 'Group Layouts',
 		'note' => 'Enable groups to customize their layout',
+	),
+	"group_admin_content" => array(
+		'label' => 'Allow Linked Content Administration',
+		'note' => 'Enable groups to have administrative control over content that has been linked to them. This will limit content to be joinable to only one group.',
 	),
 );
 $gBitSmarty->assign( 'formGroupFeatures',$formGroupFeatures );

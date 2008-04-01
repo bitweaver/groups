@@ -57,7 +57,7 @@ if( $gBitSystem->isPackageActive('moderation') &&
 									  MODERATION_REJECTED => MODERATION_DELETE,
 									  MODERATION_APPROVED => MODERATION_DELETE,
 									  ),
-							   "add content" =>
+							   "add_content" =>
 							   array (MODERATION_PENDING =>
 									  array(MODERATION_APPROVED,
 											MODERATION_REJECTED),
@@ -83,9 +83,13 @@ if( $gBitSystem->isPackageActive('moderation') &&
 				$gBitUser->addUserToGroup( $pModeration['moderator_id'], $group->mGroupId);
 			}
 		}
-		else if ($pModeration['type'] == 'add content') {
+		else if ($pModeration['type'] == 'add_content') {
 			if ($pModeration['status'] == MODERATION_APPROVED) {
-				// @TODO: Map in the content
+				// Add content to the group
+				$group = new BitGroup(NULL, $pModeration['content_id']);
+				$group->load();
+				// @TODO need a way to get the mapped content id from moderation pkg
+				//$group->linkContent( array( "content_id" => $pModeration['submit_content_id'] ) );
 			}
 		}
 

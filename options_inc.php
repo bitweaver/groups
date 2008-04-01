@@ -21,11 +21,15 @@ $formGroupOptions = array(
 		'note' => 'When checked any content created (like pages or blog posts) wiil be held for moderation before being displayed',
 		'default' => 'n',
 	),
-	"admin_content_strict" => array(
-		'label' => 'Admin Edits All',
-		'note' => 'Can the administrator edit any content assigned to the group?',
-		'default' => 'n',
-	),
 );
+
+if ( $gBitSystem->isFeatureActive( 'group_admin_content' ) ){
+	$formGroupOptions['admin_content_strict'] = array(
+		'label' => 'Assert Administrative Control of Content',
+		'note' => 'Can the group administrator administrate any content in the group? This means being able to edit any of the content, vs. standard control of allowing it be linked to the group.',
+		'default' => 'n',
+	);
+}
+	
 $gBitSmarty->assign('formGroupOptions', $formGroupOptions);
 ?>
