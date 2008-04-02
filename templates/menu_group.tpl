@@ -39,10 +39,10 @@
 			{if $gContent->hasAdminPermission() }
 				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}invite_members.php?group_id={$gContent->mGroupId}">{tr}Invite members{/tr}</a></li>
 			{/if}
-			{if $gContent->hasAdminPermission() || $gBitUser->hasPermission( 'p_group_edit' ) }
+			{if $gContent->hasAdminPermission() || $gContent->hasEditPermission() }
 				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}edit.php?group_id={$gContent->mGroupId}">{tr}Group settings{/tr}</a></li>
 			{/if}
-			{if ($gBitSystem->isFeatureActive( 'group_themes' ) || $gBitSystem->isFeatureActive( 'group_layouts' )) && ($gContent->hasAdminPermission() || $gBitUser->hasPermission( 'p_group_edit' )) }
+			{if ($gBitSystem->isFeatureActive( 'group_themes' ) || $gBitSystem->isFeatureActive( 'group_layouts' )) && ($gContent->hasAdminPermission() || $gContent->hasEditPermission()) }
 				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}theme.php?group_id={$gContent->mGroupId}">{tr}Group styles{/tr}</a></li>
 			{/if}
 		{/if}

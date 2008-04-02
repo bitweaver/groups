@@ -6,6 +6,7 @@
 	</div>
 
 	<div class="body">
+		{formfeedback hash=$feedback}
 		{if $approve}
 			<div id="themeapprove">
 				<h1>{tr}Confirm Selection{/tr}</h1>
@@ -16,6 +17,79 @@
 		{/if}
 
 		{jstabs}
+			{if $gBitSystem->isFeatureActive( 'group_layouts' )}
+				{jstab title="Layout Options"}
+					{form action=$smarty.server.PHP_SELF legend="Assign column modules"}
+
+						<input type="hidden" name="group_id" value="{$gContent->mGroupId}" />
+						<table class="data">
+							<thead>
+								<tr style="text-align:left;">
+									<th>{tr}Modules{/tr}</th>
+									<th>{tr}Position{/tr}</th>
+									<th>{tr}Rows{/tr}</th>
+									<th>{tr}Cache Time{/tr}</th>
+								</tr>
+							</thead>
+							<tbody>
+								{foreach from=$allModules item=modules key=package}
+								{cycle values="odd,even" assign="pkgClass"}
+									<tr class="{$pkgClass} data">
+										<td colspan="4"><strong>{$package}</strong></td>
+									</tr>
+									{foreach from=$modules item=name key=tpl}
+										<tr class="{$pkgClass} data">
+											<td>{$name}
+												<input type="hidden" name="fAssign[{$name}][module_rsrc]" value="{$tpl}" />
+												{if $assignedModules.$tpl}
+													<input type="hidden" name="fAssign[{$name}][module_id]" value="{$assignedModules.$tpl.module_id}" />
+												{/if}
+											</td>
+											<td>
+												<select name="fAssign[{$name}][layout_area]">
+													{assign var='layout_area' value='unassign'}
+													{if $assignedModules.$tpl}
+													{assign var='layout_area' value=$assignedModules.$tpl.layout_area}
+													{/if}
+													<option value="unassign" {if $layout_area eq 'unassign'}selected="selected"{/if}>{tr}Do not display{/tr}</option>
+													<option value="l" {if $layout_area eq 'l'}selected="selected"{/if}>{tr}Left column{/tr}</option>
+													<option value="r" {if $layout_area eq 'r'}selected="selected"{/if}>{tr}Right column{/tr}</option>
+												</select>
+											</td>
+											<td>
+												<input type="text" size="5" name="fAssign[{$name}][module_rows]" id="module_rows" value="{$fAssign.module_rows|escape}" />
+											</td>
+											<td>
+												<input type="text" size="5" name="fAssign[{$name}][cache_time]" id="cache_time" value="{$fAssign.cache_time|escape}" /> seconds
+											</td>
+										</tr>
+									{/foreach}
+								{/foreach}
+							</tbody>
+						</table>
+
+						<div class="row submit">
+							<input type="submit" name="submitcolumns" value="{tr}Change column layout{/tr}" />
+						</div>
+
+						<h3>{tr}Modules Help{/tr}</h3>
+						<ul>
+							<li><strong>Position</strong><br />
+								{formhelp note="Select the column this module should be displayed in."}
+							</li>
+							<li><strong>Rows</strong><br />
+								{formhelp note="Select the maximum number of items to be displayed. (optional - default is 10)"}
+							</li>
+							<li><strong>Cache Time</strong><br />
+								{formhelp note="This is the number of seconds the module is cached before the content is refreshed. The higher the value, the less load there is on the server. (optional)"}
+							</li>
+						</ul>
+					{/form}
+					{form action=$smarty.server.PHP_SELF legend="Assign center pieces"}
+						@TODO form for customizing center layout r
+					{/form}
+				{/jstab}
+			{/if}
 			{if $gBitSystem->isFeatureActive( 'group_themes' )}
 				{jstab title="Theme Options"}
 					{legend legend="Select a Theme"}
@@ -49,13 +123,6 @@
 							</li>
 						{/foreach}
 					</ul>
-					{/legend}
-				{/jstab}
-			{/if}
-			{if $gBitSystem->isFeatureActive( 'group_layouts' )}
-				{jstab title="Layout Options"}
-					{legend legend="Layout Options"}
-						@TODO insert layout options for group here.
 					{/legend}
 				{/jstab}
 			{/if}

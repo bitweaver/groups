@@ -10,7 +10,9 @@ require_once(GROUP_PKG_PATH.'lookup_group_inc.php' );
 
 // must be owner or admin to edit an existing group 
 if( $gContent->isValid() ) {
-	$gContent->verifyEditPermission();
+	if( !$gContent->hasEditPermission() ){
+		$gBitSystem->fatalError( tra( "You do not have permission to edit this group's theme." ));
+	}
 	if ( !( $gBitSystem->isFeatureActive( 'group_themes' ) || $gBitSystem->isFeatureActive( 'group_layouts' )) ){
 		$gBitSystem->fatalError( tra( 'Sorry, custom styling groups has been disabled by the site administrator.' ));
 	}
@@ -44,6 +46,9 @@ if ($gBitSystem->isFeatureActive( 'group_themes' )){
 	$stylesList = $gBitThemes->getStylesList( NULL, NULL, $subDirs );
 	$gBitSmarty->assign_by_ref( "stylesList", $stylesList );
 }
+
+// get layout info
+include_once( GROUP_PKG_PATH.'admin_layout_inc.php' );
 
 // display
 $gBitSystem->setBrowserTitle( tra( 'Custom style group'." ".$gContent->getTitle() ) );
