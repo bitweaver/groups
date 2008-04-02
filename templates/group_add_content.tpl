@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/group_add_content.tpl,v 1.2 2008/04/02 14:26:18 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/group_add_content.tpl,v 1.3 2008/04/02 14:46:28 wjames5 Exp $ *}
 {strip}
 <div class="display group">
 	<div class="header">
@@ -41,7 +41,7 @@
 					{pagination}
 				</div>
 			{elseif $recentGroups}
-					<em>You currently do not belong to any groups. You must first join a group before you can submit content to it.</em>
+				<em>There are currently no groups you are a member of that you can submit this content to. You can join other groups or create one.</em>
 				<h2>Search Groups</h2>
 				{minifind sort_mode=$sort_mode}
 				<h2>New Groups</h2>

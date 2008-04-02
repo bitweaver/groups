@@ -797,14 +797,12 @@ function group_content_list_sql( &$pObject, $pParamHash=NULL ) {
 }
 
 function group_content_display( &$pObject, &$pParamHash ) {
-	global $gBitSmarty;
+	global $gBitSystem, $gBitSmarty;
 	$listHash['mapped_content_id'] = $pObject->mContentId;
 	$group = new BitGroup();
 	$groups = $group->getList( $listHash );
-	if ( count( $groups ) == 1 ){
-		// if and only if the content is mapped to one group do we use its theme
-		// load up the group
-		// check that it is not flickr like
+	if ( count( $groups ) == 1 && $gBitSystem->isFeatureActive('group_admin_content') ) {
+		// if and only if the content is mapped to one group do we use its theme and only if admin of content is enabled e.g. groups are not flickr like
 		// apply group layout
 		$group->setGroupStyle( $groups[0]['content_id'] );
 	}

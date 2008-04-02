@@ -6,6 +6,11 @@ require_once( '../bit_setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage( 'group' );
 
+//if the request is from the search field redirect us to the list - otherwise do what we do
+if ( isset( $_REQUEST['find'] ) ){
+	header ("location: ".GROUP_PKG_URI."list_groups.php?find=".$_REQUEST['find'] );
+	die;
+}
 // verify the user can add stuff to a group
 if ( !$gBitUser->isRegistered() ){
 	$gBitSystem->fatalPermission( NULL, 'Sorry, but you must be registered and belong to any group to submit content to it.' );
@@ -66,16 +71,16 @@ if( !$gContent->isValid() ) {
 	$userGroupsHash = $_REQUEST;
 	$userGroupsHash['user_id'] = $gBitUser->mUserId;
 	$userGroupsList = $gContent->getList( $userGroupsHash );
-	if ( !empty( $userGroupsList ) ){
-		// limit this list to content group is not linked too already.
-		$mG = $uG = array();
-		foreach( $memberGroups as $data1 ){
-			$mG[$data1['group_id']] = $data1;
-		}
-		foreach( $userGroupsList as $data2 ){
-			$uG[$data2['group_id']] = $data2;
-		}
-		$nonmemberGroups = array_diff_key( $uG, $mG );
+	// limit this list to content group is not linked too already.
+	$mG = $uG = array();
+	foreach( $memberGroups as $data1 ){
+		$mG[$data1['group_id']] = $data1;
+	}
+	foreach( $userGroupsList as $data2 ){
+		$uG[$data2['group_id']] = $data2;
+	}
+	$nonmemberGroups = array_diff_key( $uG, $mG );
+	if ( !empty( $nonmemberGroups ) ){
 		$gBitSmarty->assign('nonmemberGroups', $nonmemberGroups);
 		$gBitSmarty->assign( 'sort_mode', ( isset($_REQUEST['sort_mode'])?$_REQUEST['sort_mode']:NULL ) );
 		$gBitSmarty->assign('submit_content_id', $_REQUEST['submit_content_id'] );
