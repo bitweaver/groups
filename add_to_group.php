@@ -21,7 +21,10 @@ $linkContent->load();
 if ( !$linkContent->isValid() ){
 	$gBitSystem->fatalError( "The content you are trying to submit to a group is invalid." );
 }
-
+// verify edit permission of the content to be submitted to the group 
+if ( !$linkContent->hasEditPermission() ){
+	$gBitSystem->fatalError( "You do not have sufficient permission to submit this content to a group." );
+}
 
 require_once( GROUP_PKG_PATH.'lookup_group_inc.php' );
 
@@ -35,16 +38,45 @@ if( $gContent->isValid() ) {
 	$gBitSystem->verifyPermission( 'p_group_view' );
 }
 
+// get a list of groups the content is already in - we'll need it one way or another
+$memberGroupsHash['mapped_content_id'] = $linkContent->mContentId;
+$memberGroups = $gContent->getList( $memberGroupsHash );
+
+// some checks if its already been mapped before 
+if ( !empty( $memberGroups ) ){
+	// verify the submitted content is not already in the group submitted to - check this after permission check to make sure user can know things about the content
+	if ( $gContent->isValid() ){
+		foreach( $memberGroups as $memberGroup ){
+			if ( $memberGroup['group_id'] == $gContent->mGroupId ){
+				//@ TODO maybe we should redirect to the page as within the group instead of fataling 
+				$gBitSystem->fatalError( "This content has already be added to this group." );
+			}
+		}
+	}
+	// if its not in the requested group but groups can admin content and its in one group already then die -  we only allow one mapping per content when groups can admin
+	if( $gBitSystem->isFeatureActive('group_admin_content')) {
+		$gBitSystem->fatalError( "Sorry, this website only allows content to be mapped to one group, and this content is already in another group." );
+	}
+}
+
+// ok - we've made it though all the various checks - lets get it on.
 // if we dont have a valid group to map the content to then lets offer some options
 if( !$gContent->isValid() ) {
 	// if no group is requested, if no default is set, or the group requested is not valid we deliver a list of groups the user belongs to
-	// @TODO if submitted content is already in one group and $gBitSystem->isFeatureActive('group_admin_content') then deny the request - only allow linking to one group
-	// @TODO limit this list to content group is not linked too.
-	$memberHash = $_REQUEST;
-	$memberHash['user_id'] = $gBitUser->mUserId;
-	$memberGroupsList = $gContent->getList( $memberHash );
-	if ( !empty( $memberGroupsList ) ){
-		$gBitSmarty->assign('memberGroups', $memberGroupsList);
+	$userGroupsHash = $_REQUEST;
+	$userGroupsHash['user_id'] = $gBitUser->mUserId;
+	$userGroupsList = $gContent->getList( $userGroupsHash );
+	if ( !empty( $userGroupsList ) ){
+		// limit this list to content group is not linked too already.
+		$mG = $uG = array();
+		foreach( $memberGroups as $data1 ){
+			$mG[$data1['group_id']] = $data1;
+		}
+		foreach( $userGroupsList as $data2 ){
+			$uG[$data2['group_id']] = $data2;
+		}
+		$nonmemberGroups = array_diff_key( $uG, $mG );
+		$gBitSmarty->assign('nonmemberGroups', $nonmemberGroups);
 		$gBitSmarty->assign( 'sort_mode', ( isset($_REQUEST['sort_mode'])?$_REQUEST['sort_mode']:NULL ) );
 		$gBitSmarty->assign('submit_content_id', $_REQUEST['submit_content_id'] );
 	}else{

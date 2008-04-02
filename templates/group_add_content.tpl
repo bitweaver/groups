@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/group_add_content.tpl,v 1.1 2008/04/01 20:59:10 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/group_add_content.tpl,v 1.2 2008/04/02 14:26:18 wjames5 Exp $ *}
 {strip}
 <div class="display group">
 	<div class="header">
@@ -7,7 +7,7 @@
 
 	<div class="body">
 		<div class="content">
-				{if $memberGroups}
+				{if $nonmemberGroups}
 				<h2>Your Groups</h2>
 
 				<div>
@@ -22,17 +22,17 @@
 							<th>{tr}Action{/tr}</th>
 						</tr>
 
-						{foreach from=$memberGroups key=groupId item=memberGroup}
+						{foreach from=$nonmemberGroups key=groupId item=nonmemberGroup}
 							<tr class="{cycle values="odd,even"}">
 								<td>
-									{if $memberGroup.group_home}<a href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$memberGroup.group_id}" title="Group home page" />{/if}<strong>{$memberGroup.group_name}</strong>{if $memberGroup.group_home}</a>{/if}
+									{if $nonmemberGroup.group_home}<a href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$nonmemberGroup.group_id}" title="Group home page" />{/if}<strong>{$nonmemberGroup.group_name}</strong>{if $nonmemberGroup.group_home}</a>{/if}
 								</td>
 								<td>
-									{$memberGroup.group_desc}
+									{$nonmemberGroup.group_desc}
 								</td>
 
 								<td  style="text-align:center;">
-									<a href="{$smarty.const.GROUP_PKG_URL}add_to_group.php?group_id={$memberGroup.group_id}&amp;submit_content_id={$submit_content_id}">Submit</a>
+									<a href="{$smarty.const.GROUP_PKG_URL}add_to_group.php?group_id={$nonmemberGroup.group_id}&amp;submit_content_id={$submit_content_id}">Submit</a>
 								</td>
 							</tr>
 						{/foreach}

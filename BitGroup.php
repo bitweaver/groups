@@ -746,7 +746,7 @@ class BitGroup extends LibertyAttachable {
 		if ( !$this->hasUserPermission( 'p_group_group_content_create' ) ){
 			$gBitSystem->fatalError( tra("Sorry, you do not have permission to add content to the requested group") );
 		}
-		if ( !in_array( $pContent->mContentTypeGuid, $this->mContentTypePrefs ) ){
+		if ( !in_array( $pContent->mType['content_type_guid'], $this->mContentTypePrefs ) ){
 			$gBitSystem->fatalError( tra("The content you requested can not be added to the group")." ".$this->mInfo['title'] );
 		}
 		return TRUE;
@@ -809,6 +809,7 @@ function group_content_display( &$pObject, &$pParamHash ) {
 		$group->setGroupStyle( $groups[0]['content_id'] );
 	}
 	//vd( $groups );
+	$pObject->mInfo['member_groups'] = $groups;
 	$gBitSmarty->assign_by_ref( 'contentMemberGroups', $groups );
 }
 
