@@ -26,6 +26,7 @@
 							<thead>
 								<tr style="text-align:left;">
 									<th>{tr}Modules{/tr}</th>
+									<th>{tr}Location{/tr}</th>
 									<th>{tr}Position{/tr}</th>
 									<th>{tr}Rows{/tr}</th>
 									<th>{tr}Cache Time{/tr}</th>
@@ -57,10 +58,13 @@
 												</select>
 											</td>
 											<td>
-												<input type="text" size="5" name="fAssign[{$name}][module_rows]" id="module_rows" value="{$fAssign.module_rows|escape}" />
+												<input type="text" size="5" name="fAssign[{$name}][pos]" id="pos" value="{$assignedModules.$tpl.pos|escape}" />
 											</td>
 											<td>
-												<input type="text" size="5" name="fAssign[{$name}][cache_time]" id="cache_time" value="{$fAssign.cache_time|escape}" /> seconds
+												<input type="text" size="5" name="fAssign[{$name}][module_rows]" id="module_rows" value="{$assignedModules.$tpl.module_rows|escape}" />
+											</td>
+											<td>
+												<input type="text" size="5" name="fAssign[{$name}][cache_time]" id="cache_time" value="{$assignedModules.$tpl.cache_time|escape}" /> seconds
 											</td>
 										</tr>
 									{/foreach}
@@ -74,8 +78,11 @@
 
 						<h3>{tr}Modules Help{/tr}</h3>
 						<ul>
-							<li><strong>Position</strong><br />
+							<li><strong>Location</strong><br />
 								{formhelp note="Select the column this module should be displayed in."}
+							</li>
+							<li><strong>Position</strong><br />
+								{formhelp note="You can change the order in which modules are displayed by setting this value. Higher numbers are displayed further down the page. The default is 1"}
 							</li>
 							<li><strong>Rows</strong><br />
 								{formhelp note="Select the maximum number of items to be displayed. (optional - default is 10)"}
