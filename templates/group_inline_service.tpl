@@ -2,7 +2,7 @@
 {if $smarty.const.ACTIVE_PACKAGE != 'group'}
 <div class="group-permalink">
 {if $contentMemberGroups} 
-		<strong>{tr}In Group{if count($contentMemberGroups) > 1 }}s{/if}{/tr}:</strong>&nbsp;
+		<strong>{tr}In Group{if count($contentMemberGroups) > 1 }s{/if}{/tr}:</strong>&nbsp;
 	{foreach from=$contentMemberGroups item=group}
 	<a href="{$group.group_home}">{$group.group_name}</a>&nbsp;
 	{/foreach}

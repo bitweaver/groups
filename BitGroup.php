@@ -769,9 +769,58 @@ class BitGroup extends LibertyAttachable {
 }
 
 function group_module_display(&$pParamHash){
-	global $gBitThemes, $gBitSmarty, $gBitSystem;
-	if( TRUE ) {
-		/* @TODO group services on group linked content */
+	global $gBitThemes, $gBitSmarty, $gBitSystem, $gCenterPieces;
+	/* @TODO group services on group linked content */
+	if ( ACTIVE_PACKAGE == "group" && !empty( $_REQUEST['group_id'] ) ){
+		$group = new BitGroup( $_REQUEST['group_id'] );
+		$group->load();
+		if ( $group->isValid() ){
+			/* custom query to get the group's layout modules 
+			 * needed because BitTheme::getLayout forces defaults
+			 * so with that we can never get an empty array, 
+			 * which makes merging with defaults impossible.
+			 * we rely on default because we want to allow the 
+			 * site admin to insert whatever modules it wants
+			 */
+			$ret = array( 'l' => NULL, 'c' => NULL, 'r' => NULL, 't' => NULL, 'b' => NULL );
+			$query =   "SELECT tl.*
+						FROM `".BIT_DB_PREFIX."themes_layouts` tl
+						WHERE  tl.`layout`=? ORDER BY ".$gBitThemes->mDb->convertSortmode( "pos_asc" );
+
+			$result = $gBitThemes->mDb->query( $query, array(  "content_id.".$group->mContentId  ) );
+			if( !empty( $result ) && $result->RecordCount() ) {
+				$row = $result->fetchRow(); 
+				while( $row ) {
+					$row['module_params'] = $gBitThemes->parseString( $row['params'] );
+					$row["visible"] = TRUE;
+
+					if ( !is_array( $gCenterPieces ) ){ 
+						$gCenterPieces = array();
+					}
+					if( $row['layout_area'] == CENTER_COLUMN ) {
+						array_push( $gCenterPieces, $row );
+					}
+
+					if( empty( $ret[$row['layout_area']] )) {
+						$ret[$row['layout_area']] = array();
+					}
+					array_push( $ret[$row['layout_area']], $row );
+
+					$row = $result->fetchRow();
+				}
+			}
+			$groupmodules = $ret;
+
+			$merged = array();
+			// the areas of the layout - so ugly
+			$areas = array( 't', 'l', 'r', 'b', 'c' );
+			foreach( $areas as $key ){
+				$area1 = ( empty($groupmodules[$key]) || $groupmodules[$key] === NULL ) ? array() : $groupmodules[$key];
+				$area2 = ( empty($gBitThemes->mLayout[$key] ) || $gBitThemes->mLayout[$key] === NULL ) ? array() : $gBitThemes->mLayout[$key];
+				$merged[$key] = array_merge( $area2, $area1 );
+			}
+			$gBitThemes->mLayout = $merged; 
+		}
 	}
 }
 
