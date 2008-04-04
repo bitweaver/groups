@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/admin_layout_inc.php,v 1.2 2008/04/04 17:49:07 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/admin_layout_inc.php,v 1.3 2008/04/04 19:44:37 wjames5 Exp $
 
 // Initialization
 require_once( '../bit_setup_inc.php' );
@@ -20,6 +20,8 @@ if ( !empty( $_REQUEST['fAssign'] ) ){
 	$fAssign = &$_REQUEST['fAssign'];
 }
 
+
+$groupParam = "connect_group_content_id=".$gContent->mContentId; 
 // data submitted lets handle it
 if ( isset( $_REQUEST['submitcolumns'] ) ){
 	foreach( $fAssign as $moduleHash ){
@@ -28,6 +30,10 @@ if ( isset( $_REQUEST['submitcolumns'] ) ){
 		if( isset( $moduleHash['module_id'] ) ){
 			$gBitThemes->unassignModule( $moduleHash['module_id'] );
 			unset( $moduleHash['module_id'] );
+		}
+		// force in connect_group_content_id so that we're always joining to group stuff.
+		if( !strpos( $moduleHash['params'], $groupParam ) ){
+			$moduleHash['params'] .= $groupParam;
 		}
 		switch ( $moduleHash['layout_area'] ){
 			case "unassign":
@@ -43,11 +49,19 @@ if ( isset( $_REQUEST['submitcolumns'] ) ){
 	// handle center assignments
 	$moduleHash = $fAssign;
 	$moduleHash['layout'] = $layout_name;
+	// force in connect_group_content_id so that we're always joining to group stuff.
+	if( !strpos( $moduleHash['params'], $groupParam ) ){
+		$moduleHash['params'] .= $groupParam;
+	}
 	$gBitThemes->storeModule( $moduleHash );
 	$reload = TRUE;
 }else if ( isset( $_REQUEST['changecenter'] ) ){
 	foreach( $fAssign as $moduleHash ){
 		$moduleHash['layout'] = $layout_name;
+		// force in connect_group_content_id so that we're always joining to group stuff.
+		if( !strpos( $moduleHash['params'], $groupParam ) ){
+			$moduleHash['params'] .= $groupParam;
+		}
 		$gBitThemes->storeModule( $moduleHash );
 	}
 	$reload = TRUE;
