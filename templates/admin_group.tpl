@@ -46,7 +46,19 @@
 				{/foreach}
 			{/legend}
 		{/jstab}
-
+		{jstab title="Layout Options"}
+			{legend legend="Allowed Modules"}
+				{formhelp note="You can select what layout modules groups can add to their layout."}
+				{foreach from=$formGroupModules item=modules key=package} 
+				<div class="row">
+					{formlabel label=$package}
+					{forminput}
+						{html_checkboxes options=$modules name=group_modules separator="<br />" checked=$formGroupModules.checked}
+					{/forminput}
+				</div>
+				{/foreach}
+			{/legend}
+		{/jstab}
 		{jstab title="List Settings"}
 			{legend legend="List Settings"}
 				<input type="hidden" name="page" value="{$page}" />

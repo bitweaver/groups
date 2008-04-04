@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.7 2008/04/01 20:59:10 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.8 2008/04/04 17:49:10 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -74,6 +74,17 @@ $formGroupServiceDisplayOptions = array(
 );
 $gBitSmarty->assign( 'formGroupServiceDisplayOptions', $formGroupServiceDisplayOptions );
 
+// get data for module preferences
+$allModules = $gBitThemes->getAllModules();
+ksort( $allModules );
+foreach( $allModules as $package=>$modules ){
+	foreach( $modules as $tpl=>$desc ){
+		$ref = 'group_mod_'.strtolower($package)."_".( str_replace( ' ', '_', $desc ) );
+		$formGroupModules[$package][$ref] = $desc;
+	}
+}
+$gBitSmarty->assign_by_ref( 'formGroupModules', $formGroupModules );
+
 // store the prefs
 if( !empty( $_REQUEST['group_preferences'] ) ) {
 	foreach( $formGroupServiceDisplayOptions as $item => $data ) {
@@ -91,8 +102,14 @@ if( !empty( $_REQUEST['group_preferences'] ) ) {
 		simple_set_toggle( $item, GROUP_PKG_NAME );
 	}
 
-	foreach( array_keys( $formGroupContent['guids'] ) as $types ) {
-		$gBitSystem->storeConfig( $types, ( ( !empty( $_REQUEST['group_content'] ) && in_array( $types, $_REQUEST['group_content'] ) ) ? 'y' : NULL ), GROUP_PKG_NAME );
+	foreach( array_keys( $formGroupContent['guids'] ) as $type ) {
+		$gBitSystem->storeConfig( $type, ( ( !empty( $_REQUEST['group_content'] ) && in_array( $type, $_REQUEST['group_content'] ) ) ? 'y' : NULL ), GROUP_PKG_NAME );
+	}
+	
+	foreach( $formGroupModules as $package ){
+		foreach( $package as $conf => $desc ){
+			$gBitSystem->storeConfig( $conf, ( ( !empty( $_REQUEST['group_modules'] ) && in_array( $conf, $_REQUEST['group_modules'] ) ) ? 'y' : NULL ), GROUP_PKG_NAME );
+		}
 	}
 }
 
@@ -104,7 +121,19 @@ foreach( $gLibertySystem->mContentTypes as $cType ) {
 }
 $gBitSmarty->assign( 'formGroupContent', $formGroupContent );
 
+// check allowed modules
+foreach( $formGroupModules as $package ){
+	foreach( $package as $conf=>$desc ){
+		if ( $gBitSystem->getConfig( $conf ) ){
+			$formGroupModules['checked'][] = $conf;
+		}
+	}
+}
+
+/* Seems like this is here for no reason 
 $group = new BitGroup();
 $groups = $group->getList( $_REQUEST );
 $gBitSmarty->assign_by_ref('groups', $groups['data']);
+ */
+
 ?>

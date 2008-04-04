@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/admin_layout_inc.php,v 1.1 2008/04/02 23:02:55 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/admin_layout_inc.php,v 1.2 2008/04/04 17:49:07 wjames5 Exp $
 
 // Initialization
 require_once( '../bit_setup_inc.php' );
@@ -38,41 +38,32 @@ if ( isset( $_REQUEST['submitcolumns'] ) ){
 				break;
 		}
 	}
-	// in storage situations we reload the layout settings so we have up to date data
-	$layout = $gBitThemes->getLayout( $layoutHash );
+	$reload = TRUE;
 }else if ( isset( $_REQUEST['submitcenter'] ) ){
-	// @TODO handle center assignments
-	// in storage situations we reload the layout settings so we have up to date data
-	$layout = $gBitThemes->getLayout( $layoutHash );
+	// handle center assignments
+	$moduleHash = $fAssign;
+	$moduleHash['layout'] = $layout_name;
+	$gBitThemes->storeModule( $moduleHash );
+	$reload = TRUE;
+}else if ( isset( $_REQUEST['changecenter'] ) ){
+	foreach( $fAssign as $moduleHash ){
+		$moduleHash['layout'] = $layout_name;
+		$gBitThemes->storeModule( $moduleHash );
+	}
+	$reload = TRUE;
+}else if ( isset( $_REQUEST['unassigncenter'] ) ){
+	$gBitUser->verifyTicket();
+	if( isset( $_REQUEST['module_id'] ) ){
+		$gBitThemes->unassignModule( $_REQUEST['module_id'] );
+		$reload = TRUE;
+	}
 }
 
-/* BONEYARD - we might use this for pos assignments and center module assignments
-if( isset( $_REQUEST['module_id'] ) && !empty( $_REQUEST['move_module'] )) {
-	if( isset( $_REQUEST['move_module'] )) {
-		switch( $_REQUEST['move_module'] ) {
-			case "unassign":
-				$gBitThemes->unassignModule( $_REQUEST['module_id'] );
-				break;
-			case "up":
-				$gBitThemes->moveModuleUp( $_REQUEST['module_id'] );
-				break;
-			case "down":
-				$gBitThemes->moveModuleDown( $_REQUEST['module_id'] );
-				break;
-			case "left":
-				$gBitThemes->moveModuleToArea( $_REQUEST['module_id'], 'l' );
-				break;
-			case "right":
-				$gBitThemes->moveModuleToArea( $_REQUEST['module_id'], 'r' );
-				break;
-		}
-	}
-} elseif( !empty($processForm) && ( $processForm == 'Center' || $processForm == 'Column' )) {
-	$fAssign = &$_REQUEST['fAssign'];
-	$fAssign['layout'] = $layout;
-	$gBitThemes->storeModule( $fAssign );
+
+if ( isset( $reload ) ){
+	// after edit changes we need to relaod the layout so we have them 
+	$layout = $gBitThemes->getLayout( $layoutHash );
 }
-*/
 
 $gBitThemes->generateModuleNames( $layout );
 $gBitSmarty->assign_by_ref( 'layout', $layout );
@@ -91,20 +82,35 @@ foreach( $layout as $area ){
 	if ( !empty( $area ) ){
 		foreach( $area as $module ){
 			if ( $module['layout'] == $layout_name ){
-				$assignedModules[$module['module_rsrc']] = array(	'module_id' => $module['module_id'], 
-																	'layout_area' => $module['layout_area'],
-			   														'pos' => $module['pos']	);
+			   	if( $module['layout_area'] != "c" ){
+					$assignedModules[$module['module_rsrc']] = $module; 
+				}else{
+					$centerAssignedModules[$module['module_rsrc']] = $module;
+				}
 			}
 		}
 	}
 }
+
 $gBitSmarty->assign_by_ref( 'assignedModules', $assignedModules );
+$gBitSmarty->assign_by_ref( 'centerAssignedModules', $centerAssignedModules );
 
 $gBitSmarty->assign_by_ref( 'layoutAreas', $layoutAreas );
 
 $allModules = $gBitThemes->getAllModules();
 ksort( $allModules );
 $gBitSmarty->assign_by_ref( 'allModules', $allModules );
+
+// we only allow the modules that the site admin has allowed for groups
+foreach( $allModules as $package=>$modules ){
+	foreach( $modules as $tpl=>$desc ){
+		$conf = 'group_mod_'.strtolower($package)."_".( str_replace( ' ', '_', $desc ) );
+		if ( $gBitSystem->getConfig( $conf ) ){
+			$allowedModules[$package][$tpl] = $desc;
+		}
+	}
+}
+$gBitSmarty->assign_by_ref( 'allowedModules', $allowedModules );
 
 $allCenters = $gBitThemes->getAllModules( 'templates', 'center_' );
 ksort( $allCenters );

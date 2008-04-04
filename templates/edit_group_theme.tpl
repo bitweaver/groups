@@ -25,18 +25,19 @@
 						<table class="data">
 							<thead>
 								<tr style="text-align:left;">
-									<th>{tr}Modules{/tr}</th>
-									<th>{tr}Location{/tr}</th>
-									<th>{tr}Position{/tr}</th>
-									<th>{tr}Rows{/tr}</th>
-									<th>{tr}Cache Time{/tr}</th>
+									<th style="width:30%">{tr}Column Modules{/tr}</th>
+									<th style="width:10%">{tr}Order{/tr}</th>
+									<th style="width:10%">{tr}Rows{/tr}</th>
+									<th style="width:10%">{tr}Cache Time (seconds){/tr}</th>
+									<th style="width:10%">{tr}Params{/tr}</th>
+									<th style="text-align:center">{tr}Location{/tr}</th>
 								</tr>
 							</thead>
 							<tbody>
-								{foreach from=$allModules item=modules key=package}
+								{foreach from=$allowedModules item=modules key=package}
 								{cycle values="odd,even" assign="pkgClass"}
 									<tr class="{$pkgClass} data">
-										<td colspan="4"><strong>{$package}</strong></td>
+										<td colspan="6"><strong>{$package}</strong></td>
 									</tr>
 									{foreach from=$modules item=name key=tpl}
 										<tr class="{$pkgClass} data">
@@ -47,6 +48,18 @@
 												{/if}
 											</td>
 											<td>
+												<input type="text" size="5" name="fAssign[{$name}][pos]" id="pos" value="{$assignedModules.$tpl.pos|escape}" />
+											</td>
+											<td>
+												<input type="text" size="5" name="fAssign[{$name}][module_rows]" id="module_rows" value="{$assignedModules.$tpl.module_rows|escape}" />
+											</td>
+											<td>
+												<input type="text" size="5" name="fAssign[{$name}][cache_time]" id="cache_time" value="{$assignedModules.$tpl.cache_time|escape}" />
+											</td>
+											<td>
+												<input type="text" size="15" name="fAssign[{$name}][params]" id="params" value="{$assignedModules.$tpl.params|escape}" />
+											</td>
+											<td style="text-align:center">
 												<select name="fAssign[{$name}][layout_area]">
 													{assign var='layout_area' value='unassign'}
 													{if $assignedModules.$tpl}
@@ -57,15 +70,6 @@
 													<option value="r" {if $layout_area eq 'r'}selected="selected"{/if}>{tr}Right column{/tr}</option>
 												</select>
 											</td>
-											<td>
-												<input type="text" size="5" name="fAssign[{$name}][pos]" id="pos" value="{$assignedModules.$tpl.pos|escape}" />
-											</td>
-											<td>
-												<input type="text" size="5" name="fAssign[{$name}][module_rows]" id="module_rows" value="{$assignedModules.$tpl.module_rows|escape}" />
-											</td>
-											<td>
-												<input type="text" size="5" name="fAssign[{$name}][cache_time]" id="cache_time" value="{$assignedModules.$tpl.cache_time|escape}" /> seconds
-											</td>
 										</tr>
 									{/foreach}
 								{/foreach}
@@ -73,15 +77,120 @@
 						</table>
 
 						<div class="row submit">
-							<input type="submit" name="submitcolumns" value="{tr}Change column layout{/tr}" />
+							<input type="submit" name="submitcolumns" value="{tr}Change columns settings{/tr}" />
 						</div>
 
-						<h3>{tr}Modules Help{/tr}</h3>
+					{/form}
+					{legend legend="Assign center modules"}
+					{if count($centerAssignedModules) > 0}
+						{form action=$smarty.server.PHP_SELF}
+							<input type="hidden" name="group_id" value="{$gContent->mGroupId}" />
+							<table class="data">
+								<thead>
+									<tr style="text-align:left;">
+										<th style="width:30%">{tr}Assigned Center Modules{/tr}</th>
+										<th style="width:10%">{tr}Order{/tr}</th>
+										<th style="width:10%">{tr}Rows{/tr}</th>
+										<th style="width:10%">{tr}Cache Time (seconds){/tr}</th>
+										<th style="width:10%">{tr}Params{/tr}</th>
+										<th style="text-align:center;">{tr}Unassign{/tr}</th>
+									</tr>
+								</thead>
+								<tbody>
+								{foreach from=$centerAssignedModules item=cmodule key=tpl}
+									{if $cmodule.layout_area == "c"}
+										{cycle values="odd,even" assign="pkgClass"}
+										<tr class="{$pkgClass} data">
+											<td>{$cmodule.name}
+												<input type="hidden" name="fAssign[{$cmodule.module_id}][module_id]" value="{$cmodule.module_id}" />
+												<input type="hidden" name="fAssign[{$cmodule.module_id}][layout_area]" value="c" />
+											</td>
+											<td>
+												<input type="text" size="5" name="fAssign[{$cmodule.module_id}][pos]" id="pos" value="{$cmodule.pos|escape}" />
+											</td>
+											<td>
+												<input type="text" size="5" name="fAssign[{$cmodule.module_id}][module_rows]" id="module_rows" value="{$cmodule.module_rows|escape}" />
+											</td>
+											<td>
+												<input type="text" size="5" name="fAssign[{$cmodule.module_id}][cache_time]" id="cache_time" value="{$cmodule.cache_time|escape}" />
+											</td>
+											<td>
+												<input type="text" size="15" name="fAssign[{$cmodule.module_id}][params]" id="params" value="{$cmodule.params|escape}" />
+											</td>
+											<td style="text-align:center;">
+												<a title="{tr}Unassign{/tr}" href="{$smarty.const.GROUP_PKG_URL}theme.php?group_id={$gContent->mGroupId}&amp;unassigncenter=1&amp;module_id={$cmodule.module_id}">{biticon ipackage="icons" iname="edit-delete" iexplain="Unassign Module"}</a>
+											</td>
+										</tr>
+									{/if}
+								{/foreach}
+								</tbody>
+							</table>
+
+							<div class="row submit">
+								<input type="submit" name="changecenter" value="{tr}Change center settings{/tr}" />
+							</div>
+						{/form}
+					{else}
+						<div style="margin:0 0 20px 0; text-align:center;"><em>There are currently no custom assigned center modules. Defaults are used.</em></div>
+					{/if}
+					{form action=$smarty.server.PHP_SELF}
+			<input type="hidden" name="group_id" value="{$gContent->mGroupId}" />
+			<input type="hidden" name="fAssign[layout_area]" value="c" />
+
+			<div class="row">
+				{formlabel label="Center Piece" for="module"}
+				{forminput}
+					{if $fEdit && $fAssign.name}
+						<input type="hidden" name="fAssign[module]" value="{$fAssign.module}" id="module" />{$fAssign.module}
+					{else}
+						{html_options name="fAssign[module_rsrc]" id="module" values=$allCenters options=$allCenters selected=`$mod`}
+					{/if}
+					{formhelp note="Pick the center bit you want to display when accessing this package."}
+				{/forminput}
+			</div>
+
+			<div class="row">
+				{formlabel label="Order" for="c_ord"}
+				{forminput}
+					<input type="text" size="5" name="fAssign[pos]" id="pos" value="" />
+					{formhelp note="Select where within the column the module should be displayed."}
+				{/forminput}
+			</div>
+
+			<div class="row">
+				{formlabel label="Cache Time" for="c_cache_time"}
+				{forminput}
+					<input type="text" name="fAssign[cache_time]" id="c_cache_time" size="5" value="{$fAssign.cache_time|escape}" /> seconds
+					{formhelp note="This is the number of seconds the module is cached before the content is refreshed. The higher the value, the less load there is on the server. (optional)"}
+				{/forminput}
+			</div>
+
+			<div class="row">
+				{formlabel label="Rows" for="c_rows"}
+				{forminput}
+					<input type="text" size="5" name="fAssign[module_rows]" id="c_rows" value="{$fAssign.module_rows|escape}" />
+					{formhelp note="Select what the maximum number of items are displayed. (optional - default is 10)"}
+				{/forminput}
+			</div>
+
+			<div class="row">
+				{formlabel label="Parameters" for="c_params"}
+				{forminput}
+					<input type="text" size="48" name="fAssign[params]" id="c_params" value="{$fAssign.params|escape}" />
+					{formhelp note="Here you can enter any additional parameters the module might need. (optional)"}
+				{/forminput}
+			</div>
+						<div class="row submit">
+							<input type="submit" name="submitcenter" value="{tr}Assign center module{/tr}" />
+						</div>
+					{/form}
+					{/legend}
+					{legend legend="Modules Help"}
 						<ul>
 							<li><strong>Location</strong><br />
 								{formhelp note="Select the column this module should be displayed in."}
 							</li>
-							<li><strong>Position</strong><br />
+							<li><strong>Order</strong><br />
 								{formhelp note="You can change the order in which modules are displayed by setting this value. Higher numbers are displayed further down the page. The default is 1"}
 							</li>
 							<li><strong>Rows</strong><br />
@@ -91,10 +200,7 @@
 								{formhelp note="This is the number of seconds the module is cached before the content is refreshed. The higher the value, the less load there is on the server. (optional)"}
 							</li>
 						</ul>
-					{/form}
-					{form action=$smarty.server.PHP_SELF legend="Assign center pieces"}
-						@TODO form for customizing center layout r
-					{/form}
+					{/legend}
 				{/jstab}
 			{/if}
 			{if $gBitSystem->isFeatureActive( 'group_themes' )}
