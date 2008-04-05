@@ -24,6 +24,19 @@ if ( !$gBitUser->isRegistered() ){
 // if it has a custom theme lets theme it
 $gContent->setGroupStyle();
 
+// Load a users pending moderation if it exists
+$pendingModeration = NULL;
+if ($gBitSystem->isPackageActive('moderation')) {
+	global $gModerationSystem;
+	$listHash = array('content_id' => $gContent->mContentId,
+					  'source_user_id' => $gBitUser->mUserId,
+					  'package' => 'group',
+					  'type' => 'join',
+					  'status' => MODERATION_PENDING );
+	$pendingModeration = $gModerationSystem->getList($listHash);
+	$gBitSmarty->assign('joinModeration', $pendingModeration);
+}
+
 // if the user is already in the group
 if( $gBitUser->isInGroup( $gContent->mGroupId ) ){
 	// user is changing their preferences
@@ -45,14 +58,18 @@ if( $gBitUser->isInGroup( $gContent->mGroupId ) ){
 			die;
 		}
 	} else if( $gBitSystem->isPackageActive('moderation') ){
-		// otherwise send the request to moderation
-		$gModerationSystem->requestModeration('group', 'join', NULL, $gContent->mGroupId, $gContent->mContentId);
-		// @TOOD display some page letting user know their membership is awaiting moderation
+		// otherwise send the request to moderation if they aren't reloading
+		if ( empty($pendingModeration) ) {
+			$pendingModeration = $gModerationSystem->requestModeration('group', 'join', NULL, $gContent->mGroupId, $gContent->mContentId, empty($_REQUEST['join_message']) ? NULL : $_REQUEST['join_message'], MODERATION_PENDING, empty($_REQUEST['notice']) ? NULL : array('notice' => $_REQUEST['notice']));
+			$gBitSmarty->assign('joinModeration', $pendingModeration);
+		}
+		else {
+			$gBitSmarty->assign('errors', tra('You have already requested to join this group.'));
+		}
 	} else {
 		$gBitSmarty->assign('errors', tra("This group is not public. You may not join."));
 	}
 }
-
 
 // display
 $gBitSystem->display( 'bitpackage:group/user_prefs.tpl', tra('Join')." ".$gContent->getTitle() );

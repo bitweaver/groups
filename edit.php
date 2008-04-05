@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.24 2008/04/01 13:43:29 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.25 2008/04/05 17:10:35 nickpalmer Exp $
 // Copyright (c) 2004 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -80,16 +80,19 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 		}
 
 		// store content types group can create
-		$groupContentTypes = array_keys( $formGroupContent['guids'] );
-		// we check the full list so that if the admin options changed we automagically clean up the group
-		foreach( $gLibertySystem->mContentTypes as $cType ) {
-			$type = $cType['content_type_guid'];
-			if ( !empty( $_REQUEST['group_content'] ) && in_array( $type, $_REQUEST['group_content'] ) && in_array( $type, $groupContentTypes ) ) {
-				$gContent->storeContentTypePref( $type );
-			}else{
-				$gContent->expungeContentTypePref( $type );
+		if(!empty($formGropContent['guids'])) {
+			$groupContentTypes = array_keys( $formGroupContent['guids'] );
+			// we check the full list so that if the admin options changed we automagically clean up the group
+			foreach( $gLibertySystem->mContentTypes as $cType ) {
+				$type = $cType['content_type_guid'];
+				if ( !empty( $_REQUEST['group_content'] ) && in_array( $type, $_REQUEST['group_content'] ) && in_array( $type, $groupContentTypes ) ) {
+					$gContent->storeContentTypePref( $type );
+				}else{
+					$gContent->expungeContentTypePref( $type );
+				}
 			}
 		}
+
 		// make sure the list is up to date after storing any prefs
 		$gContent->mContentTypePrefs = $gContent->getContentTypePrefs();
 
@@ -103,7 +106,8 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 
 		if ( $gContent->mInfo['view_content_public'] != $publicStatus ){
 			// get list of user groups and their perms
-			$allGroups = $gBitUser->getAllGroups();
+			$pListHash = array();
+			$allGroups = $gBitUser->getAllGroups($pListHash);
 			// set view perms for our group
 			foreach( $allGroups as $groupId => $group ){
 				$groupPerms = array_keys( $group['perms'] );

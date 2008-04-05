@@ -73,6 +73,7 @@ if( $gBitSystem->isPackageActive('moderation') &&
 			if ($pModeration['status'] == MODERATION_APPROVED) {
 				// Add the user to the group
 				$gBitUser->addUserToGroup( $pModeration['source_user_id'], $pModeration['moderator_group_id'] );
+				// @TODO: Store the users notification preference now. It is in $pModeration['data']['notice'] and probably has to be stuffed in switchboard.
 			}
 		}
 		else if ($pModeration['type'] == 'invite') {
