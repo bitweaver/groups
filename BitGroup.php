@@ -29,6 +29,20 @@ define( 'GROUPS_ROLE_MANAGER', 2);
 define( 'GROUPS_ROLE_MEMBER', 3);
 
 /**
+ * load up switchboard
+ * we need to include bit_setup)inc incase groups  gets loaded first
+ */
+if ( is_file( BIT_ROOT_PATH.'moderation/bit_setup_inc.php' ) ){
+	require_once( BIT_ROOT_PATH.'moderation/bit_setup_inc.php' );
+}
+
+if ($gBitSystem->isPackageActive('switchboard')) {
+	global $gSwitchboardSystem;
+	// Register us as a sender.
+	$gSwitchboardSystem->registerSwitchboardSender('group', array('message'));
+}
+
+/**
  * load up moderation
  * we need to include its bit_setup_inc incase groups gets loaded first
  */
@@ -78,8 +92,8 @@ if( $gBitSystem->isPackageActive('moderation') &&
 					!empty($pModeration['data']['notice'])) {
 					if ($pModeration['data']['notice'] == 'email' ||
 						$pModeration['data']['notice'] == 'digest') {
-						global $gModerationSystem;
-						$gModerationSystem->storeUserPref($pModeration['source_user_id'], 'switchboard', $pModeration['data']['notice'],$pModeration['content_id']);
+						global $gSwitchboardSystem;
+						$gSwitchboardSystem->storeUserPref($pModeration['source_user_id'], 'group', 'message', $pModeration['content_id'], $pModeration['data']['notice']);
 					}
 				}
 			}
@@ -999,7 +1013,6 @@ function group_content_user_perms( &$pObject, $pParamHash ) {
 	else {
 		$pObject->mUserContentPerms = array();
 	}
-
 }
 
 ?>

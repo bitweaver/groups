@@ -56,7 +56,7 @@ if( $gBitUser->isInGroup( $gContent->mGroupId ) ){
 		if ( $gBitUser->addUserToGroup( $gBitUser->mUserId, $gContent->mGroupId ) ){
 			if ( $gBitSystem->isPackageActive('switchboard') && !empty($_REQUEST['notice']) ) {
 				global $gSwitchboardSystem;
-				$gSwitchboardSystem->storeUserPref($gBitUser->mUserId, 'switchboard', $_REQUEST['notice'], $gContent->mContentId);
+				$gSwitchboardSystem->storeUserPref($gBitUser->mUserId, 'group', 'message', $gContent->mContentId,  $_REQUEST['notice']);
 			}
 			header( "Location: ".$gContent->getDisplayUrl() );
 			die;

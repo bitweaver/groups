@@ -22,7 +22,7 @@
 						<input type="hidden" name="group_id" value="{$gContent->mInfo.group_id}" />
 						{formlabel label=Email}
 						{forminput}
-							<input type="radio" value="each" name="notice" checked="checked"/>
+							<input type="radio" value="email" name="notice" checked="checked"/>
 							{formhelp note="Recieve each message via email as it is posted."}
 						{/forminput}
 						{formlabel label=Digest}
