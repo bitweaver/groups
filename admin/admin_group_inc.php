@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.10 2008/04/06 19:32:17 spiderr Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.11 2008/04/06 22:35:49 spiderr Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -39,7 +39,7 @@ $formGroupEmailList = array(
 	),
 );
 $gBitSmarty->assign( 'formGroupEmailList',$formGroupEmailList );
-$formGroupEmailText = array( 'group_email_host', 'group_email_admin' );
+$formGroupEmailText = array( 'group_email_host', 'group_email_admin', 'group_email_mailman_bin' );
 
 $formGroupLists = array(
 	"group_list_group_id" => array(

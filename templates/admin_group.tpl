@@ -19,6 +19,12 @@
 			{legend legend="Group Email List"}
 				<input type="hidden" name="page" value="{$page}" />
 
+				<div class="row">
+					{forminput}
+						Please see <a href="http://www.bitweaver.org/wiki/GroupsPackageConfig">configuration requirements</a> prior to utilizing this feature.
+					{/forminput}
+				</div>
+
 				{foreach from=$formGroupEmailList key=item item=output}
 					<div class="row">
 						{formlabel label=`$output.label` for=$item}
@@ -40,6 +46,13 @@
 					{forminput}
 						<input type="text" name="group_email_admin" value="{$gBitSystem->getConfig('group_email_admin',$gBitSystem->getConfig('site_sender_email'))}" />
 						{formhelp note="This is the email for the master administrator for all mailing lists."}
+					{/forminput}
+				</div>
+				<div class="row">
+					{formlabel label="Mailman bin Path" for='emailhost'}
+					{forminput}
+						<input type="text" name="group_email_mailman_bin" value="{$gBitSystem->getConfig('group_email_mailman_bin')|escape}" />
+						{formhelp note="Path to mailman applications, typically: /usr/lib/mailman/bin/"}
 					{/forminput}
 				</div>
 			{/legend}
