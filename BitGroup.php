@@ -1,8 +1,8 @@
 <?php
-/**
-* $Header
-* $Id: BitGroup.php
-*/
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.68 2008/04/06 22:36:30 spiderr Exp $
+// Copyright (c) 2004-2008 bitweaver Group
+// All Rights Reserved.
+// Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
 
 /**
 * Group class 
