@@ -1,6 +1,6 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.25 2008/04/05 17:10:35 nickpalmer Exp $
-// Copyright (c) 2004 bitweaver Group
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.26 2008/04/06 22:36:09 spiderr Exp $
+// Copyright (c) bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
 
@@ -55,8 +55,7 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 	$publicStatus = isset( $gContent->mInfo['view_content_public'] )?$gContent->mInfo['view_content_public']:NULL;
 
 	// Check if all Request values are delivered, and if not, set them
-	// to avoid error messages. This can happen if some features are
-	// disabled
+	// to avoid error messages. This can happen if some features are disabled
 	if( $gContent->store( $_REQUEST['group'] ) ) {
 
 		// if that went ok store role permissions for the group
@@ -87,7 +86,7 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 				$type = $cType['content_type_guid'];
 				if ( !empty( $_REQUEST['group_content'] ) && in_array( $type, $_REQUEST['group_content'] ) && in_array( $type, $groupContentTypes ) ) {
 					$gContent->storeContentTypePref( $type );
-				}else{
+				} else {
 					$gContent->expungeContentTypePref( $type );
 				}
 			}
