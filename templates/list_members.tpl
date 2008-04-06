@@ -8,7 +8,7 @@
 
 <div class="listing users">
 	<div class="header">
-		<h1>{tr}Group Members{/tr}: {$groupInfo.group_name}</h1>
+		<h1>{tr}Group Members{/tr}: {$groupInfo.group_name|escape}</h1>
 	</div>
 
 	<div class="body">
