@@ -12,29 +12,31 @@
 			<span class="warning">{tr}Your request to join this group is pending. You can update your preferences once your request has been approved.{/tr}
 		{else}
 			{form enctype="multipart/form-data" id="joingroupform"}
-				{if !$gBitUser->isInGroup( $gContent->mGroupId )}
-					{assign var="legendtext" value="How do you want to read this group?"}
-				{else}
-					{assign var="legendtext" value="Membership preferences"}
+				{if $gBitSystem->isPackageActive('switchboard')}
+					{if !$gBitUser->isInGroup( $gContent->mGroupId )}
+						{assign var="legendtext" value="How do you want to read this group?"}
+					{else}
+						{assign var="legendtext" value="Membership preferences"}
+					{/if}
+					{legend legend=$legendtext}
+						<input type="hidden" name="group_id" value="{$gContent->mInfo.group_id}" />
+						{formlabel label=Email}
+						{forminput}
+							<input type="radio" value="each" name="notice" checked="checked"/>
+							{formhelp note="Recieve each message via email as it is posted."}
+						{/forminput}
+						{formlabel label=Digest}
+						{forminput}
+							<input type="radio" value="digest" name="notice" />
+							{formhelp note="Get all messages for the day bundled into a single email."}
+						{/forminput}
+						{formlabel label="No Email"}
+						{forminput}
+							<input type="radio" value="none" name="notice" />
+							{formhelp note="Recieve no emails, read all messages online."}
+						{/forminput}
+					{/legend}
 				{/if}
-				{legend legend=$legendtext}
-					<input type="hidden" name="group_id" value="{$gContent->mInfo.group_id}" />
-					{formlabel label=Email}
-					{forminput}
-						<input type="radio" value="each" name="notice" checked="checked"/>
-						{formhelp note="Recieve each message via email as it is posted."}
-					{/forminput}
-					{formlabel label=Digest}
-					{forminput}
-						<input type="radio" value="digest" name="notice" />
-						{formhelp note="Get all messages for the day bundled into a single email."}
-					{/forminput}
-					{formlabel label="No Email"}
-					{forminput}
-						<input type="radio" value="none" name="notice" />
-						{formhelp note="Recieve no emails, read all messages online."}
-					{/forminput}
-				{/legend}
 				{if !$gBitUser->isInGroup( $gContent->mGroupId) && $gContent->mInfo.is_public != "y"}
 					{legend legend="Join Request"}
 						{forminput}

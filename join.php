@@ -54,6 +54,10 @@ if( $gBitUser->isInGroup( $gContent->mGroupId ) ){
 	// if group is free to join then do it
 	if ( $gContent->mInfo['is_public'] == "y" ){
 		if ( $gBitUser->addUserToGroup( $gBitUser->mUserId, $gContent->mGroupId ) ){
+			if ( $gBitSystem->isPackageActive('switchboard') && !empty($_REQUEST['notice']) ) {
+				global $gSwitchboardSystem;
+				$gSwitchboardSystem->storeUserPref($gBitUser->mUserId, 'switchboard', $_REQUEST['notice'], $gContent->mContentId);
+			}
 			header( "Location: ".$gContent->getDisplayUrl() );
 			die;
 		}

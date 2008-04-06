@@ -67,13 +67,21 @@ if( $gBitSystem->isPackageActive('moderation') &&
 							   );
 
 	function groups_moderation_callback(&$pModeration) {
-		global $gBitUser;
+		global $gBitUser, $gBitSystem;
 
 		if ($pModeration['type'] == 'join') {
 			if ($pModeration['status'] == MODERATION_APPROVED) {
 				// Add the user to the group
 				$gBitUser->addUserToGroup( $pModeration['source_user_id'], $pModeration['moderator_group_id'] );
-				// @TODO: Store the users notification preference now. It is in $pModeration['data']['notice'] and probably has to be stuffed in switchboard.
+				// Store the users notification preference
+				if ($gBitSystem->isPackageActive('switchboard') &&
+					!empty($pModeration['data']['notice'])) {
+					if ($pModeration['data']['notice'] == 'email' ||
+						$pModeration['data']['notice'] == 'digest') {
+						global $gModerationSystem;
+						$gModerationSystem->storeUserPref($pModeration['source_user_id'], 'switchboard', $pModeration['data']['notice'],$pModeration['content_id']);
+					}
+				}
 			}
 		}
 		else if ($pModeration['type'] == 'invite') {
