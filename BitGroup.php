@@ -907,6 +907,24 @@ function group_content_edit( &$pObject, &$pParamHash ) {
 function group_content_store( &$pObject, &$pParamHash ) {
 	global $gBitSystem, $gLibertySystem, $gBitUser;
 	$errors = NULL;
+
+	if( $gBitSystem->isPackageActive( 'group' ) && $gBitSystem->isPackageActive('switchboard') ) {
+		if( $pObject->isValid() && $pObject->isContentType( BITCOMMENT_CONTENT_TYPE_GUID ) ) {
+
+			// Get the groups the root is in
+			$listHash['mapped_content_id'] = $pParamHash['root_id'];
+			$group = new BitGroup();
+			$groups = $group->getList( $listHash );
+
+			if (!empty($groups)) {
+				foreach($groups as $group) {
+					global $gSwitchboardSystem;
+					$gSwitchboardSystem->sendEvent('group', 'message', $group['content_id'], array('subject' => tra('Group').': '.$group['title'].' : '.$pParamHash['title'], 'message' => tra('To read this message click here:').' '.$pObject->getDisplayURI()));
+				}
+			}
+		}
+	}
+
 	if( $gBitSystem->isPackageActive( 'group' ) && !empty( $pParamHash['connect_group_content_id'] ) ) {
 		$groupContent = new BitGroup( NULL, $pParamHash['connect_group_content_id'] );
 		$groupContent->load();
