@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.9 2008/04/05 23:27:06 spiderr Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.10 2008/04/06 19:32:17 spiderr Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -31,6 +31,15 @@ $formGroupFeatures = array(
 	),
 );
 $gBitSmarty->assign( 'formGroupFeatures',$formGroupFeatures );
+
+$formGroupEmailList = array(
+	"group_email_list" => array(
+		'label' => 'Group Email List',
+		'note' => 'Enable groups to have an associated email list',
+	),
+);
+$gBitSmarty->assign( 'formGroupEmailList',$formGroupEmailList );
+$formGroupEmailText = array( 'group_email_host', 'group_email_admin' );
 
 $formGroupLists = array(
 	"group_list_group_id" => array(
@@ -106,6 +115,10 @@ if( !empty( $_REQUEST['group_preferences'] ) ) {
 		simple_set_toggle( $item, GROUP_PKG_NAME );
 	}
 
+	foreach( $formGroupEmailText as $text ) {
+		$gBitSystem->storeConfig( $text, ( !empty( $_REQUEST[$text] ) ? trim( $_REQUEST[$text] ) : NULL ), GROUP_PKG_NAME );
+	}
+	
 	foreach( array_keys( $formGroupContent['guids'] ) as $type ) {
 		$gBitSystem->storeConfig( $type, ( ( !empty( $_REQUEST['group_content'] ) && in_array( $type, $_REQUEST['group_content'] ) ) ? 'y' : NULL ), GROUP_PKG_NAME );
 	}
@@ -115,6 +128,7 @@ if( !empty( $_REQUEST['group_preferences'] ) ) {
 			$gBitSystem->storeConfig( $conf, ( ( !empty( $_REQUEST['group_modules'] ) && in_array( $conf, $_REQUEST['group_modules'] ) ) ? 'y' : NULL ), GROUP_PKG_NAME );
 		}
 	}
+
 }
 
 // check the correct packages in the package selection
