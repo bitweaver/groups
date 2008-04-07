@@ -102,10 +102,13 @@ if( !$gContent->isValid() ) {
 		}
 	} else if( $gBitSystem->isPackageActive('moderation') ){
 		// otherwise send the request to moderation
-		// @TODO Don't think moderation can handle two content id situations, need feed back from Nick - wjames5
-		// $gModerationSystem->requestModeration('group', 'add_content', NULL, $gContent->mGroupId, $gContent->mContentId);
-		vd( 'Need way to moderate submissions!' );
-		// @TODO display some page letting user know their submisssion is awaiting moderation
+		// @TODO add a check here to see if the request has been made before to prevent duplicate requests
+		$dataHash = array( "map_content_id"=>$linkContent->mContentId );
+		$requestText = "The user has submitted a ".$linkContent->mType['content_description']." to the group ".$gContent->getTitle();
+		$modID = $gModerationSystem->requestModeration('group', 'add_content', NULL, $gContent->mGroupId, $gContent->mContentId, $requestText, MODERATION_PENDING, $dataHash );
+		$rsltMsg = $linkContent->mType['content_description']." ".$linkContent->mInfo['title']." has been submitted to the group ".$gContent->getTitle().", and is awaiting moderation.";
+		$rsltTitle = $gContent->getTitle();
+		$gModerationSystem->display( $rsltMsg, $rsltTitle );
 	} 
 }
 $gBitSystem->display( 'bitpackage:group/group_add_content.tpl', tra( 'Groups' ) );

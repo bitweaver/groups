@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.68 2008/04/06 22:36:30 spiderr Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.69 2008/04/07 22:24:49 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -108,11 +108,12 @@ if( $gBitSystem->isPackageActive('moderation') &&
 		}
 		else if ($pModeration['type'] == 'add_content') {
 			if ($pModeration['status'] == MODERATION_APPROVED) {
-				// Add content to the group
-				$group = new BitGroup(NULL, $pModeration['content_id']);
-				$group->load();
-				// @TODO need a way to get the mapped content id from moderation pkg
-				//$group->linkContent( array( "content_id" => $pModeration['submit_content_id'] ) );
+				if ( !empty( $pModeration['data']['map_content_id'] ) ){
+					$group = new BitGroup(NULL, $pModeration['content_id']);
+					$group->load();
+					$group->linkContent( array( "content_id" => $pModeration['data']['map_content_id'] ) );
+				}
+				// @TODO would be nice to be able to kick an error or msg back to the moderation system
 			}
 		}
 
