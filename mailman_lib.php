@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailman_lib.php,v 1.1 2008/04/06 22:38:50 spiderr Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailman_lib.php,v 1.2 2008/04/07 02:39:44 spiderr Exp $
 // Copyright (c) bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -40,9 +40,40 @@ function mailman_list_lists() {
 	return( $ret );
 }
 
-function mailman_newlist( $pCommand ) {
-bt(); die;
-	$ret = FALSE;
+
+// pParamHash follows naming convention off newlist --help usage instructions
+function mailman_newlist( $pParamHash ) {
+	$error = NULL;
+	if( !($error = mailman_verify_list( $pParamHash['listname'] )) ) {
+		$options = ' -q '.escapeshellarg( $pParamHash['listname'] );
+		$options .= ' '.escapeshellarg( $pParamHash['listadmin-addr'] ).' ';
+		$options .= ' '.escapeshellarg( $pParamHash['admin-password'] ).' ';
+		
+		$output = mailman_command( 'newlist', $options );
+
+		$newList = $pParamHash['listname'];
+		$newAliases = "
+## $newList mailing list
+$newList:              \"|/usr/lib/mailman/mail/mailman post $newList\"
+$newList-admin:        \"|/usr/lib/mailman/mail/mailman admin $newList\"
+$newList-bounces:      \"|/usr/lib/mailman/mail/mailman bounces $newList\"
+$newList-confirm:      \"|/usr/lib/mailman/mail/mailman confirm $newList\"
+$newList-join:         \"|/usr/lib/mailman/mail/mailman join $newList\"
+$newList-leave:        \"|/usr/lib/mailman/mail/mailman leave $newList\"
+$newList-owner:        \"|/usr/lib/mailman/mail/mailman owner $newList\"
+$newList-request:      \"|/usr/lib/mailman/mail/mailman request $newList\"
+$newList-subscribe:    \"|/usr/lib/mailman/mail/mailman subscribe $newList\"
+$newList-unsubscribe:  \"|/usr/lib/mailman/mail/mailman unsubscribe $newList\"";
+
+		if( $fh = fopen( '/etc/aliases', 'a' ) ) {
+			fwrite( $fh, $newAliases );
+			fclose( $fh );
+			exec( 'newaliases' );
+		} else {
+			$error = "Could not open /etc/aliases for appending.";
+		}
+	}
+	return $error;
 }
 
 function mailman_rmlist( $pCommand ) {
@@ -55,9 +86,9 @@ function mailman_command( $pCommand, $pOptions=NULL ) {
 	$fullCommand = $gBitSystem->getConfig( 'group_email_mailman_bin' ).'/'.$pCommand;
 	$fullCommand = str_replace( '//', '/', $fullCommand );
 	if( file_exists( $fullCommand ) ) {
-		exec( $fullCommand, $ret );
+		exec( $fullCommand.' '.$pOptions, $ret );
 	} else {
-		bit_log_error( tra( 'Groups mailman command failed.' ).tra( 'File not found' ).': '.$fullCommand );
+		bit_log_error( tra( 'Groups mailman command failed.' ).' '.tra( 'File not found' ).': '.$fullCommand );
 	}
 	return $ret;
 }

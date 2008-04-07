@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailing_list.php,v 1.1 2008/04/06 22:38:50 spiderr Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailing_list.php,v 1.2 2008/04/07 02:39:44 spiderr Exp $
 // Copyright (c) bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -23,7 +23,7 @@ if( $gContent->isValid() ) {
 
 	// if it has a custom theme lets theme it
 	$gContent->setGroupStyle();
-}else{
+} else {
 	$gBitSystem->fatalError( tra( 'The Group you requested does not exist' ));
 }
 
@@ -32,10 +32,9 @@ if( !$gContent->getPreference( 'group_mailing_list' ) ) {
 }
 if( !empty( $_REQUEST['create_list'] ) ) {
 	//------ Email List ------//
-	if( !($error = mailman_verify_list( $_REQUEST['group_mailing_list'] )) ) {
-		if( mailman_newlist( $_REQUEST['group_mailing_list'] ) ) {
-			$gContent->storePreference( 'group_mailing_list', !empty( $_REQUEST['group_mailing_list'] ) ? $_REQUEST['group_mailing_list'] : NULL );
-		}
+	if( !($error = mailman_newlist( array( 'listname' => $_REQUEST['group_mailing_list'], 'admin-password'=>$_REQUEST['group_mailing_list_password'], 'listadmin-addr'=>$gBitUser->getField( 'email' ) ) )) ) {
+		$gContent->storePreference( 'group_mailing_list', !empty( $_REQUEST['group_mailing_list'] ) ? $_REQUEST['group_mailing_list'] : NULL );
+		$gContent->storePreference( 'group_mailing_list_password', $_REQUEST['group_mailing_list_password'] );
 	} else {
 		$gBitSmarty->assign( 'errorMsg', $error );
 	}

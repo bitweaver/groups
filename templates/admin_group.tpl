@@ -53,6 +53,8 @@
 					{forminput}
 						<input type="text" name="group_email_mailman_bin" value="{$gBitSystem->getConfig('group_email_mailman_bin')|escape}" />
 						{formhelp note="Path to mailman applications, typically: /usr/lib/mailman/bin/"}
+						{if !$gBitSystem->getConfig('group_email_mailman_bin')}
+						{/if}
 					{/forminput}
 				</div>
 			{/legend}

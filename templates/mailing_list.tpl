@@ -22,6 +22,13 @@
 			{formhelp note="This is the email address for the group. It needs to be all lowercase alpha-numeric characters."}
 		{/forminput}
 	</div>
+	<div class="row">
+		{formlabel label="Administrator Password" for='emailhost'}
+		{forminput}
+			<input type="text" name="group_mailing_list_password" value="{$smarty.request.group_mailing_list_password}" />
+			{formhelp note="This is the password used to administer the mailing list."}
+		{/forminput}
+	</div>
 	<div class="row submit">
 		{forminput}
 			<input type="submit" name="create_list" value="Create List" />
