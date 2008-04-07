@@ -3,18 +3,23 @@ global $gContent;
 require_once( GROUP_PKG_PATH.'BitGroup.php');
 require_once( LIBERTY_PKG_PATH.'lookup_content_inc.php' );
 
+// this is needed when the center module is applied to avoid abusing $_REQUEST
+if( empty( $lookupHash )) {
+	$lookupHash = &$_REQUEST;
+}
+
 // if we already have a gContent, we assume someone else created it for us, and has properly loaded everything up.
 if( empty( $gContent ) || !is_object( $gContent ) || !$gContent->isValid() ) {
 	// if group_id supplied, use that
-	if( @BitBase::verifyId( $_REQUEST['group_id'] ) ) {
-		$gContent = new BitGroup( $_REQUEST['group_id'] );
+	if( @BitBase::verifyId( $lookupHash['group_id'] ) ) {
+		$gContent = new BitGroup( $lookupHash['group_id'] );
 
 	// if content_id supplied, use that
-	} elseif( @BitBase::verifyId( $_REQUEST['content_id'] ) ) {
-		$gContent = new BitGroup( NULL, $_REQUEST['content_id'] );
+	} elseif( @BitBase::verifyId( $lookupHash['content_id'] ) ) {
+		$gContent = new BitGroup( NULL, $lookupHash['content_id'] );
 
-	} elseif (@BitBase::verifyId( $_REQUEST['group']['group_id'] ) ) {
-		$gContent = new BitGroup( $_REQUEST['group']['group_id'] );
+	} elseif (@BitBase::verifyId( $lookupHash['group']['group_id'] ) ) {
+		$gContent = new BitGroup( $lookupHash['group']['group_id'] );
 
 	// otherwise create new object
 	} else {
