@@ -62,6 +62,13 @@ $tables = array(
 		CONSTRAINT ', CONSTRAINT `groups_content_types_group_content_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
 					, CONSTRAINT `groups_content_types_type_guid` FOREIGN KEY (`content_type_guid`) REFERENCES `".BIT_DB_PREFIX."liberty_content_types` (`content_type_guid`)'
 	",
+
+	'groups_invitations' => "
+		group_id I4 NOTNULL,
+		email C(200)
+		CONSTRAINT '
+			, CONSTRAINT `groups_invitations_group_id_ref` FOREIGN KEY (`group_id`) REFERENCES `".BIT_DB_PREFIX."groups` (`group_id`)'
+	",
 );
 
 global $gBitInstaller;
