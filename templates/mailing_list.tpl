@@ -2,15 +2,38 @@
 
 <div class="listing users">
 	<div class="header">
-		<h1>{tr}Mailing List{/tr}: {$groupInfo.group_name|escape}</h1>
+		<h1>{tr}Mailing List{/tr}{if $gContent->getPreference('group_mailing_list')}: {$gContent->getPreference('group_mailing_list')}{/if}</h1>
 	</div>
 
 	<div class="body">
 		{formfeedback success=$successMsg error=$errorMsg}
 
-		{if !$gContent->getPreference( 'group_mailing_list' )}
+{if $gContent->getPreference('group_mailing_list')}
+			<div class="row">
+				{formlabel label="Subscribe"}
+				{forminput}
+					{form}
+					<input type="hidden" name="group_id" value="{$gContent->mGroupId}"/>
+					{if mailman_findmember($gContent->getPreference('group_mailing_list'),$gBitUser->getField('email'))}
+						<p>{tr}You are currently subscribed to the mailing list using the email:{/tr} {$gBitUser->getField('email')}</p>
+						<input type="submit" name="unsubscribe" value="Unsubscribe" />
+					{else}
+						<p>{tr}You are currently not subscribed to the mailing list.{/tr}</p>
+						<input type="submit" name="subscribe" value="Subscribe" />
+					{/if}
+					{/form}
+				{/forminput}
+			</div>
+	{if $gContent->hasAdminPermission()}
+		<div class="row submit">
+			{forminput}
+				<input type="submit" name="delete_list" value="Delete List" />
+			{/forminput}
+		</div>
+	{/if}
+{else}
 			{formfeedback warning="No mailing address has been configured for this group."}
-			{if $gContent->hasAdminPermission()}
+	{if $gContent->hasAdminPermission()}
 {strip}
 {legend legend="Group Mailing List"}
 {form}
@@ -37,8 +60,8 @@
 {/form}
 {/legend}
 {/strip}
-			{/if}
-		{/if}
+	{/if}
+{/if}
 
 		<ol class="data">
 			{foreach from=$groupMembers key=userId item=member}

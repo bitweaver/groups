@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailman_lib.php,v 1.2 2008/04/07 02:39:44 spiderr Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailman_lib.php,v 1.3 2008/04/07 17:13:57 spiderr Exp $
 // Copyright (c) bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -76,19 +76,54 @@ $newList-unsubscribe:  \"|/usr/lib/mailman/mail/mailman unsubscribe $newList\"";
 	return $error;
 }
 
-function mailman_rmlist( $pCommand ) {
+function mailman_remove_member( $pListName, $pEmail ) {
+	$ret = '';
+	if( $fullCommand = mailman_get_command( 'remove_members' ) ) {
+		$cmd = "echo ".escapeshellarg( $pEmail )." | $fullCommand  -f - ".escapeshellarg( $pListName );
+		exec( $cmd, $ret );
+	} else {
+		bit_log_error( tra( 'Groups mailman command failed' ).' (remove_members) '.tra( 'File not found' ).': '.$fullCommand );
+	}
+}
+
+function mailman_addmember( $pListName, $pEmail ) {
+	$ret = '';
+	if( $fullCommand = mailman_get_command( 'add_members' ) ) {
+		$cmd = "echo ".escapeshellarg( $pEmail )." | $fullCommand  -r - ".escapeshellarg( $pListName );
+		exec( $cmd, $ret );
+	} else {
+		bit_log_error( tra( 'Groups mailman command failed' ).' (add_members) '.tra( 'File not found' ).': '.$fullCommand );
+	}
+}
+
+function mailman_findmember( $pListName, $pEmail ) {
+	$options = ' -l '.escapeshellarg( $pListName ).' '.escapeshellarg( $pEmail );
+	$output = mailman_command( 'find_member', $options );
+	return $output;
+}
+
+function mailman_rmlist( $pListName ) {
 	$ret = FALSE;
 }
 
 function mailman_command( $pCommand, $pOptions=NULL ) {
+	$ret = NULL;
+	if( $fullCommand = mailman_get_command( $pCommand ) ) {
+		$cmd = $fullCommand.' '.$pOptions;
+		exec( $cmd, $ret );
+	} else {
+		bit_log_error( tra( 'Groups mailman command failed' ).' ('.$pCommand.') '.tra( 'File not found' ).': '.$fullCommand );
+	}
+	return $ret;
+}
+
+function mailman_get_command( $pCommand ) {
 	global $gBitSystem;
 	$ret = NULL;
 	$fullCommand = $gBitSystem->getConfig( 'group_email_mailman_bin' ).'/'.$pCommand;
 	$fullCommand = str_replace( '//', '/', $fullCommand );
 	if( file_exists( $fullCommand ) ) {
-		exec( $fullCommand.' '.$pOptions, $ret );
-	} else {
-		bit_log_error( tra( 'Groups mailman command failed.' ).' '.tra( 'File not found' ).': '.$fullCommand );
+		$ret = $fullCommand;
 	}
 	return $ret;
 }

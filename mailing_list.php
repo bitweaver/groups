@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailing_list.php,v 1.2 2008/04/07 02:39:44 spiderr Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailing_list.php,v 1.3 2008/04/07 17:13:57 spiderr Exp $
 // Copyright (c) bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -46,8 +46,19 @@ if( !empty( $_REQUEST['create_list'] ) ) {
 
 } elseif( !empty( $_REQUEST['delete_list'] ) ) {
 	if( $gContent->getPreference( 'group_mailing_list' ) ) {
-		groups_mailman_command( 'rmlist', $gContent->getPreference( 'group_mailing_list' ) );
+		mailman_rmlist( $gContent->getPreference( 'group_mailing_list' ) );
 	}
+} elseif( !empty( $_REQUEST['subscribe'] ) ) {
+	if( $gContent->getPreference( 'group_mailing_list' ) ) {
+		mailman_addmember( $gContent->getPreference( 'group_mailing_list' ), $gBitUser->getField( 'email' ) );
+	}
+} elseif( !empty( $_REQUEST['unsubscribe'] ) ) {
+	if( $gContent->getPreference( 'group_mailing_list' ) ) {
+		mailman_remove_member( $gContent->getPreference( 'group_mailing_list' ), $gBitUser->getField( 'email' ) );
+	}
+}
+
+if( $gContent->getPreference( 'group_mailing_list' ) ) {
 }
 
 // Get all the groups members
