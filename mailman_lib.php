@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailman_lib.php,v 1.3 2008/04/07 17:13:57 spiderr Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailman_lib.php,v 1.4 2008/04/07 18:02:43 spiderr Exp $
 // Copyright (c) bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -52,8 +52,7 @@ function mailman_newlist( $pParamHash ) {
 		$output = mailman_command( 'newlist', $options );
 
 		$newList = $pParamHash['listname'];
-		$newAliases = "
-## $newList mailing list
+		$newAliases = "## $newList mailing list
 $newList:              \"|/usr/lib/mailman/mail/mailman post $newList\"
 $newList-admin:        \"|/usr/lib/mailman/mail/mailman admin $newList\"
 $newList-bounces:      \"|/usr/lib/mailman/mail/mailman bounces $newList\"
@@ -103,7 +102,51 @@ function mailman_findmember( $pListName, $pEmail ) {
 }
 
 function mailman_rmlist( $pListName ) {
-	$ret = FALSE;
+	$error = NULL;
+	if( mailman_verify_list( $pListName ) ) {
+		$options = ' -a '.escapeshellarg( $pListName );
+		$output = mailman_command( 'rmlist', $options );
+
+		$newList = $pListName;
+		$aliasesLines = array( 
+"## $newList mailing list" => TRUE,
+"$newList" => "\"|/usr/lib/mailman/mail/mailman post $newList\"",
+"$newList-admin" => "\"|/usr/lib/mailman/mail/mailman admin $newList\"",
+"$newList-bounces" => "\"|/usr/lib/mailman/mail/mailman bounces $newList\"",
+"$newList-confirm" => "\"|/usr/lib/mailman/mail/mailman confirm $newList\"",
+"$newList-join" => "\"|/usr/lib/mailman/mail/mailman join $newList\"",
+"$newList-leave" => "\"|/usr/lib/mailman/mail/mailman leave $newList\"",
+"$newList-owner" => "\"|/usr/lib/mailman/mail/mailman owner $newList\"",
+"$newList-request" => "\"|/usr/lib/mailman/mail/mailman request $newList\"",
+"$newList-subscribe" => "\"|/usr/lib/mailman/mail/mailman subscribe $newList\"",
+"$newList-unsubscribe" => "\"|/usr/lib/mailman/mail/mailman unsubscribe $newList\"" );
+
+		if( $fh = fopen( '/etc/aliases', 'r+' ) ) {
+			// cull out all aliase lines for the mailing list and rewrite the file
+			$newContents = '';
+			while( $line = fgets( $fh ) ) {
+				@list( $alias, $value ) = split( ':', $line );
+				$alias = trim( $alias );
+				if( empty( $aliasesLines[$alias] ) ) {
+					$newContents .= $line;
+				} 
+			}
+			fclose( $fh );
+
+			// reopen file truncating to zero length
+			$fh = fopen( '/etc/aliases', 'w' );
+			if( empty( $newContents ) ) {
+				$error = "Empty aliases for /etc/aliases";
+			} elseif( !fwrite( $fh, $newContents ) ) {
+				$error = "Could not write new /etc/aliases";
+			}
+			fclose( $fh );
+			exec( 'newaliases' );
+		} else {
+			$error = "Could not open /etc/aliases for appending.";
+		}
+	}
+	return $error;
 }
 
 function mailman_command( $pCommand, $pOptions=NULL ) {

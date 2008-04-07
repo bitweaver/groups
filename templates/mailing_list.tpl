@@ -9,11 +9,11 @@
 		{formfeedback success=$successMsg error=$errorMsg}
 
 {if $gContent->getPreference('group_mailing_list')}
+		{form}
+		<input type="hidden" name="group_id" value="{$gContent->mGroupId}"/>
 			<div class="row">
 				{formlabel label="Subscribe"}
 				{forminput}
-					{form}
-					<input type="hidden" name="group_id" value="{$gContent->mGroupId}"/>
 					{if mailman_findmember($gContent->getPreference('group_mailing_list'),$gBitUser->getField('email'))}
 						<p>{tr}You are currently subscribed to the mailing list using the email:{/tr} {$gBitUser->getField('email')}</p>
 						<input type="submit" name="unsubscribe" value="Unsubscribe" />
@@ -21,7 +21,6 @@
 						<p>{tr}You are currently not subscribed to the mailing list.{/tr}</p>
 						<input type="submit" name="subscribe" value="Subscribe" />
 					{/if}
-					{/form}
 				{/forminput}
 			</div>
 	{if $gContent->hasAdminPermission()}
@@ -31,6 +30,7 @@
 			{/forminput}
 		</div>
 	{/if}
+	{/form}
 {else}
 			{formfeedback warning="No mailing address has been configured for this group."}
 	{if $gContent->hasAdminPermission()}

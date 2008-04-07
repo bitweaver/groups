@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailing_list.php,v 1.3 2008/04/07 17:13:57 spiderr Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailing_list.php,v 1.4 2008/04/07 18:02:43 spiderr Exp $
 // Copyright (c) bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -27,9 +27,6 @@ if( $gContent->isValid() ) {
 	$gBitSystem->fatalError( tra( 'The Group you requested does not exist' ));
 }
 
-if( !$gContent->getPreference( 'group_mailing_list' ) ) {
-	$gBitSmarty->assign( 'suggestedListName', preg_replace( '/[^a-z0-9]/', '', strtolower( $gContent->getTitle() ) ) );
-}
 if( !empty( $_REQUEST['create_list'] ) ) {
 	//------ Email List ------//
 	if( !($error = mailman_newlist( array( 'listname' => $_REQUEST['group_mailing_list'], 'admin-password'=>$_REQUEST['group_mailing_list_password'], 'listadmin-addr'=>$gBitUser->getField( 'email' ) ) )) ) {
@@ -46,7 +43,19 @@ if( !empty( $_REQUEST['create_list'] ) ) {
 
 } elseif( !empty( $_REQUEST['delete_list'] ) ) {
 	if( $gContent->getPreference( 'group_mailing_list' ) ) {
-		mailman_rmlist( $gContent->getPreference( 'group_mailing_list' ) );
+		if( empty( $_REQUEST['confirm'] ) ) {
+			$formHash['delete_list'] = TRUE;
+			$formHash['group_id'] = $gContent->mGroupId;
+			$gBitSystem->confirmDialog( $formHash, array( 'warning' => 'Are you sure you want to delete the mailing list '.$gContent->getTitle().'?', 'error' => 'This cannot be undone!' ) );
+		} else {
+			if( !($error = mailman_rmlist( $gContent->getPreference( 'group_mailing_list' ) )) ) {
+				$gContent->storePreference( 'group_mailing_list', NULL );
+				$gContent->storePreference( 'group_mailing_list_password', NULL );
+				header( "Location: ".GROUP_PKG_URL."mailing_list.php?group_id=".$gContent->mGroupId );
+			} else {
+				$gBitSmarty->assign( 'errorMsg', $error );
+			}
+		}
 	}
 } elseif( !empty( $_REQUEST['subscribe'] ) ) {
 	if( $gContent->getPreference( 'group_mailing_list' ) ) {
@@ -58,7 +67,8 @@ if( !empty( $_REQUEST['create_list'] ) ) {
 	}
 }
 
-if( $gContent->getPreference( 'group_mailing_list' ) ) {
+if( !$gContent->getPreference( 'group_mailing_list' ) ) {
+	$gBitSmarty->assign( 'suggestedListName', preg_replace( '/[^a-z0-9]/', '', strtolower( $gContent->getTitle() ) ) );
 }
 
 // Get all the groups members
