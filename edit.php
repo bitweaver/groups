@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.26 2008/04/06 22:36:09 spiderr Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.27 2008/04/07 16:11:20 wjames5 Exp $
 // Copyright (c) bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -79,7 +79,7 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 		}
 
 		// store content types group can create
-		if(!empty($formGropContent['guids'])) {
+		if(!empty($formGroupContent['guids'])) {
 			$groupContentTypes = array_keys( $formGroupContent['guids'] );
 			// we check the full list so that if the admin options changed we automagically clean up the group
 			foreach( $gLibertySystem->mContentTypes as $cType ) {
