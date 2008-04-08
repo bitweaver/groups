@@ -44,6 +44,23 @@
 					<p>{tr}There are currently no requests to be reviewed.{/tr}</p>
 				{/if}
 			{/jstab}
+			{jstab title="Email Members"}
+				{legend legend="Send an email blast to members of the group"}
+				{form}
+						<input type="hidden" name="group_id" value="{$gContent->mInfo.group_id}" />
+						<div class="row">
+							{formlabel label="Subject" for="subject"}
+							{forminput}
+								<input type="text" size="60" maxlength="200" name="email_subject" id="subject" value="" />
+							{/forminput}
+						</div>
+						{textarea name="email_body" label="Email Body"}{/textarea}
+						<div class="row submit">
+							<input type="submit" name="send_email" value="{tr}Send{/tr}" />
+						</div>
+				{/form}
+				{/legend}
+			{/jstab}
 		{/jstabs}
 		</div><!-- end .content -->
 	</div><!-- end .body -->
