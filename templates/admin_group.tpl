@@ -54,6 +54,7 @@
 						<input type="text" name="group_email_mailman_bin" value="{$gBitSystem->getConfig('group_email_mailman_bin')|escape}" />
 						{formhelp note="Path to mailman applications, typically: /usr/lib/mailman/bin/"}
 						{if !$gBitSystem->getConfig('group_email_mailman_bin')}
+							{formfeedback error="This setting is required to use mailing lists."}
 						{/if}
 					{/forminput}
 				</div>

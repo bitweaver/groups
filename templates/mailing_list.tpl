@@ -7,34 +7,36 @@
 
 	<div class="body">
 		{formfeedback success=$successMsg error=$errorMsg}
+{jstabs}
 
+{jstab title="List Information"}
 {if $gContent->getPreference('group_mailing_list')}
-		{form}
-		<input type="hidden" name="group_id" value="{$gContent->mGroupId}"/>
-			<div class="row">
-				{formlabel label="Subscribe"}
-				{forminput}
-					{if mailman_findmember($gContent->getPreference('group_mailing_list'),$gBitUser->getField('email'))}
-						<p>{tr}You are currently subscribed to the mailing list using the email:{/tr} {$gBitUser->getField('email')}</p>
-						<input type="submit" name="unsubscribe" value="Unsubscribe" />
-					{else}
-						<p>{tr}You are currently not subscribed to the mailing list.{/tr}</p>
-						<input type="submit" name="subscribe" value="Subscribe" />
-					{/if}
-				{/forminput}
-			</div>
+	{form}
+	<input type="hidden" name="group_id" value="{$gContent->mGroupId}"/>
+	<div class="row">
+		{formlabel label="Subscribe"}
+		{forminput}
+			{if mailman_findmember($gContent->getPreference('group_mailing_list'),$gBitUser->getField('email'))}
+				<p>{tr}You are currently subscribed to the mailing list using the email:{/tr} {$gBitUser->getField('email')}</p>
+				<input type="submit" name="unsubscribe" value="Unsubscribe" />
+			{else}
+				<p>{tr}You are currently not subscribed to the mailing list.{/tr}</p>
+				<input type="submit" name="subscribe" value="Subscribe" />
+			{/if}
+		{/forminput}
+	</div>
 	{if $gContent->hasAdminPermission()}
-		<div class="row submit">
-			{forminput}
-				<input type="submit" name="delete_list" value="Delete List" />
-			{/forminput}
-		</div>
+	<div class="row submit">
+		{forminput}
+			<input type="submit" name="delete_list" value="Delete List" />
+		{/forminput}
+	</div>
 	{/if}
 	{/form}
 {else}
 			{formfeedback warning="No mailing address has been configured for this group."}
 	{if $gContent->hasAdminPermission()}
-{strip}
+		{if $gBitSystem->getConfig('group_email_mailman_bin')}
 {legend legend="Group Mailing List"}
 {form}
 	<input type="hidden" name="group_id" value="{$gContent->mGroupId}"/>
@@ -59,17 +61,28 @@
 	</div>
 {/form}
 {/legend}
-{/strip}
+		{else}
+			{formfeedback error="Mailman is not configured."}
+			{if $gBitUser->isAdmin()}
+				<a href="{$smarty.const.KERNEL_PKG_PATH}admin/index.php?page=group">{tr}See group configuration{/tr}</a>
+			{/if}
+		{/if}
 	{/if}
 {/if}
-
+{/jstab}
+{if $listMembers}
+{jstab title="List Subscribers"}
 		<ol class="data">
-			{foreach from=$groupMembers key=userId item=member}
-				<li>{displayname hash=$member}</li>
+			{foreach from=$listMembers key=userId item=member}
+				<li>{displayname email=$member} &lt;{$member}&gt;</li>
 			{foreachelse}
 				<li>{tr}The group has no members.{/tr}</li>
 			{/foreach}
 		</ol>
+{/jstab}
+{/if}
+
+{/jstabs}
 	</div><!-- end .body -->
 </div>
 {/strip}

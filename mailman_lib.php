@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailman_lib.php,v 1.4 2008/04/07 18:02:43 spiderr Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailman_lib.php,v 1.5 2008/04/08 17:03:11 spiderr Exp $
 // Copyright (c) bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -38,6 +38,15 @@ function mailman_list_lists() {
 		}
 	}
 	return( $ret );
+}
+
+
+function mailman_list_members( $pListName ) {
+	$ret = array();
+	$options = escapeshellarg( $pListName );
+	if( $output = mailman_command( 'list_members', $options ) ) {
+	}
+	return( $output );
 }
 
 
