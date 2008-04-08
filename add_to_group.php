@@ -103,7 +103,10 @@ if( !$gContent->isValid() ) {
 	} else if( $gBitSystem->isPackageActive('moderation') ){
 		// otherwise send the request to moderation
 		// @TODO add a check here to see if the request has been made before to prevent duplicate requests
-		$dataHash = array( "map_content_id"=>$linkContent->mContentId );
+		$dataHash = array( 'map_content_id'=>$linkContent->mContentId,
+	   					   'content_type_guid'=>$linkContent->mType['content_type_guid'],
+	   					   'content_description'=>$linkContent->mType['content_description'],
+				   		   'title'=>$linkContent->getTitle() );
 		$requestText = "The user has submitted a ".$linkContent->mType['content_description']." to the group ".$gContent->getTitle();
 		$modID = $gModerationSystem->requestModeration('group', 'add_content', NULL, $gContent->mGroupId, $gContent->mContentId, $requestText, MODERATION_PENDING, $dataHash );
 		$rsltMsg = $linkContent->mType['content_description']." ".$linkContent->mInfo['title']." has been submitted to the group ".$gContent->getTitle().", and is awaiting moderation.";

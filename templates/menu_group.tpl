@@ -36,11 +36,10 @@
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}join.php?group_id={$gContent->mGroupId}">{if !$gBitUser->isInGroup( $gContent->mGroupId )}{tr}Join this group{/tr}{else}{tr}Edit my membership{/tr}{/if}</a></li>
 			{if $gContent->hasAdminPermission() || $gContent->hasUserPermission('p_group_group_members_admin')}
 				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}manage.php?group_id={$gContent->mGroupId}" title="assign roles">{tr}Manage members{/tr}</a></li>
-			{/if}
-			{if $gContent->hasAdminPermission() }
-				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}invite_members.php?group_id={$gContent->mGroupId}">{tr}Invite members{/tr}</a></li>
+				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}tasks.php?group_id={$gContent->mGroupId}">{tr}Management Tasks{/tr}</a></li>
 			{/if}
 			{if $gContent->hasAdminPermission() || $gContent->hasEditPermission() }
+				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}invite_members.php?group_id={$gContent->mGroupId}">{tr}Invite members{/tr}</a></li>
 				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}edit.php?group_id={$gContent->mGroupId}">{tr}Group settings{/tr}</a></li>
 			{/if}
 			{if ($gBitSystem->isFeatureActive( 'group_themes' ) || $gBitSystem->isFeatureActive( 'group_layouts' )) && ($gContent->hasAdminPermission() || $gContent->hasEditPermission()) }
