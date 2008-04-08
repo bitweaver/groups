@@ -32,10 +32,10 @@ if (isset($_REQUEST['moderation_id'])) {
 		if ( $moderation['type'] == "add_content" ){
 			$msg = $moderation['data']['content_description']." ".$moderation['data']['title']." ".$_REQUEST['transition'];
 		}
-		$gBitSmarty->assign_by_ref( 'successMsg', $msg );
+		$gBitSmarty->assign_by_ref( 'successModMsg', $msg );
 	}else{
 		$msg = tra( 'Invalid request!' );
-		$gBitSmarty->assign_by_ref( 'errorMsg', $msg );
+		$gBitSmarty->assign_by_ref( 'errorModMsg', $msg );
 	}
 }
 
@@ -46,11 +46,12 @@ $gBitSmarty->assign_by_ref( 'modRequests', $modRequests );
 
 // email notification
 if ( isset($_REQUEST['send_email']) && $gBitSystem->isPackageActive('switchboard') ) {
-	$messageHash = array( 'subject' => "[".$gContent->getTitle()." ".tra('Group')."] ".$_REQUEST['email_subject'],
-						  'message' => $_REQUEST['email_body'] );
-	// @TODO finish this sending of email through SB, not sure how to format recipient list
-	// $recipients = ?;
-	// $gSwitchboardSystem->sendEvent('group', 'message', $gContent->mGroupId, $subject, $message );
+	$subject = "[".$gContent->getTitle()." ".tra('Group')."] ".$_REQUEST['email_subject'];
+	$body = $_REQUEST['email_body'];
+	$usersHash = array( 'email', 'real_name', 'login', 'user_id' );
+	$recipients = $gContent->getMembers();
+	$gSwitchboardSystem->sendEmail( $subject, $body, $recipients );
+	$gBitSmarty->assign( 'successEmailMsg', 'Email sent!' );
 }
 
 // display

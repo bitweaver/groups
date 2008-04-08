@@ -37,7 +37,7 @@
 
 				{if $list_moderations}
 					{legend legend="Review Requests"}
-						{formfeedback success=$successMsg error=$errorMsg}
+						{formfeedback success=$successModMsg error=$errorModMsg}
 						<ul>{$list_moderations}</ul>
 					{/legend}
 				{else}
@@ -46,6 +46,7 @@
 			{/jstab}
 			{jstab title="Email Members"}
 				{legend legend="Send an email blast to members of the group"}
+				{formfeedback success=$successEmailMsg error=$errorEmailMsg}
 				{form}
 						<input type="hidden" name="group_id" value="{$gContent->mInfo.group_id}" />
 						<div class="row">

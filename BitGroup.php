@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.69 2008/04/07 22:24:49 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.70 2008/04/08 21:03:25 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -603,7 +603,7 @@ class BitGroup extends LibertyAttachable {
 	function getMembers(){
 		$ret = array();
 		if ( $this->verifyId( $this->mGroupId ) ){
-			$query = "SELECT uu.`user_id` AS hash_key, uu.`login`, uu.`real_name`, uu.`user_id` 
+			$query = "SELECT uu.`user_id` AS hash_key, uu.`login`, uu.`real_name`, uu.`user_id`, uu.`email` 
 						FROM `".BIT_DB_PREFIX."users_users` uu 
 						INNER JOIN `".BIT_DB_PREFIX."users_groups_map` ug ON (uu.`user_id`=ug.`user_id`) 
 						WHERE `group_id`=?";
