@@ -30,11 +30,11 @@ if (isset($_REQUEST['moderation_id'])) {
 												NULL : $_REQUEST['reply']) );
 
 		if ( $moderation['type'] == "add_content" ){
-			$msg = $moderation['data']['content_description']." ".$moderation['data']['title']." successfully ".$_REQUEST['transition'];
+			$msg = $moderation['data']['content_description']." ".$moderation['data']['title']." ".$_REQUEST['transition'];
 		}
 		$gBitSmarty->assign_by_ref( 'successMsg', $msg );
 	}else{
-		$msg = "Invalid request!";
+		$msg = tra( 'Invalid request!' );
 		$gBitSmarty->assign_by_ref( 'errorMsg', $msg );
 	}
 }
