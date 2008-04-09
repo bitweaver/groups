@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.70 2008/04/08 21:03:25 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.71 2008/04/09 20:32:24 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -790,15 +790,17 @@ class BitGroup extends LibertyAttachable {
 			}
 		}
 	}
-}
 
-function group_module_display(&$pParamHash){
-	global $gBitThemes, $gBitSmarty, $gBitSystem, $gCenterPieces;
-	/* @TODO group services on group linked content */
-	if ( ACTIVE_PACKAGE == "group" && !empty( $_REQUEST['group_id'] ) ){
-		$group = new BitGroup( $_REQUEST['group_id'] );
-		$group->load();
-		if ( $group->isValid() ){
+	/**
+	 * Groups can add to their layout. Get their additions and add them to the base layout.
+	 * We don't make them add base group layout items so that its less confusing for laypeople.
+	 */
+	function injectGroupLayoutModules(){
+		global $gBitSmarty, $gBitThemes, $gCenterPieces;
+		if ( $this->isValid() ){
+			// need ref for our group menu if it needs to reference the group content object
+			$gBitSmarty->assign_by_ref( 'groupContent', $this );
+
 			/* custom query to get the group's layout modules 
 			 * needed because BitTheme::getLayout forces defaults
 			 * so with that we can never get an empty array, 
@@ -811,7 +813,7 @@ function group_module_display(&$pParamHash){
 						FROM `".BIT_DB_PREFIX."themes_layouts` tl
 						WHERE  tl.`layout`=? ORDER BY ".$gBitThemes->mDb->convertSortmode( "pos_asc" );
 
-			$result = $gBitThemes->mDb->query( $query, array(  "content_id.".$group->mContentId  ) );
+			$result = $gBitThemes->mDb->query( $query, array(  "content_id.".$this->mContentId  ) );
 			if( !empty( $result ) && $result->RecordCount() ) {
 				$row = $result->fetchRow(); 
 				while( $row ) {
@@ -848,6 +850,20 @@ function group_module_display(&$pParamHash){
 	}
 }
 
+function group_module_display(&$pParamHash){
+	global $gBitThemes, $gBitSmarty, $gBitSystem, $gCenterPieces;
+	if ( ACTIVE_PACKAGE == "group" && !empty( $_REQUEST['group_id'] ) ){
+		/* @TODO this is being done for the group pkg itself which is dumb - we are loading the object twice. 
+		 * We call it here since it is after layout gets loaded, but we should find a way to ref the group so we dont load it twice every freaking time.
+		 */
+		if ( $gBitSystem->isFeatureActive('group_layouts') ){
+			$group = new BitGroup( $_REQUEST['group_id'] );
+			$group->load();
+			$group->injectGroupLayoutModules();
+		}
+	}
+}
+
 function group_content_list_sql( &$pObject, $pParamHash=NULL ) {
 	global $gBitSystem;
 	$ret = array();
@@ -870,14 +886,29 @@ function group_content_list_sql( &$pObject, $pParamHash=NULL ) {
 }
 
 function group_content_display( &$pObject, &$pParamHash ) {
-	global $gBitSystem, $gBitSmarty;
+	global $gBitSystem, $gBitSmarty, $gBitThemes;
 	$listHash['mapped_content_id'] = $pObject->mContentId;
 	$group = new BitGroup();
 	$groups = $group->getList( $listHash );
 	if ( count( $groups ) == 1 && $gBitSystem->isFeatureActive('group_admin_content') ) {
 		// if and only if the content is mapped to one group do we use its theme and only if admin of content is enabled e.g. groups are not flickr like
-		// apply group layout
+		// apply group theme 
 		$group->setGroupStyle( $groups[0]['content_id'] );
+		// apply group layout
+		if ( $gBitSystem->isFeatureActive('group_layouts') ){
+			// we need to get the group pkg base layout first, this will make sure we dont use any other package as the base layout
+			$gBitThemes->mLayout = NULL;
+			$layout_name = "group"; 
+			$layoutHash = array(
+				'layout' => $layout_name,
+				'fallback' => FALSE,
+			);
+			$gBitThemes->loadLayout( $layoutHash );
+			// now we can add our custom groupcontent layout to it
+			$group2 = new BitGroup ( null, $groups[0]['content_id'] );
+			$group2->load();
+			$group2->injectGroupLayoutModules();
+		}
 	}
 	//vd( $groups );
 	$pObject->mInfo['member_groups'] = $groups;

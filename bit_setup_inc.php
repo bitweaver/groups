@@ -32,5 +32,7 @@ if( $gBitSystem->isPackageActive( 'group' ) ) {
 	) );
 
 	require_once( 'BitGroup.php' );
+
+	// $gBitSmarty->load_filter( 'output', 'groupslayout' );
 }
 ?>
