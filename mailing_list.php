@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailing_list.php,v 1.5 2008/04/08 17:03:11 spiderr Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/Attic/mailing_list.php,v 1.6 2008/04/09 16:07:37 spiderr Exp $
 // Copyright (c) bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -73,6 +73,5 @@ if( $gContent->getPreference( 'group_mailing_list' ) ) {
 }
 
 // display
-$gBitSystem->setBrowserTitle( $gContent->getTitle() ." ".  tra( 'Group Members' ) );
-$gBitSystem->display( "bitpackage:group/mailing_list.tpl" );
+$gBitSystem->display( "bitpackage:group/mailing_list.tpl", $gContent->getTitle() ." ".  tra( 'Group Mailing List' ) );
 ?>

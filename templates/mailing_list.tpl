@@ -11,6 +11,12 @@
 
 {jstab title="List Information"}
 {if $gContent->getPreference('group_mailing_list')}
+	<div class="row">
+		{formlabel label="Address"}
+		{forminput}
+			{$gContent->getPreference('group_mailing_list')}@{$gBitSystem->getConfig('group_email_host',$gBitSystem->getConfig('kernel_server_name'))}
+		{/forminput}
+	</div>
 	{form}
 	<input type="hidden" name="group_id" value="{$gContent->mGroupId}"/>
 	<div class="row">
