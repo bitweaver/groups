@@ -20,7 +20,7 @@ if( $gContent->isValid() ) {
 	$gBitSystem->fatalError( tra( 'The Group you are trying to invite people to does not exist' ));
 }
 
-if( !empty( $_REQUEST["send_invite"] ) ) {
+if ( !empty($_REQUEST['send_invite']) && $gBitSystem->isPackageActive('switchboard') ) {
 	// check all the email addresses are well formed
     // $tokens = split("[ \t\r\n,]", $_REQUEST['email_addresses'] );
     $tokens = split("[^-A-z0-9\.@_]", $_REQUEST['email_addresses'] );
@@ -51,11 +51,22 @@ if( !empty( $_REQUEST["send_invite"] ) ) {
 		$gBitSmarty->assign_by_ref( 'validEmail', $valid ); 
 		$gBitSmarty->assign_by_ref( 'email_addresses', $_REQUEST['email_addresses'] );
 		$gBitSmarty->assign_by_ref( 'email_body', $_REQUEST['email_body'] );
-	}else{
-		// @TODO store the email address in the invite table
-		// get an invite code
+	}else if( count( $valid ) > 0 ){
+		// @TODO store the email address in the invite tabl
+		$inviteCode = "@TODO_GET_KEY_ID";
 		// format the message and subject and send to switchboard
-		$msg = tra( "Invitations sent!" );
+		$subject = "Invitation to join ".$gContent->getTitle()." ".tra('Group');
+		// create email body text. @TODO move this to a tpl	
+		$body = $gBitUser->getDisplayName()." ".$gBitUser->mInfo['email']." has invited you to join the group ".$gContent->getTitle()." at ".BIT_ROOT_URI;
+		$body .= "\n\n".$_REQUEST['email_body']."\n\nTo join this group click the following url:\n".BIT_ROOT_URI."group/join.php?invite=".$inviteCode;
+		$body .= "\n\n".tra('Group Description')."\n\n".$gContent->mInfo['group_desc'];
+		// format email addresses for Switchboard
+		foreach( $valid as $email ){
+			$recipients[] = array( 'email' => $email );
+		}
+		// send email
+		$gSwitchboardSystem->sendEmail( $subject, $body, $recipients );
+		$msg = tra( 'Invitations sent!' );
 		$gBitSmarty->assign_by_ref( 'successMsg', $msg );
 	}
 }
