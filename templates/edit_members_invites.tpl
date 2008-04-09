@@ -26,7 +26,7 @@
 					<input type="submit" name="send_invite" value="{tr}Invite Members{/tr}" />
 				</div>
 			{/form}
-			{if invalidEmail}
+			{if $invalidEmail}
 				{legend legend="Error Help"}
 					<p>{tr}There was a problem with the format of your email addresses. Please check they are well formed and separated by commas. We have tried to diagnose the errors; our diagnosis may not be perfect, hopefully it is helpful. Here are what appear to be the invalid and valid emails:{/tr}</p>
 					<div class="row">
