@@ -17,7 +17,7 @@ if( $gContent->isValid() ) {
 	// if it has a custom theme lets theme it
 	$gContent->setGroupStyle();
 }else{
-	$gBitSystem->fatalError( tra( 'The Group you are trying to invite people to does not exist' ));
+	$gBitSystem->fatalError( tra( 'The Group you requested does not exist' ));
 }
 
 if ( !empty($_REQUEST['send_invite']) && $gBitSystem->isPackageActive('switchboard') ) {
@@ -52,26 +52,49 @@ if ( !empty($_REQUEST['send_invite']) && $gBitSystem->isPackageActive('switchboa
 		$gBitSmarty->assign_by_ref( 'email_addresses', $_REQUEST['email_addresses'] );
 		$gBitSmarty->assign_by_ref( 'email_body', $_REQUEST['email_body'] );
 	}else if( count( $valid ) > 0 ){
-		// @TODO store the email address in the invite tabl
-		$inviteCode = "@TODO_GET_KEY_ID";
-		// format the message and subject and send to switchboard
-		$subject = "Invitation to join ".$gContent->getTitle()." ".tra('Group');
-		// create email body text. @TODO move this to a tpl	
-		$body = $gBitUser->getDisplayName()." ".$gBitUser->mInfo['email']." has invited you to join the group ".$gContent->getTitle()." at ".BIT_ROOT_URI;
-		$body .= "\n\n".$_REQUEST['email_body']."\n\nTo join this group click the following url:\n".BIT_ROOT_URI."group/join.php?invite=".$inviteCode;
-		$body .= "\n\n".tra('Group Description')."\n\n".$gContent->mInfo['group_desc'];
-		// format email addresses for Switchboard
-		foreach( $valid as $email ){
-			$recipients[] = array( 'email' => $email );
+		// store the email addresses in the invite table and send email
+		foreach ( $valid as $email ){
+			$inviteHash = array( 'group_id' => $gContent->mGroupId,
+								 'email' => $email );
+			if ( $invite = $gContent->storeInvitation( $inviteHash ) ){
+				$inviteId = $invite['invite_id'];
+
+				// format the message and subject and send to switchboard
+				$subject = "Invitation to join ".$gContent->getTitle()." ".tra('Group');
+				// create email body text. 
+				// @TODO maybe move this to a tpl	
+				// @TODO add the website name to the link
+				$body = $gBitUser->getDisplayName()." ".$gBitUser->mInfo['email']." has invited you to join the group ".$gContent->getTitle()." at ".BIT_ROOT_URI;
+				$body .= "\n\n".$_REQUEST['email_body']."\n\nTo join this group click the following url:\n".BIT_ROOT_URI."group/join.php?invite=".$inviteId;
+				$body .= "\n\n".tra('Group Description')."\n\n".$gContent->mInfo['group_desc'];
+
+				// send email - each one must be separate since invite code is unique
+				// $gSwitchboardSystem->sendEmail( $subject, $body, array( 'email' => $email ) );
+			}
 		}
-		// send email
-		$gSwitchboardSystem->sendEmail( $subject, $body, $recipients );
 		$msg = tra( 'Invitations sent!' );
 		$gBitSmarty->assign_by_ref( 'successMsg', $msg );
 	}
 }
 
-// @TODO get a list of open invitations
+if ( !empty($_REQUEST['delete_invites']) && !empty( $_REQUEST['invites'] ) ) {
+	$deleted = TRUE;
+	foreach( $_REQUEST['invites'] as $invite ){
+		if ( !$gContent->expungeInvitation( $invite ) ){
+			$deleted = FALSE;
+			$msg = tra( 'There was a problem deleting one or more invitations.' );
+			$gBitSmarty->assign_by_ref( 'errorDeleteMsg', $msg );
+		}
+	}
+	if ( $deleted ){
+		$msg = tra( 'Invitations deleted!' );
+		$gBitSmarty->assign_by_ref( 'successDeleteMsg', $msg );
+	}
+}
+
+// get a list of all pending invites
+$invites = $gContent->getInvitationsList(); 
+$gBitSmarty->assign_by_ref( 'invites', $invites );
 
 // display
 $gBitSystem->setBrowserTitle( $gContent->getTitle() ." ".  tra( 'Group Invite Members' ) );

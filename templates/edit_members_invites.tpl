@@ -5,6 +5,8 @@
 	</div><!-- end .header -->
 	<div class="body">
 		<div class="content">
+		{jstabs}
+			{jstab title="Invite Members"}
 			{formfeedback success=$successMsg error=$errorMsg}
 			{form enctype="multipart/form-data" id="sendinvite" legend="Send invitation by email"}
 				<input type="hidden" name="group_id" value="{$gContent->mInfo.group_id}" />
@@ -53,6 +55,49 @@
 					</div>
 				{/legend}
 			{/if}
+			{/jstab}
+			{jstab title="Open Invitations"}
+				{formfeedback success=$successDeleteMsg error=$errorDeleteMsg}
+				{if count( $invites ) > 0 }
+					{form}
+						<input type="hidden" name="group_id" value="{$gContent->mInfo.group_id}" />
+						<table>
+						<thead>
+							<tr style="text-align:left">
+								<th>Email Address</th>
+								<th>User Name (if registered)</th>
+								<th style="text-align:center">Action</th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<td colspan=3 style="text-align:right">
+									<input type="submit" name="delete_invites" value="Delete Checked" />
+								</td>
+							</tr>
+						</tfoot>
+						<tbody>
+						{foreach item="invite" from=$invites}
+						 {cycle values="odd,even" assign="inviteClass"}
+						 <tr class="data {$inviteClass}">
+								<td>{$invite.email}</td>
+								<td>{if $invite.login}
+										<a href="{$smarty.const.BIT_ROOT_URL}users/index.php?home={$invite.login}" />{if $invite.real_name}{$invite.real_name}{else}{$invite.login}{/if}</a>
+									{else}
+										person is not registered
+									{/if}
+								</td>
+								<td style="text-align:center"><input type="checkbox" name="invites[]" value="{$invite.invite_id}" /></td>
+							</tr>
+						{/foreach}
+						</tbody>
+						</table>
+					{/form}
+				{else}
+					There are no open invitations
+				{/if}
+			{/jstab}
+		{/jstabs}
 		</div><!-- end .content -->
 	</div><!-- end .body -->
 </div><!-- end .group -->

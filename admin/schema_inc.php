@@ -64,8 +64,9 @@ $tables = array(
 	",
 
 	'groups_invitations' => "
-		group_id I4 NOTNULL,
-		email C(200)
+		group_id I4 PRIMARY,
+		email C(200) PRIMARY,
+		invite_id C(32) PRIMARY
 		CONSTRAINT '
 			, CONSTRAINT `groups_invitations_group_id_ref` FOREIGN KEY (`group_id`) REFERENCES `".BIT_DB_PREFIX."groups` (`group_id`)'
 	",

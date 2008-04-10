@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.72 2008/04/10 12:58:20 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.73 2008/04/10 16:14:11 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -653,6 +653,102 @@ class BitGroup extends LibertyAttachable {
 	}
 
 	// -------------------- End Group Roles Funtions -------------------- //
+
+
+
+
+	// -------------------- Member Invitation Funtions -------------------- //
+
+	function verifyInvitation( &$pParamHash ){
+		$errors = array();
+		if( @$this->verifyId( $pParamHash['group_id'] ) ) {
+			$pParamHash['invite_store']['group_id'] = $pParamHash['group_id'];
+		}else{
+			$errors['group_id'] = "Invalid Group Id.";
+		}
+
+		if( !empty( $pParamHash['email'] ) ) {
+			$pParamHash['invite_store']['email'] = $pParamHash['email'];
+		}else{
+			$errors['email'] = "No email address was set.";
+		}
+
+		$pParamHash['invite_store']['invite_id'] = $this->genInviteId();
+
+		return( count( $errors ) == 0 );
+	}
+
+	function genInviteId(){
+		global $gBitUser;
+		$inviteId = $gBitUser->genPass(32);
+		// lets make sure its unique
+		if ( $this->mDb->getOne( "SELECT `invite_id` FROM `".BIT_DB_PREFIX."groups_invitations` WHERE `invite_id` = ?", array( $inviteId ) ) ){
+			// if its already in use lets try again
+			$inviteId = $this->genInviteId();
+		}
+		return $inviteId;		
+	}
+
+	function storeInvitation( &$pParamHash ){
+        $result = FALSE;
+        if( $this->verifyInvitation( $pParamHash ) ) {
+            $this->mDb->StartTrans();
+			$this->mDb->associateInsert( BIT_DB_PREFIX."groups_invitations", $pParamHash['invite_store'] );
+            $this->mDb->CompleteTrans();
+
+            // re-query to confirm results
+            $result = $this->getInvitation( $pParamHash['invite_store'] );
+        }
+        return $result;
+	}
+
+	function getInvitation( &$pMixed ){
+        $result = FALSE;
+		if ( !empty( $pMixed['invite_id'] ) || !empty( $pMixed['email'] ) ){
+			$bindVars = array();
+			$query = "SELECT * FROM `".BIT_DB_PREFIX."groups_invitations` WHERE";
+			if ( isset( $pMixed['invite_id'] ) ){
+				$query .= " `invite_id`=?";
+				array_push( $bindVars, $pMixed['invite_id'] );
+			}else if ( isset( $pMixed['email'] ) ){
+				$query .= " `email`=?";
+				array_push( $bindVars, $pMixed['email'] );
+			}
+			$result = $this->mDb->getOne( $query, $bindVars );
+		}
+		return $result;
+	}
+
+	function getInvitationsList(){
+		$ret = array();
+		if( $this->isValid() ) {
+			$bindVars = array( 'group_id' => $this->mGroupId );
+			$query = "SELECT DISTINCT gi.`email`, gi.`invite_id`, uu.`user_id`, uu.`login`, uu.`real_name` 
+					  FROM `".BIT_DB_PREFIX."groups_invitations` gi 
+					  LEFT OUTER JOIN `".BIT_DB_PREFIX."users_users` uu ON (uu.`email` = gi.`email`)
+					  WHERE gi.`group_id` = ? ORDER BY uu.`real_name`, uu.`login`, gi.`email`";
+			$result = $this->mDb->query( $query, $bindVars );
+			while ($res = $result->fetchrow()) {
+				$ret[] = $res;
+			};
+		}
+		return $ret;
+	}
+
+	function expungeInvitation( &$pInviteId ){
+		$return = FALSE;
+		if ( $this->isValid() && isset( $pInviteId ) ){
+			$bindVars = array( $pInviteId );
+			if ( $this->mDb->getOne("SELECT `invite_id` FROM `".BIT_DB_PREFIX."groups_invitations` WHERE `invite_id`=?", $bindVars ) ){
+				$query = "DELETE FROM `".BIT_DB_PREFIX."groups_invitations` WHERE `invite_id`=?"; 
+				$result = $this->mDb->query($query, $bindVars);
+				$return = TRUE;
+			}
+		}
+		return $return;
+	}
+
+	// -------------------- End Member Invitation Funtions -------------------- //
 
 
 
