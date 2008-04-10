@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.73 2008/04/10 16:14:11 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.74 2008/04/10 21:40:38 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -697,26 +697,25 @@ class BitGroup extends LibertyAttachable {
             $this->mDb->CompleteTrans();
 
             // re-query to confirm results
-            $result = $this->getInvitation( $pParamHash['invite_store'] );
+            $result = $this->getInvitation( $pParamHash['invite_store']['invite_id'] );
         }
         return $result;
 	}
 
-	function getInvitation( &$pMixed ){
-        $result = FALSE;
-		if ( !empty( $pMixed['invite_id'] ) || !empty( $pMixed['email'] ) ){
-			$bindVars = array();
-			$query = "SELECT * FROM `".BIT_DB_PREFIX."groups_invitations` WHERE";
-			if ( isset( $pMixed['invite_id'] ) ){
-				$query .= " `invite_id`=?";
-				array_push( $bindVars, $pMixed['invite_id'] );
-			}else if ( isset( $pMixed['email'] ) ){
-				$query .= " `email`=?";
-				array_push( $bindVars, $pMixed['email'] );
+	function getInvitation( &$pInviteId ){
+        $ret = FALSE;
+		if ( isset( $pInviteId ) ){
+			$bindVars = array( $pInviteId );
+			$query = "SELECT gi.*, uu.`user_id`, uu.`login`, uu.`real_name`
+						FROM `".BIT_DB_PREFIX."groups_invitations` gi 
+						LEFT OUTER JOIN `".BIT_DB_PREFIX."users_users` uu ON (uu.`email` = gi.`email`)
+						WHERE `invite_id`=?";
+			$result = $this->mDb->query( $query, $bindVars );
+			if( $result && $result->numRows() ) {
+				$ret = $result->fields;
 			}
-			$result = $this->mDb->getOne( $query, $bindVars );
 		}
-		return $result;
+		return $ret;
 	}
 
 	function getInvitationsList(){
