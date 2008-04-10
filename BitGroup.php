@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.71 2008/04/09 20:32:24 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.72 2008/04/10 12:58:20 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -486,6 +486,11 @@ class BitGroup extends LibertyAttachable {
 		return $ret;
 	}
 
+
+
+
+	// -------------------- Group Roles Funtions -------------------- //
+	
 	function getRoles() {
         $sql = "SELECT gr.* FROM `".BIT_DB_PREFIX."groups_roles` gr 
                 ORDER BY gr.`role_name` ASC";
@@ -647,6 +652,12 @@ class BitGroup extends LibertyAttachable {
 		return $ret;
 	}
 
+	// -------------------- End Group Roles Funtions -------------------- //
+
+
+
+
+	// -------------------- Content Mapping Funtions -------------------- //
 
 	/**
 	 * linkContent
@@ -776,6 +787,13 @@ class BitGroup extends LibertyAttachable {
 		return TRUE;
 	}
 
+	// -------------------- End Content Mapping Funtions -------------------- //
+
+
+
+
+	// -------------------- Theme and Layout Funtions -------------------- //
+
 	/**
 	 * Groups can pick their own theme. Get it and set it.
 	 */
@@ -848,7 +866,13 @@ class BitGroup extends LibertyAttachable {
 			$gBitThemes->mLayout = $merged; 
 		}
 	}
+	
+	// -------------------- End Theme and Layout Funtions -------------------- //
+	
 }
+
+
+// -------------------- Service Funtions -------------------- //
 
 function group_module_display(&$pParamHash){
 	global $gBitThemes, $gBitSmarty, $gBitSystem, $gCenterPieces;
