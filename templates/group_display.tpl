@@ -4,10 +4,10 @@
 		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='icon' serviceHash=$gContent->mInfo}
 
 		{if $print_page ne 'y'}
-			{if $gBitUser->hasPermission( 'p_group_edit' )}
+			{if $gContent->hasUserPermission( 'p_group_edit' )}
 				<a title="{tr}Edit this group{/tr}" href="{$smarty.const.GROUP_PKG_URL}edit.php?group_id={$gContent->mInfo.group_id}">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="Edit Group"}</a>
 			{/if}
-			{if $gBitUser->hasPermission( 'p_group_remove' ) || $gContent->isOwner()}
+			{if $gContent->hasUserPermission( 'p_group_remove' ) || $gContent->isOwner()}
 				<a title="{tr}Remove this group{/tr}" href="{$smarty.const.GROUP_PKG_URL}remove_group.php?group_id={$gContent->mInfo.group_id}">{biticon ipackage="icons" iname="edit-delete" iexplain="Remove Group"}</a>
 			{/if}
 		{/if}<!-- end print_page -->
@@ -54,7 +54,7 @@
 							{if $thread.post_count > 1}{if $thread.llc_user_id < 0}{$thread.l_anon_name|escape}{else}{displayname user_id=$thread.llc_user_id}{/if}{else}{/if}
 						</td>
 
-						{if $gBitUser->hasPermission('p_boards_edit') || $gBitUser->hasPermission('p_boards_post_edit')}
+						{if $gContent->hasUserPermission('p_boards_edit') || $gContent->hasUserPermission('p_boards_post_edit')}
 							<td style="text-align:center;">{if $thread.unreg > 0}<a class="highlight" href="{$thread.url}" title="{$thread.title|escape}">{$thread.unreg}</a>{/if}</td>
 						{/if}
 
