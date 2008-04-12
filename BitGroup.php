@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.74 2008/04/10 21:40:38 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.75 2008/04/12 22:40:20 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1157,30 +1157,30 @@ function group_content_user_perms( &$pObject, $pParamHash ) {
 	if ( $pObject->mContentTypeGuid == BITGROUP_CONTENT_TYPE_GUID ) {
 
 		$query = "SELECT rpm.`perm_name` AS `hash_key`, rpm.`perm_name`, g.`group_id`, ugm.`user_id`  FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rpm ".
-			"LEFT JOIN `".BIT_DB_PREFIX."groups_roles_users_map` rum ON ( rpm.`role_id` = rum.`role_id` ) ".
+			"LEFT JOIN `".BIT_DB_PREFIX."groups_roles_users_map` rum ON ( rpm.`role_id` = rum.`role_id` AND rpm.`group_content_id` = rum.`group_content_id`) ".
 			"LEFT JOIN `".BIT_DB_PREFIX."groups` g ON (rpm.`group_content_id` = g.`content_id` ) ".
 			"LEFT OUTER JOIN `".BIT_DB_PREFIX."users_groups_map` ugm ON (g.`group_id` = ugm.`group_id` AND ugm.`user_id` = ?) ".
 			"WHERE rpm.`group_content_id` = ? AND (rum.`user_id` = ? OR rpm.`role_id` = 3)";
 
 	} else {
 
-		$query = "SELECT rpm.`perm_name` AS `hash_key`, rpm.`perm_name`, rpm.`group_id` FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rpm ".
-			"LEFT JOIN `".BIT_DB_PREFIX."groups_roles_users_map` rum ON (rpm.`group_content_id` = rum.`group_content_id` ) ".
+		$query = "SELECT rpm.`perm_name` AS `hash_key`, rpm.*, ccm.*, ugm.*, rpm.`perm_name`, rpm.`group_id` FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rpm ".
+			"LEFT JOIN `".BIT_DB_PREFIX."groups_roles_users_map` rum ON (rpm.`role_id` = rum.`role_id` AND rpm.`group_content_id` = rum.`group_content_id` ) ".
 			"LEFT JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` ccm ON (rpm.`group_content_id` = ccm.`group_content_id` ) ".
 			"LEFT OUTER JOIN `".BIT_DB_PREFIX."users_groups_map` ugm ON (rpm.`group_id` = ugm.`group_id` AND ugm.`user_id` = ?) ".
 			"WHERE  ccm.`to_content_id` = ? AND (rum.`user_id` = ? OR rpm.`role_id` = 3)";
 
 	}
-
 	$perms = $pObject->mDb->getAssoc($query, array($userId, $contentId, $userId));
+	// Add the admin permission for this content type if appropriate
+	if( isset($perms['p_group_group_content_admin'] ) && $pObject->mContentTypeGuid != BITGROUP_CONTENT_TYPE_GUID ) {
+		$perms[$pObject->mAdminContentPerm] = array('perm_name'=>$pObject->mAdminContentPerm, 'user_id' => $userId);
+	}
+
 	if ( !isset($pObject->mUserContentPerms) ) {
 		$pObject->mUserContentPerms = $perms;
-	}
-	else if ( !empty($perms) ){
+	} elseif ( !empty($perms) ){
 		$pObject->mUserContentPerms = array_merge($pObject->mUserContentPerms, $perms);
-	}
-	else {
-		$pObject->mUserContentPerms = array();
 	}
 }
 
