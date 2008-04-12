@@ -112,7 +112,7 @@ $gBitInstaller->registerSchemaDefault( GROUP_PKG_NAME, array(
 	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_content_admin', 'Can admin group content')",
 	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_content_create', 'Can create group content')",
 	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_content_submit', 'Can submit content to group for inclusion')",
-	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_attachments_upload', 'Can upload files to group')",
+	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_att_upload', 'Can upload files to group')",
 	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_members_admin', 'Can admin group members')",
 	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_members_view', 'Can view group members')",
 	"INSERT INTO `".BIT_DB_PREFIX."groups_permissions` (`perm_name`,`perm_desc`) VALUES ('p_group_group_members_invite', 'Can send invitations to the group')",

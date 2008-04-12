@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/files.php,v 1.2 2008/04/11 16:24:22 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/files.php,v 1.3 2008/04/12 22:39:44 wjames5 Exp $
 // Copyright (c) bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -24,7 +24,7 @@ if( $gContent->isValid() ) {
 
 // If we are saving
 if( !empty( $_REQUEST["save_group"] ) ) {
-	if( !( $gContent->hasEditPermission() || $gContent->hasUserPermission('p_group_group_attachments_upload') ) ){
+	if( !( $gContent->hasEditPermission() || $gContent->hasUserPermission('p_group_group_att_upload') ) ){
 		$gBitSystem->fatalError( tra( "You do not have permission to add files to this group" ) );
 	}
 	
