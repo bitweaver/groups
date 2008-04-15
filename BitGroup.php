@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.76 2008/04/14 15:03:01 nickpalmer Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.77 2008/04/15 13:34:31 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -30,10 +30,10 @@ define( 'GROUPS_ROLE_MEMBER', 3);
 
 /**
  * load up switchboard
- * we need to include bit_setup)inc incase groups  gets loaded first
+ * we need to include bit_setup_inc incase groups  gets loaded first
  */
-if ( is_file( BIT_ROOT_PATH.'moderation/bit_setup_inc.php' ) ){
-	require_once( BIT_ROOT_PATH.'moderation/bit_setup_inc.php' );
+if ( is_file( BIT_ROOT_PATH.'switchboard/bit_setup_inc.php' ) ){
+	require_once( BIT_ROOT_PATH.'switchboard/bit_setup_inc.php' );
 }
 
 if ($gBitSystem->isPackageActive('switchboard')) {
