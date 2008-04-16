@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/moderation_inc.php,v 1.1 2008/04/15 13:48:22 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/moderation_inc.php,v 1.2 2008/04/16 02:45:47 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -61,7 +61,7 @@ if( $gBitSystem->isPackageActive('moderation') &&
 			}
 		}
 		else if ($pModeration['type'] == 'invite') {
-			if ($pModerationStatus['status'] == MODERATION_APPROVED) {
+			if ($pModeration['status'] == MODERATION_APPROVED) {
 				// Add the user to the group
 				$group = new BitGroup(NULL, $pModeration['content_id']);
 				$group->load();
