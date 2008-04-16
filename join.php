@@ -123,7 +123,7 @@ if( $gBitUser->isInGroup( $gContent->mGroupId ) ){
 	} else if( $gBitSystem->isPackageActive('moderation') ){
 		// otherwise send the request to moderation if they aren't reloading
 		if ( empty($pendingModeration) ) {
-			$pendingModeration = $gModerationSystem->requestModeration('group', 'join', NULL, $gContent->mGroupId, $gContent->mContentId, empty($_REQUEST['join_message']) ? NULL : $_REQUEST['join_message'], MODERATION_PENDING, empty($_REQUEST['notice']) ? NULL : array('notice' => $_REQUEST['notice']));
+			$pendingModeration = $gModerationSystem->requestModeration('group', 'join', NULL, $gContent->mGroupId, NULL, $gContent->mContentId, empty($_REQUEST['join_message']) ? NULL : $_REQUEST['join_message'], MODERATION_PENDING, empty($_REQUEST['notice']) ? NULL : array('notice' => $_REQUEST['notice']));
 			$gBitSmarty->assign('joinModeration', $pendingModeration);
 		}
 		else {
