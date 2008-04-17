@@ -7,7 +7,7 @@
 	<a href="{$group.group_home}">{$group.group_name}</a>&nbsp;
 	{/foreach}
 {/if}
-{if $gContent && $gContent->hasEditPermission() && (!$gBitSystem->isFeatureActive('group_admin_content') || (isset($contentMemberGroups) && count($contentMemberGroups)==0))}
+{if is_object($gContent) && $gContent->hasEditPermission() && (!$gBitSystem->isFeatureActive('group_admin_content') || (isset($contentMemberGroups) && count($contentMemberGroups)==0))}
 	<a href="{$smarty.const.GROUP_PKG_URL}add_to_group.php?submit_content_id={$gContent->mContentId}">Submit to a Group</a>
 {/if}
 </div>
