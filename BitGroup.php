@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.78 2008/04/15 13:48:22 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.79 2008/04/22 03:50:06 spiderr Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -168,7 +168,9 @@ class BitGroup extends LibertyAttachable {
 					$board = new BitBoard();
 					$boardHash = array(
 							"title" => $pParamHash['title']." ".tra('Forum'),
-							"data" => tra('Message board for the ').$pParamHash['title']." ".tra('Group')
+							"data" => tra('Message board for the ').$pParamHash['title']." ".tra('Group'),
+							'boards_mailing_list' => preg_replace( '/[^a-z0-9]/', '', strtolower( $pParamHash['content_store']['title'] ) ),
+							'boards_mailing_list_password' => substr( md5( rand() ), 0, 8 ),
 						);
 					if ( $board->store( $boardHash ) ){
 						$this->linkContent( $board->mInfo );
