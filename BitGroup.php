@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.79 2008/04/22 03:50:06 spiderr Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.80 2008/04/23 17:31:07 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -298,6 +298,15 @@ class BitGroup extends LibertyAttachable {
 		global $gBitUser;
 		$ret = FALSE;
 		if( $this->isValid() ) {
+			// before we clear out the group we need to know its forum boards so we can clear those out too
+			$listHash = array(
+				"connect_group_content_id" => $this->mContentId,
+				"content_type_guid" => "bitboard",
+				"sort_mode" => "created_asc"
+				);
+			$boards = $this->getContentList( $listHash );
+
+			// delete the group and its related group pkg settings
 			$this->mDb->StartTrans();
 			$query = "DELETE FROM `".BIT_DB_PREFIX."groups` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
@@ -309,11 +318,24 @@ class BitGroup extends LibertyAttachable {
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
 			$query = "DELETE FROM `".BIT_DB_PREFIX."groups_content_types` WHERE `group_content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
-			// TODO: Should we expunge the forum and all comments as well?
 			if( LibertyAttachable::expunge() ) {
 				if( $gBitUser->remove_group($this->mGroupId) ) {
 					$ret = TRUE;
 					$this->mDb->CompleteTrans();
+
+					/* if the group is succesfully deleted the oldest forum associated with it, 
+					 * which was automagically created when the group was created. If we ever want
+					 * to support associating multiple boards with a group then some consideration
+					 * of if all boards should be deleted might need to be made. Revision of that
+					 * would occure here.
+					 */
+					if ( $boards['cant'] && !empty( $boards['data'][0]['board_id'] ) ){
+						$boardId = $boards['data'][0]['board_id'];
+						require_once( BOARDS_PKG_PATH.'BitBoard.php' );
+						$board = new BitBoard( $boardId );
+						$board->load();
+						$board->expunge();
+					}
 				}
 				else {
 					$this->mDb->RollbackTrans();
