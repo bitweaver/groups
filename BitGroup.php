@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.82 2008/04/25 21:26:15 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.83 2008/04/25 21:57:22 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -166,6 +166,9 @@ class BitGroup extends LibertyAttachable {
 				$result = $this->mDb->associateInsert( $table, $pParamHash['group_pkg_store'] );
 				// Make sure this user is in the group
 				$gBitUser->addUserToGroup( $gBitUser->mUserId, $this->mGroupId );
+				// Restore the group in users table to update the home link now that we have a group id
+				$pParamHash['home'] = GROUP_PKG_URL."index.php?group_id=".$this->mGroupId;
+				$gBitUser->storeGroup( $pParamHash );
 				// Autogenerate a board for this group
 				if ( $gBitSystem->isPackageActive( 'boards' ) ){
 					require_once( BOARDS_PKG_PATH.'BitBoard.php' );
@@ -182,6 +185,7 @@ class BitGroup extends LibertyAttachable {
 					}
 				}
 			}
+
 			if ( $gBitSystem->isPackageActive( 'boards' ) ){
 				if ( !is_object( $board ) ){
 					$board = &$this->getBoard();
