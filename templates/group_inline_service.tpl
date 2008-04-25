@@ -1,5 +1,5 @@
 {strip}
-{if $smarty.const.ACTIVE_PACKAGE != 'group'}
+{if $smarty.const.ACTIVE_PACKAGE != 'group' && $smarty.const.ACTIVE_PACKAGE != 'boards'}
 <div class="group-permalink">
 {if $contentMemberGroups} 
 		<strong>{tr}In Group{if count($contentMemberGroups) > 1 }s{/if}{/tr}:</strong>&nbsp;
