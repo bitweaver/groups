@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.80 2008/04/23 17:31:07 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.81 2008/04/25 20:18:56 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -152,10 +152,11 @@ class BitGroup extends LibertyAttachable {
 		if( $this->verify( $pParamHash ) && $gBitUser->storeGroup( $pParamHash ) && LibertyAttachable::store( $pParamHash ) ) {
 			$table = BIT_DB_PREFIX."groups";
 			if( $this->mGroupId ) {
+				// editing an existing group
 				$locId = array( "group_id" => $pParamHash['group_id'] );
 				$result = $this->mDb->associateUpdate( $table, $pParamHash['group_pkg_store'], $locId );
 			}else {
-				// Get content
+				// new group
 				$pParamHash['group_pkg_store']['content_id'] = $pParamHash['content_id'];
 				$pParamHash['group_pkg_store']['group_id'] = $pParamHash['group_store']['group_id'];
 				$this->mGroupId = $pParamHash['group_store']['group_id'];
@@ -176,6 +177,26 @@ class BitGroup extends LibertyAttachable {
 						$this->linkContent( $board->mInfo );
 					}
 				}
+			}
+			if ( $gBitSystem->isPackageActive( 'boards' ) ){
+				if ( !is_object( $board ) ){
+					// if we are updating we dont have a board object, so lets get it.
+					$listHash = array(
+						"connect_group_content_id" => $this->mContentId,
+						"content_type_guid" => "bitboard",
+						"sort_mode" => "created_asc"
+						);
+					$boards = $this->getContentList( $listHash );
+					if ( $boards['cant'] && !empty( $boards['data'][0]['board_id'] ) ){
+						$boardId = $boards['data'][0]['board_id'];
+						require_once( BOARDS_PKG_PATH.'BitBoard.php' );
+						$board = new BitBoard( $boardId );
+						$board->load();
+					}
+				}
+				// pass moderate messages selection on to our group board
+				$modComments = $pParamHash['group_pkg_store']['mod_msgs'] == 'y'?$pParamHash['group_pkg_store']['mod_msgs']:NULL;
+				$board->storePreference( 'moderate_comments', $modComments );
 			}
 
 			$this->mDb->CompleteTrans();
@@ -1143,6 +1164,11 @@ function group_content_user_perms( &$pObject, $pParamHash ) {
 	// Add the admin permission for this content type if appropriate
 	if( isset($perms['p_group_group_content_admin'] ) && $pObject->mContentTypeGuid != BITGROUP_CONTENT_TYPE_GUID ) {
 		$perms[$pObject->mAdminContentPerm] = array('perm_name'=>$pObject->mAdminContentPerm, 'user_id' => $userId);
+	}
+
+	if( !empty($perms['p_group_group_msgs_admin'] ) ){
+		$perms['p_boards_post_edit'] = array( 'perm_name'=>'p_boards_post_edit', 'user_id'=> $userId );
+		$perms['p_liberty_admin_comments'] = array( 'perm_name'=>'p_liberty_admin_comments', 'user_id'=> $userId );
 	}
 
 	if ( !isset($pObject->mUserContentPerms) ) {
