@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.81 2008/04/25 20:18:56 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.82 2008/04/25 21:26:15 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -80,6 +80,9 @@ class BitGroup extends LibertyAttachable {
 		$this->mViewContentPerm  = 'p_group_view';
 		$this->mEditContentPerm  = 'p_group_edit';
 		$this->mAdminContentPerm = 'p_group_admin';
+
+		// A reference to the group's affiliated board, see getBoard() below
+		$this->mBoardObj = NULL;
 	}
 
 	/**
@@ -175,24 +178,13 @@ class BitGroup extends LibertyAttachable {
 						);
 					if ( $board->store( $boardHash ) ){
 						$this->linkContent( $board->mInfo );
+						$this->mBoardObj = &$board;
 					}
 				}
 			}
 			if ( $gBitSystem->isPackageActive( 'boards' ) ){
 				if ( !is_object( $board ) ){
-					// if we are updating we dont have a board object, so lets get it.
-					$listHash = array(
-						"connect_group_content_id" => $this->mContentId,
-						"content_type_guid" => "bitboard",
-						"sort_mode" => "created_asc"
-						);
-					$boards = $this->getContentList( $listHash );
-					if ( $boards['cant'] && !empty( $boards['data'][0]['board_id'] ) ){
-						$boardId = $boards['data'][0]['board_id'];
-						require_once( BOARDS_PKG_PATH.'BitBoard.php' );
-						$board = new BitBoard( $boardId );
-						$board->load();
-					}
+					$board = &$this->getBoard();
 				}
 				// pass moderate messages selection on to our group board
 				$modComments = $pParamHash['group_pkg_store']['mod_msgs'] == 'y'?$pParamHash['group_pkg_store']['mod_msgs']:NULL;
@@ -319,13 +311,8 @@ class BitGroup extends LibertyAttachable {
 		global $gBitUser;
 		$ret = FALSE;
 		if( $this->isValid() ) {
-			// before we clear out the group we need to know its forum boards so we can clear those out too
-			$listHash = array(
-				"connect_group_content_id" => $this->mContentId,
-				"content_type_guid" => "bitboard",
-				"sort_mode" => "created_asc"
-				);
-			$boards = $this->getContentList( $listHash );
+			// before we clear out the group we need to know its board so we can clear it out too
+			$board = &$this->getBoard();
 
 			// delete the group and its related group pkg settings
 			$this->mDb->StartTrans();
@@ -343,20 +330,8 @@ class BitGroup extends LibertyAttachable {
 				if( $gBitUser->remove_group($this->mGroupId) ) {
 					$ret = TRUE;
 					$this->mDb->CompleteTrans();
-
-					/* if the group is succesfully deleted the oldest forum associated with it, 
-					 * which was automagically created when the group was created. If we ever want
-					 * to support associating multiple boards with a group then some consideration
-					 * of if all boards should be deleted might need to be made. Revision of that
-					 * would occure here.
-					 */
-					if ( $boards['cant'] && !empty( $boards['data'][0]['board_id'] ) ){
-						$boardId = $boards['data'][0]['board_id'];
-						require_once( BOARDS_PKG_PATH.'BitBoard.php' );
-						$board = new BitBoard( $boardId );
-						$board->load();
-						$board->expunge();
-					}
+					// delete the associated board
+					$board->expunge();
 				}
 				else {
 					$this->mDb->RollbackTrans();
@@ -826,6 +801,35 @@ class BitGroup extends LibertyAttachable {
 			}
 		}
 		return $contentTypeData;
+	}
+
+	/**
+	 * get the group's affiliated baord
+	 * 
+	 * get the oldest board associated with the group, which was automagically created when 
+	 * the group was created. If we ever want to support associating multiple boards 
+	 * with a group then how to deal with that would have to be handled here.
+	 */
+	function getBoard(){
+		if ( $this->isValid() && !is_object( $this->mBoardObj ) ){
+			$listHash = array(
+				"connect_group_content_id" => $this->mContentId,
+				"content_type_guid" => "bitboard",
+				"sort_mode" => "created_asc"
+				);
+
+			$boards = $this->getContentList( $listHash );
+
+			if ( $boards['cant'] && !empty( $boards['data'][0]['board_id'] ) ){
+				$boardId = $boards['data'][0]['board_id'];
+				require_once( BOARDS_PKG_PATH.'BitBoard.php' );
+				$board = new BitBoard( $boardId );
+				$board->load();
+				$this->mBoardObj = &$board;
+			}
+		}
+
+		return $this->mBoardObj;
 	}
 
 	/**
