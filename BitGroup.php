@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.83 2008/04/25 21:57:22 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.84 2008/04/27 23:07:50 spiderr Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -333,9 +333,11 @@ class BitGroup extends LibertyAttachable {
 			if( LibertyAttachable::expunge() ) {
 				if( $gBitUser->remove_group($this->mGroupId) ) {
 					$ret = TRUE;
+					if( !empty( $board ) ) {
+						// delete the associated board
+						$board->expunge();
+					}
 					$this->mDb->CompleteTrans();
-					// delete the associated board
-					$board->expunge();
 				}
 				else {
 					$this->mDb->RollbackTrans();
