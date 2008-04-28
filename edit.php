@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.27 2008/04/07 16:11:20 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.28 2008/04/28 21:16:04 wjames5 Exp $
 // Copyright (c) bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -54,6 +54,9 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 	// get the current public status of the group before we save. we need this later for setting access control
 	$publicStatus = isset( $gContent->mInfo['view_content_public'] )?$gContent->mInfo['view_content_public']:NULL;
 
+	// get the current post messages permission for group members before we save. we need this later for setting post messages access control
+	$membersPostMsgsStatus = in_array( 'p_group_group_msgs_create', array_keys( $groupRoles[3]['perms'] ) )?TRUE:FALSE;
+
 	// Check if all Request values are delivered, and if not, set them
 	// to avoid error messages. This can happen if some features are disabled
 	if( $gContent->store( $_REQUEST['group'] ) ) {
@@ -77,6 +80,46 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 				}
 			}
 		}
+		
+		
+		//----- set comment posting permissions for related board -----//
+
+		/**
+		 * since groups inherently requires membership by default to post comments 
+		 * to the group, then we need to revoke p_liberty_post_comments from all 
+		 * other groups on the related board.
+		 *
+		 * further more, if members of the group also can not post comments, e.g. it
+		 * is an announce only grop,  then we need to not give p_liberty_post_comments 
+		 * to this group for the related board.
+		 */
+		// only set the custom preferences if there has been a status change
+		$membersPostMsgs = !empty( $_REQUEST['group']['perms'][3]['p_group_group_msgs_create'] )?TRUE:FALSE;
+		if ( $membersPostMsgs != $membersPostMsgsStatus ){ 
+			$boardContentId = $gContent->mBoardObj->mContentId;
+			$commPostPerm = 'p_liberty_post_comments';
+			$allGroups = $gBitUser->getAllGroups($pListHash);
+			// for each group thats not this group and has the permission revoke it
+			foreach( $allGroups as $groupId => $group ){
+				$groupPerms = array_keys( $group['perms'] );
+				// if group has content view perm by default and is not admin and not our group
+				if ( $groupId != 1 && $groupId != $gContent->mGroupId  && in_array( $commPostPerm, $groupPerms ) ){
+					// revoke
+					$gContent->storePermission( $groupId, $commPostPerm, TRUE, $boardContentId );
+				}
+			}
+
+			// set the perm for this group
+			if ( $membersPostMsgs ){
+				// if members can post comments then give the group the perm
+				$gContent->storePermission( $gContent->mGroupId, $commPostPerm, FALSE, $boardContentId );
+			}else{
+				// if not lets make sure its not set
+				$gContent->removePermission( $gContent->mGroupId, $commPostPerm, $boardContentId );
+			}
+		}
+		// end setting p_liberty_post_comments custom permissions
+
 
 		// store content types group can create
 		if(!empty($formGroupContent['guids'])) {
