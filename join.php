@@ -100,7 +100,10 @@ if ($gBitSystem->isPackageActive('moderation')) {
 if( $gBitUser->isInGroup( $gContent->mGroupId ) ){
 	// user is changing their preferences
    	if( !empty( $_REQUEST['save_prefs'] ) ){
-		// @TODO store them
+		if ( $gBitSystem->isPackageActive('switchboard') && !empty($_REQUEST['notice']) ) {
+			global $gSwitchboardSystem;
+			$gSwitchboardSystem->storeUserPref($gBitUser->mUserId, 'group', 'message', $gContent->mContentId,  $_REQUEST['notice']);
+		}
 	} elseif( !empty( $_REQUEST['leave_group'] ) ){
 		// remove the user from the group
 		$gBitUser->removeUserFromGroup( $gBitUser->mUserId, $gContent->mGroupId );

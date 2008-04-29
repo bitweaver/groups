@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.86 2008/04/29 02:13:43 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.87 2008/04/29 15:02:17 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1059,17 +1059,36 @@ function group_content_store( &$pObject, &$pParamHash ) {
 	$errors = NULL;
 
 	if( $gBitSystem->isPackageActive( 'group' ) && $gBitSystem->isPackageActive('switchboard') ) {
-		if( $pObject->isValid() && $pObject->isContentType( BITCOMMENT_CONTENT_TYPE_GUID ) ) {
+		if( $pObject->isValid() && $pObject->isContentType( BITCOMMENT_CONTENT_TYPE_GUID ) && $pParamHash['content_store']['content_status_id'] == 50 ) {
+			// load up the root, we need to know a few things
+			$root = LibertyBase::getLibertyObject( $pParamHash['root_id'] );
+			// if its a board and it does not have a mailing list in effect then we can send an email
+			if( $root->mType['content_type_guid'] == 'bitboard' && !$root->getPreference( 'boards_mailing_list' ) ){
 
-			// Get the groups the root is in
-			$listHash['mapped_content_id'] = $pParamHash['root_id'];
-			$group = new BitGroup();
-			$groups = $group->getList( $listHash );
+				// Get the groups the root is in
+				$listHash['mapped_content_id'] = $pParamHash['root_id'];
+				$group = new BitGroup();
+				$groups = $group->getList( $listHash );
 
-			if (!empty($groups)) {
-				foreach($groups as $group) {
-					global $gSwitchboardSystem;
-					$gSwitchboardSystem->sendEvent('group', 'message', $group['content_id'], array('subject' => tra('Group').': '.$group['title'].' : '.$pParamHash['title'], 'message' => tra('To read this message click here:').' '.$pObject->getDisplayURI()));
+				// some text we need
+				$permaLink = BIT_BASE_URI.$pObject->getDisplayUrl( NULL, array('parent_id' => $pParamHash['root_id'], 'content_id'=>$pParamHash['content_id']) );
+				$parsedData = $pObject->parseData($pParamHash['content_store']);
+
+				if (!empty($groups)) {
+					foreach($groups as $group) {
+						// Draft the message body:
+						$body = tra('A new message was posted to the group').' '.$group['title'].'<br/><br/>'
+								.tra('The message was posted here:').' '.$permaLink.'<br/><br/><br/>'
+								.'/----- '.tra('Here is the posted text').' -----/<br/><br/>'
+								.$parsedData;
+
+						global $gSwitchboardSystem;
+						$gSwitchboardSystem->sendEvent('group', 
+													   'message', 
+													   $group['content_id'], 
+													   array('subject' => tra('Group').': '.$group['title'].' : '.$pParamHash['title'], 'message' => $body)
+													);
+					}
 				}
 			}
 		}
