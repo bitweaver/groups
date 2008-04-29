@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.85 2008/04/28 21:16:04 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.86 2008/04/29 02:13:43 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1181,6 +1181,7 @@ function group_content_user_perms( &$pObject, $pParamHash ) {
 		// grant admin comments if member has permission
 		if( !empty($perms['p_group_group_msgs_admin'] ) ){
 			$perms['p_boards_post_edit'] = array( 'perm_name'=>'p_boards_post_edit', 'user_id'=> $userId );
+			$perms['p_liberty_edit_comments'] = array( 'perm_name'=>'p_liberty_edit_comments', 'user_id'=> $userId );
 			$perms['p_liberty_admin_comments'] = array( 'perm_name'=>'p_liberty_admin_comments', 'user_id'=> $userId );
 		}
 
