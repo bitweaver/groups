@@ -12,7 +12,7 @@
 			<span class="warning">{tr}Your request to join this group is pending. You can update your preferences once your request has been approved.{/tr}
 		{else}
 			{form enctype="multipart/form-data" id="joingroupform"}
-				{if $gBitSystem->isPackageActive('switchboard')}
+				{if $gBitSystem->isPackageActive('switchboard') || $hasMailList}
 					{if !$gBitUser->isInGroup( $gContent->mGroupId )}
 						{assign var="legendtext" value="How do you want to read this group?"}
 					{else}
@@ -22,17 +22,19 @@
 						<input type="hidden" name="group_id" value="{$gContent->mInfo.group_id}" />
 						{formlabel label=Email}
 						{forminput}
-							<input type="radio" value="email" name="notice" checked="checked"/>
+							<input type="radio" value="email" name="notice" {if $userEmailPref=='email'}checked="checked"{/if}/>
 							{formhelp note="Recieve each message via email as it is posted."}
 						{/forminput}
+						{if !$hasMailList}
 						{formlabel label=Digest}
 						{forminput}
-							<input type="radio" value="digest" name="notice" />
+							<input type="radio" value="digest" name="notice" {if $userEmailPref=='digest'}checked="checked"{/if}/>
 							{formhelp note="Get all messages for the day bundled into a single email."}
 						{/forminput}
+						{/if}
 						{formlabel label="No Email"}
 						{forminput}
-							<input type="radio" value="none" name="notice" />
+							<input type="radio" value="none" name="notice" {if $userEmailPref=='none'}checked="checked"{/if}/>
 							{formhelp note="Recieve no emails, read all messages online."}
 						{/forminput}
 					{/legend}

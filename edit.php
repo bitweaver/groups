@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.28 2008/04/28 21:16:04 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.29 2008/04/30 16:24:59 wjames5 Exp $
 // Copyright (c) bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -57,9 +57,12 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 	// get the current post messages permission for group members before we save. we need this later for setting post messages access control
 	$membersPostMsgsStatus = in_array( 'p_group_group_msgs_create', array_keys( $groupRoles[3]['perms'] ) )?TRUE:FALSE;
 
-	// Check if all Request values are delivered, and if not, set them
-	// to avoid error messages. This can happen if some features are disabled
+	// store it
 	if( $gContent->store( $_REQUEST['group'] ) ) {
+		// if its new store set the creator's email pref to receive email
+		if( $gContent->mInfo['last_modified'] == $gContent->mInfo['created'] ){
+			$gContent->storeUserEmailPref( 'email' );
+		}
 
 		// if that went ok store role permissions for the group
 		foreach( array_keys( $groupRoles ) as $roleId ) {

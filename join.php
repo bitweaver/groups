@@ -99,15 +99,13 @@ if ($gBitSystem->isPackageActive('moderation')) {
 // if the user is already in the group
 if( $gBitUser->isInGroup( $gContent->mGroupId ) ){
 	// user is changing their preferences
-   	if( !empty( $_REQUEST['save_prefs'] ) ){
-		if ( $gBitSystem->isPackageActive('switchboard') && !empty($_REQUEST['notice']) ) {
-			global $gSwitchboardSystem;
-			$gSwitchboardSystem->storeUserPref($gBitUser->mUserId, 'group', 'message', $gContent->mContentId,  $_REQUEST['notice']);
-		}
+   	if( !empty( $_REQUEST['save_prefs'] ) && !empty($_REQUEST['notice']) ) {
+		$gContent->storeUserEmailPref( $_REQUEST['notice'] );
 	} elseif( !empty( $_REQUEST['leave_group'] ) ){
+		// dump the users email prefs
+		$gContent->deleteUserEmailPref(); 
 		// remove the user from the group
 		$gBitUser->removeUserFromGroup( $gBitUser->mUserId, $gContent->mGroupId );
-		// @TODO remove their preferences for the group
 		header( "Location: ".$gContent->getDisplayUrl() );
 		die;
 	}
@@ -116,9 +114,8 @@ if( $gBitUser->isInGroup( $gContent->mGroupId ) ){
 	// if group is free to join then do it
 	if ( $gContent->mInfo['is_public'] == "y" ){
 		if ( $gBitUser->addUserToGroup( $gBitUser->mUserId, $gContent->mGroupId ) ){
-			if ( $gBitSystem->isPackageActive('switchboard') && !empty($_REQUEST['notice']) ) {
-				global $gSwitchboardSystem;
-				$gSwitchboardSystem->storeUserPref($gBitUser->mUserId, 'group', 'message', $gContent->mContentId,  $_REQUEST['notice']);
+			if ( !empty($_REQUEST['notice']) ) {
+				$gContent->storeUserEmailPref($_REQUEST['notice']);
 			}
 			header( "Location: ".$gContent->getDisplayUrl() );
 			die;
@@ -136,6 +133,14 @@ if( $gBitUser->isInGroup( $gContent->mGroupId ) ){
 		$gBitSmarty->assign('errors', tra("This group is not public. You may not join."));
 	}
 }
+
+// are we using a mailing list
+$hasMailList = $gContent->getBoard()->getPreference('boards_mailing_list');
+$gBitSmarty->assign( 'hasMailList', $hasMailList );
+
+// get the users current email pref
+$userEmailPref = $gContent->getUserEmailPref();
+$gBitSmarty->assign( 'userEmailPref', $userEmailPref );
 
 // display
 $gBitSystem->display( 'bitpackage:group/user_prefs.tpl', tra('Join')." ".$gContent->getTitle() );

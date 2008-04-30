@@ -58,10 +58,7 @@ if( !empty( $_REQUEST["save_roles"] ) ) {
 		$gBitSystem->fatalError( tra( 'You cannot modify a system administrator.' ));
 	}
 	// dump the users email prefs
-	if ( $gBitSystem->isPackageActive('switchboard') ) {
-		global $gSwitchboardSystem;
-		$gSwitchboardSystem->deleteUserPref($assignUser->mUserId, 'group', 'message', $gContent->mContentId, 'none'); 
-	}
+	$gContent->deleteUserEmailPref( $assignUser ); 
 	// remove the user from the group
 	$gBitUser->removeUserFromGroup($_REQUEST["assign_user"], $_REQUEST["group_id"]);
 	header( 'Location: '.$_SERVER['PHP_SELF'].'?group_id='.$gContent->mGroupId );

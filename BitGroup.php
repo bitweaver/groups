@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.88 2008/04/30 00:29:21 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.89 2008/04/30 16:24:59 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -601,6 +601,79 @@ class BitGroup extends LibertyAttachable {
 	}
 
 	// -------------------- End Group Roles Funtions -------------------- //
+
+
+
+
+	// -------------------- Member Email Funtions -------------------- //
+	
+	function storeUserEmailPref( $pPref, $pUser=NULL ){ 
+		global $gBitSystem, $gBitUser;
+		// if user is NULL get the active one
+		if ( !is_object( $pUser ) ){
+			$pUser = &$gBitUser;
+		}
+		// if the content is this and its board has a mailing list then act on that
+		if ( ($board = $this->getBoard()) && $board->getPreference( 'boards_mailing_list' ) ){
+			require_once( UTIL_PKG_PATH.'mailman_lib.php' );
+			if( $pPref == 'email' ) {
+				mailman_addmember( $board->getPreference( 'boards_mailing_list' ), $pUser->getField( 'email' ) );
+			} elseif( $pPref == 'none' ) {
+				mailman_remove_member( $board->getPreference( 'boards_mailing_list' ), $pUser->getField( 'email' ) );
+			}
+		}
+		// no mailing list then store in switchboard
+		elseif ( $gBitSystem->isPackageActive('switchboard') ) {
+			global $gSwitchboardSystem;
+			$gSwitchboardSystem->storeUserPref($pUser->mUserId, 'group', 'message', $this->mContentId,  $pPref); 
+		}
+	}
+
+	// dump the users email prefs
+	function deleteUserEmailPref( $pUser=NULL ){
+		global $gBitSystem, $gBitUser;
+		// if user is NULL get the active one
+		if ( !is_object( $pUser ) ){
+			$pUser = &$gBitUser;
+		}
+		// if the content is this and its board has a mailing list then act on that
+		if ( ($board = $this->getBoard()) && $board->getPreference( 'boards_mailing_list' ) ){
+			require_once( UTIL_PKG_PATH.'mailman_lib.php' );
+			mailman_remove_member( $board->getPreference( 'boards_mailing_list' ), $pUser->getField( 'email' ) );
+		}
+		// no mailing list then store in switchboard
+		if ( $gBitSystem->isPackageActive('switchboard') ) {
+			global $gSwitchboardSystem;
+			$gSwitchboardSystem->deleteUserPref($pUser->mUserId, 'group', 'message', $this->mContentId ); 
+		}
+	}
+
+	function getUserEmailPref( $pUser=NULL ){
+		global $gBitSystem, $gBitUser;
+		// if user is NULL get the active one
+		if ( !is_object( $pUser ) ){
+			$pUser = &$gBitUser;
+		}
+		// if the content is this and its board has a mailing list then act on that
+		if ( ($board = $this->getBoard()) && $board->getPreference( 'boards_mailing_list' ) ){
+			require_once( UTIL_PKG_PATH.'mailman_lib.php' );
+			if ( mailman_findmember($board->getPreference('boards_mailing_list'),$gBitUser->getField('email')) ){
+				$ret = 'email';
+			}else{
+				$ret = 'none';
+			}
+		}
+		// no mailing list then store in switchboard
+		if ( $gBitSystem->isPackageActive('switchboard') ) {
+			global $gSwitchboardSystem;
+			if ( ($rslt = $gSwitchboardSystem->loadContentPrefs( $pUser->mUserId, $this->mContentId ) ) ){
+				$ret =  $rslt[0]['delivery_style'];
+			}
+		}
+		return $ret;
+	}
+
+	// -------------------- END Member Email Funtions -------------------- //
 
 
 
