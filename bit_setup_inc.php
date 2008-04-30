@@ -27,6 +27,7 @@ if( $gBitSystem->isPackageActive( 'group' ) ) {
 		'content_preview_function'		=> 'group_content_preview',
 		'content_edit_function'			=> 'group_content_edit',
 		'content_store_function'		=> 'group_content_store',
+		'comment_store_function'		=> 'group_comment_store',
 		'content_expunge_function'		=> 'group_content_expunge',
 		'content_user_perms_function'	=> 'group_content_user_perms',
 	) );

@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.87 2008/04/29 15:02:17 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.88 2008/04/30 00:29:21 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1054,12 +1054,12 @@ function group_content_edit( &$pObject, &$pParamHash ) {
 	}
 }
 
-function group_content_store( &$pObject, &$pParamHash ) {
+function group_comment_store( &$pObject, &$pParamHash ) {
 	global $gBitSystem, $gLibertySystem, $gBitUser;
 	$errors = NULL;
 
 	if( $gBitSystem->isPackageActive( 'group' ) && $gBitSystem->isPackageActive('switchboard') ) {
-		if( $pObject->isValid() && $pObject->isContentType( BITCOMMENT_CONTENT_TYPE_GUID ) && $pParamHash['content_store']['content_status_id'] == 50 ) {
+		if( $pObject->isValid() && $pObject->isContentType( BITCOMMENT_CONTENT_TYPE_GUID ) && $pObject->loadComment() && $pObject->mInfo['content_status_id'] == 50 ) {
 			// load up the root, we need to know a few things
 			$root = LibertyBase::getLibertyObject( $pParamHash['root_id'] );
 			// if its a board and it does not have a mailing list in effect then we can send an email
@@ -1070,15 +1070,23 @@ function group_content_store( &$pObject, &$pParamHash ) {
 				$group = new BitGroup();
 				$groups = $group->getList( $listHash );
 
+				// Get the link
+				require_once( BOARDS_PKG_PATH.'BitBoardPost.php' );
+				$post = new BitBoardPost( $pObject->mCommentId );
+				$post->load();
+				$link = BIT_BASE_URI.$post->getDisplayUrl();
+
 				// some text we need
 				$permaLink = BIT_BASE_URI.$pObject->getDisplayUrl( NULL, array('parent_id' => $pParamHash['root_id'], 'content_id'=>$pParamHash['content_id']) );
-				$parsedData = $pObject->parseData($pParamHash['content_store']);
+				$parseHash = $pParamHash['content_store'];
+				$parseHash['uri_mode'] = TRUE;
+				$parsedData = $pObject->parseData($parseHash);
 
 				if (!empty($groups)) {
 					foreach($groups as $group) {
 						// Draft the message body:
 						$body = tra('A new message was posted to the group').' '.$group['title'].'<br/><br/>'
-								.tra('The message was posted here:').' '.$permaLink.'<br/><br/><br/>'
+								.tra('The message was posted here:').' '.$link.'<br/><br/><br/>'
 								.'/----- '.tra('Here is the posted text').' -----/<br/><br/>'
 								.$parsedData;
 
@@ -1093,6 +1101,11 @@ function group_content_store( &$pObject, &$pParamHash ) {
 			}
 		}
 	}
+}
+
+function group_content_store( &$pObject, &$pParamHash ) {
+	global $gBitSystem, $gLibertySystem, $gBitUser;
+	$errors = NULL;
 
 	if( $gBitSystem->isPackageActive( 'group' ) && !empty( $pParamHash['connect_group_content_id'] ) ) {
 		$groupContent = new BitGroup( NULL, $pParamHash['connect_group_content_id'] );
