@@ -34,19 +34,21 @@
 				{formlabel label="Homepage URL"}
 				<div class="forminput"><a href="{$smarty.const.BIT_BASE_URI}{$gContent->getDisplayUrl()}">{$smarty.const.BIT_BASE_URI}{$gContent->getDisplayUrl()}</a></div>
 			</div>
-			{if $gBitUser->isInGroup( $gContent->mGroupId )}
+			{if $gBitUser->isInGroup( $gContent->mGroupId ) && $boardsMailingList}
 			<div class="row">
 				{formlabel label="Group Email Address"}
 				<div class="forminput">
-					@TODO put related board email address here
+					{$boardsMailingList}
 					{formhelp note="You can post messages to this groups's forum by sending mail to this address"}
 				</div>
 			</div>
 			{/if}
+			<!-- @TODO 
 			<div class="row">
 				{formlabel label="RSS Feed"}
 				<div class="forminput">@TODO link to board messages feed here</div>
 			</div>
+			-->
 		</div><!-- end .content -->
 	</div><!-- end .body -->
 </div><!-- end .group -->
