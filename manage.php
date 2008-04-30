@@ -45,6 +45,21 @@ if( !empty( $_REQUEST["save_roles"] ) ) {
 	}
 	// refresh our groupMembers list to get their new roles
 	$groupMembers = $gContent->getMembers();
+}elseif( !empty( $_REQUEST["action"] ) && $_REQUEST['action'] == 'removeuser' ){
+	$gBitUser->verifyTicket();
+	if (!$gBitUser->userExists( array( 'user_id' => $_REQUEST["assign_user"] ) ) ) {
+		$gBitSystem->fatalError( tra( "User doesnt exist" ));
+	}
+
+	$assignUser = new BitPermUser( $_REQUEST["assign_user"] );
+	$assignUser->load( TRUE );
+
+	if( $assignUser->isAdmin() && !$gBitUser->isAdmin() ) {
+		$gBitSystem->fatalError( tra( 'You cannot modify a system administrator.' ));
+	}
+	$gBitUser->removeUserFromGroup($_REQUEST["assign_user"], $_REQUEST["group_id"]);
+	header( 'Location: '.$_SERVER['PHP_SELF'].'?group_id='.$gContent->mGroupId );
+	die;
 }
 
 $gBitSmarty->assign_by_ref( 'groupMembers', $groupMembers );
