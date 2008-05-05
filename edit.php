@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.29 2008/04/30 16:24:59 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.30 2008/05/05 13:38:04 wjames5 Exp $
 // Copyright (c) bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -234,6 +234,8 @@ $gBitSmarty->assign( 'formGroupContent', $formGroupContent );
 
 // get options hash
 require_once(GROUP_PKG_PATH.'options_inc.php'); 
+// if is_public is empty in the hash, set it ot "n" to make our template work nice
+if ( $gContent->isValid() && empty( $gContent->mInfo['is_public'] ) ){ $gContent->mInfo['is_public'] = 'n'; }
 
 // Display the template
 $gBitSystem->display( 'bitpackage:group/edit_group.tpl', tra('Group') );
