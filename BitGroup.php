@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.89 2008/04/30 16:24:59 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.90 2008/05/08 06:08:09 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -229,6 +229,10 @@ class BitGroup extends LibertyAttachable {
 		if( @$this->verifyId( $this->mInfo['group_id'] ) ) {
 			$pParamHash['group_id'] = $this->mInfo['group_id'];
 		}
+		
+		if( @$this->verifyId( $this->mInfo['user_id'] ) ) {
+			$pParamHash['user_id'] = $this->mInfo['user_id'];
+		}
 
 		// It is possible a derived class set this to something different
 		if( @$this->verifyId( $pParamHash['content_type_guid'] ) ) {
@@ -275,7 +279,9 @@ class BitGroup extends LibertyAttachable {
 		}
 
 		// Setup the group home URL
-		if( !empty($pParamHash['name']) ) {
+		if( @$this->verifyId( $this->mGroupId ) ) {
+			$pParamHash['home'] = GROUP_PKG_URL."index.php?group_id=".$this->mGroupId;
+		}elseif( !empty($pParamHash['name']) ) {
 			$pParamHash['home'] = GROUP_PKG_URL.urlencode($pParamHash['name']);
 		}
 
