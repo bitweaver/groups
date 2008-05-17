@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.9 2008/04/05 23:27:07 spiderr Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.10 2008/05/17 17:12:25 laetzer Exp $ *}
 {strip}
 <div class="floaticon">{bithelp}</div>
 
@@ -28,7 +28,7 @@
 	<div class="body">
 		{form enctype="multipart/form-data" id="editgroupform"}
 			{jstabs}
-				{jstab title="Group Information"}
+				{jstab title="Group"}
 					{legend legend="Group Information"}
 						<input type="hidden" name="group[group_id]" value="{$gContent->mInfo.group_id}" />
 
@@ -60,16 +60,16 @@
 					{/legend}
 				{/jstab}
 
-				{jstab title="Group Options"}
+				{jstab title="Options"}
 					{include file="bitpackage:group/edit_group_options.tpl"}
 				{/jstab}
 
-				{jstab title="Group Administration"}
+				{jstab title="Admin"}
 					{include file="bitpackage:group/edit_group_admin.tpl"}
 				{/jstab}
 
 			{if $gBitSystem->isFeatureActive('group_email_list')}
-				{jstab title="Group Email List"}
+				{jstab title="Email"}
 					{include file="bitpackage:group/edit_group_email_list.tpl"}
 				{/jstab}
 			{/if}
