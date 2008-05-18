@@ -18,7 +18,7 @@ $formGroupOptions = array(
 	),
 	"mod_content" => array(
 		'label' => 'Moderate Content',
-		'note' => 'When checked, all content created (like pages or blog posts) will be held for moderation before being displayed',
+		'note' => 'When checked, all content created (like pages or blog posts) will be held for moderation before being displayed.',
 		'default' => 'n',
 	),
 );
