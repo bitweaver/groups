@@ -25,8 +25,8 @@ $formGroupOptions = array(
 
 if ( $gBitSystem->isFeatureActive( 'group_admin_content' ) ){
 	$formGroupOptions['admin_content_strict'] = array(
-		'label' => 'Assert Administrative Control of Content',
-		'note' => 'When checked, only the group administrator can control content in the group. When not checked, members are allowed to assign content to the group.',
+		'label' => 'Assert Administrative Control of Joined Content',
+		'note' => 'When checked, group administrators can assert administrative control over joined content. When not checked, default content administration permissions apply.',
 		'default' => 'n',
 	);
 }
