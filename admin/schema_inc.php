@@ -80,6 +80,7 @@ foreach( array_keys( $tables ) AS $tableName ) {
 
 $gBitInstaller->registerPackageInfo( GROUP_PKG_NAME, array(
 	'description' => "The Group package allows users to create groups to organize content.",
+	'requirements' => 'Group is dependent on <a class="external" href="http://www.bitweaver.org/wiki/boardspackage">BoardsPackage</a>, <a class="external" href="http://www.bitweaver.org/wiki/moderationpackage">ModerationPackage</a>, <a class="external" href="http://www.bitweaver.org/wiki/modcommentspackage">ModCommentsPackage</a>, <a class="external" href="http://www.bitweaver.org/wiki/libertysecurepackage">LibertySecurePackage</a>, <a class="external" href="http://www.bitweaver.org/wiki/switchboardpackage">SwitchboardPackage</a>',
 	'license' => '<a href="http://www.gnu.org/licenses/licenses.html#LGPL">LGPL</a>',
 ) );
 
