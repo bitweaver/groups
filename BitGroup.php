@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.90 2008/05/08 06:08:09 wjames5 Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.91 2008/06/05 21:19:53 wjames5 Exp $
 // Copyright (c) 2004-2008 bitweaver Group
 // All Rights Reserved.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -14,7 +14,7 @@
 * @class BitGroup
 */
 
-require_once( LIBERTY_PKG_PATH.'LibertyAttachable.php' );
+require_once( LIBERTY_PKG_PATH.'LibertyMime.php' );
 
 /**
 * This is used to uniquely identify the object
@@ -51,7 +51,7 @@ require_once( GROUP_PKG_PATH.'moderation_inc.php' );
 /**
  * @package group
  */
-class BitGroup extends LibertyAttachable {
+class BitGroup extends LibertyMime {
 	/**
 	* Primary key
 	* @public
@@ -64,7 +64,7 @@ class BitGroup extends LibertyAttachable {
 	* During initialisation, be sure to call our base constructors
 	**/
 	function BitGroup( $pGroupId=NULL, $pContentId=NULL ) {
-		LibertyAttachable::LibertyAttachable();
+		LibertyMime::LibertyMime();
 		$this->mGroupId = (int)$pGroupId;
 		$this->mContentId = (int)$pContentId;
 		$this->mContentTypeGuid = BITGROUP_CONTENT_TYPE_GUID;
@@ -129,7 +129,7 @@ class BitGroup extends LibertyAttachable {
 				// sets $this->mGroupMemberPermissions
 				$this->getMemberRolesAndPermsForGroup();
 
-				LibertyAttachable::load();
+				LibertyMime::load();
 			}
 		}
 		return( count( $this->mInfo ) );
@@ -152,7 +152,7 @@ class BitGroup extends LibertyAttachable {
 		$this->mDb->StartTrans();
 
 		// Verify and then store group and content.
-		if( $this->verify( $pParamHash ) && $gBitUser->storeGroup( $pParamHash ) && LibertyAttachable::store( $pParamHash ) ) {
+		if( $this->verify( $pParamHash ) && $gBitUser->storeGroup( $pParamHash ) && LibertyMime::store( $pParamHash ) ) {
 			$table = BIT_DB_PREFIX."groups";
 			if( $this->mGroupId ) {
 				// editing an existing group
@@ -336,7 +336,7 @@ class BitGroup extends LibertyAttachable {
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
 			$query = "DELETE FROM `".BIT_DB_PREFIX."groups_content_types` WHERE `group_content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
-			if( LibertyAttachable::expunge() ) {
+			if( LibertyMime::expunge() ) {
 				if( $gBitUser->remove_group($this->mGroupId) ) {
 					$ret = TRUE;
 					if( !empty( $board ) ) {
