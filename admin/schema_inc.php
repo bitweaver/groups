@@ -28,9 +28,9 @@ $tables = array(
 		group_content_id I4 NOTNULL,
 		perm_name C(30) NOTNULL,
 		role_id I4 NOTNULL
-		CONSTRAINT ', CONSTRAINT `groups_roles_perms_map_group_content_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
-					, CONSTRAINT `groups_roles_perms_map_role_id` FOREIGN KEY (`role_id`) REFERENCES `".BIT_DB_PREFIX."groups_roles` (`role_id`)
-					, CONSTRAINT `groups_roles_perms_map_perm_name` FOREIGN KEY (`perm_name`) REFERENCES `".BIT_DB_PREFIX."groups_permissions` (`perm_name`)'
+		CONSTRAINT ', CONSTRAINT `groups_roles_p_map_gp_c_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
+					, CONSTRAINT `groups_roles_p_map_role_id` FOREIGN KEY (`role_id`) REFERENCES `".BIT_DB_PREFIX."groups_roles` (`role_id`)
+					, CONSTRAINT `groups_roles_p_map_perm_name` FOREIGN KEY (`perm_name`) REFERENCES `".BIT_DB_PREFIX."groups_permissions` (`perm_name`)'
 	",
 
 	/* Users may have more than one role in a given group */
@@ -39,7 +39,7 @@ $tables = array(
 		group_content_id I4 NOTNULL,
 		user_id I4 NOTNULL,
 		role_id I4 NOTNULL
-		CONSTRAINT ', CONSTRAINT `groups_roles_users_map_group_content_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
+		CONSTRAINT ', CONSTRAINT `groups_roles_users_map_gp_c_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
 					, CONSTRAINT `groups_roles_users_map_user_id` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users` (`user_id`)
 					, CONSTRAINT `groups_roles_perms_map_role_id` FOREIGN KEY (`role_id`) REFERENCES `".BIT_DB_PREFIX."groups_roles` (`role_id`)'
 	",
@@ -51,15 +51,15 @@ $tables = array(
 		to_title C(160),
 		pos F
 		CONSTRAINT '
-			, CONSTRAINT `groups_content_cnxn_group_content_id_ref` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
-			, CONSTRAINT `groups_content_cnxn_to_content_id_ref` FOREIGN KEY (`to_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)'
+			, CONSTRAINT `groups_content_cnxn_gp_c_id_ref` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
+			, CONSTRAINT `groups_content_cnxn_to_c_id_ref` FOREIGN KEY (`to_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)'
 	",
 
 	/* content types group members can create for their group */
 	'groups_content_types' => "
 		group_content_id I4 PRIMARY,
 		content_type_guid C(16) PRIMARY
-		CONSTRAINT ', CONSTRAINT `groups_content_types_group_content_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
+		CONSTRAINT ', CONSTRAINT `groups_content_types_gp_c_id` FOREIGN KEY (`group_content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content` (`content_id`)
 					, CONSTRAINT `groups_content_types_type_guid` FOREIGN KEY (`content_type_guid`) REFERENCES `".BIT_DB_PREFIX."liberty_content_types` (`content_type_guid`)'
 	",
 
