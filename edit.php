@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.31 2008/06/18 13:18:20 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.32 2008/06/18 18:48:20 lsces Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: edit.php,v 1.31 2008/06/18 13:18:20 lsces Exp $
+ * $Id: edit.php,v 1.32 2008/06/18 18:48:20 lsces Exp $
  * @package groups
  * @subpackage functions
  */
@@ -64,7 +64,8 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 
 	// get the current post messages permission for group members before we save. we need this later for setting post messages access control
 	$membersPostMsgsStatus = in_array( 'p_group_group_msgs_create', array_keys( $groupRoles[3]['perms'] ) )?TRUE:FALSE;
-
+    // move edit return to correct array
+    $_REQUEST['group']['data'] = $_REQUEST['edit'];
 	// store it
 	if( $gContent->store( $_REQUEST['group'] ) ) {
 		// if its new store set the creator's email pref to receive email
@@ -227,8 +228,8 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 		}
 		//----- end set access perms -----//
 
-		header( "Location: ".$gContent->getDisplayUrl() );
-		die;
+//		header( "Location: ".$gContent->getDisplayUrl() );
+//		die;
 	} else {
 		$gBitSmarty->assign_by_ref( 'errors', $gContent->mErrors );
 	}
