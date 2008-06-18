@@ -1,6 +1,18 @@
 <?php
-
-// Initialization
+/**
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/add_to_group.php,v 1.8 2008/06/18 13:18:20 lsces Exp $
+ * Copyright (c) 2008 bitweaver Group
+ * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
+ * 
+ * $Id: add_to_group.php,v 1.8 2008/06/18 13:18:20 lsces Exp $
+ * @package groups
+ * @subpackage functions
+ */
+ 
+/**
+ * Initialization
+ */
 require_once( '../bit_setup_inc.php' );
 
 // Is package installed and enabled

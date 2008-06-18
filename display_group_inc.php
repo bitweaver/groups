@@ -1,12 +1,14 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.1 2008/04/07 20:00:00 wjames5 Exp $
- * @package bitweaver
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.2 2008/06/18 13:18:20 lsces Exp $
+ * @package groups
+ * @subpackage functions
  */
 
-// Is package installed and enabled
+/**
+ * Initialization
+ */
 $gBitSystem->verifyPackage( 'group' );
-
 require_once( GROUP_PKG_PATH.'lookup_group_inc.php' );
 
 // Now check permissions to access this page

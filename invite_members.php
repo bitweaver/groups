@@ -1,5 +1,17 @@
 <?php
-// Initialization
+/**
+ * @version $Header:
+ * Copyright (c) 2008 bitweaver Group
+ * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
+ * 
+ * @package groups
+ * @subpackage functions
+ */
+ 
+/**
+ * Initialization
+ */
 require_once( '../bit_setup_inc.php' );
 
 // Is package installed and enabled

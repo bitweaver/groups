@@ -1,5 +1,17 @@
 <?php
-// What options do groups support?
+/**
+ * @version $Header:
+ * Copyright (c) 2008 bitweaver Group
+ * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
+ * 
+ * @package groups
+ * @subpackage functions
+ */
+
+/**
+ * What options do groups support?
+ */ 
 $formGroupOptions = array(
 	"view_content_public" => array(
 		'label' => 'Publicly Viewable',

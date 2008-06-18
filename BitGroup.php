@@ -1,19 +1,20 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.91 2008/06/05 21:19:53 wjames5 Exp $
-// Copyright (c) 2004-2008 bitweaver Group
-// All Rights Reserved.
-// Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
-
 /**
-* Group class 
-* builds on core bitweaver functionality, such as the Liberty CMS engine
-*
-* @date created 2008/1/23
-* @author wjames <will@tekimaki.com> spider <spider@viovio.com>
-* @version 
-* @class BitGroup
-*/
-
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.92 2008/06/18 13:18:20 lsces Exp $
+ * Copyright (c) 2008 bitweaver Group
+ * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
+ *
+ * Group class 
+ * builds on core bitweaver functionality, such as the Liberty CMS engine
+ * 
+ * @author wjames <will@tekimaki.com> spider <spider@viovio.com>
+ * @package groups
+ */
+ 
+/**
+ * Initialize
+ */
 require_once( LIBERTY_PKG_PATH.'LibertyMime.php' );
 
 /**
@@ -49,7 +50,7 @@ require_once( GROUP_PKG_PATH.'moderation_inc.php' );
 
 
 /**
- * @package group
+ * @package groups
  */
 class BitGroup extends LibertyMime {
 	/**

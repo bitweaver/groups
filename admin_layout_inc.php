@@ -1,7 +1,18 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/admin_layout_inc.php,v 1.3 2008/04/04 19:44:37 wjames5 Exp $
-
-// Initialization
+/**
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/admin_layout_inc.php,v 1.4 2008/06/18 13:18:20 lsces Exp $
+ * Copyright (c) 2008 bitweaver Group
+ * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
+ * 
+ * $Id: admin_layout_inc.php,v 1.4 2008/06/18 13:18:20 lsces Exp $
+ * @package groups
+ * @subpackage functions
+ */
+ 
+/**
+ * Initialization
+ */
 require_once( '../bit_setup_inc.php' );
 
 $gBitSmarty->assign_by_ref( 'feedback', $feedback = array() );

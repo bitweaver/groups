@@ -1,10 +1,18 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.30 2008/05/05 13:38:04 wjames5 Exp $
-// Copyright (c) bitweaver Group
-// All Rights Reserved. See copyright.txt for details and a complete list of authors.
-// Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
-
-// Initialization
+/**
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.31 2008/06/18 13:18:20 lsces Exp $
+ * Copyright (c) 2008 bitweaver Group
+ * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
+ * 
+ * $Id: edit.php,v 1.31 2008/06/18 13:18:20 lsces Exp $
+ * @package groups
+ * @subpackage functions
+ */
+ 
+/**
+ * Initialization
+ */
 require_once( '../bit_setup_inc.php' );
 
 // Is package installed and enabled

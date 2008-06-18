@@ -1,6 +1,13 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_portal_inc.php,v 1.1 2008/04/07 20:00:00 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_portal_inc.php,v 1.2 2008/06/18 13:18:20 lsces Exp $
+ * Copyright (c) 2008 bitweaver Group
+ * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
+ * 
+ * $Id: display_group_portal_inc.php,v 1.2 2008/06/18 13:18:20 lsces Exp $
+ * @package groups
+ * @subpackage functions
  */
 
 /**

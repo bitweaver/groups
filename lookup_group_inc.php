@@ -1,4 +1,17 @@
 <?php
+/**
+ * @version $Header:
+ * Copyright (c) 2008 bitweaver Group
+ * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
+ * 
+ * @package groups
+ * @subpackage functions
+ */
+ 
+/**
+ * Initialization
+ */
 global $gContent;
 require_once( GROUP_PKG_PATH.'BitGroup.php');
 require_once( LIBERTY_PKG_PATH.'lookup_content_inc.php' );
