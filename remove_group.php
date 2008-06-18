@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/remove_group.php,v 1.5 2008/06/18 13:18:20 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/remove_group.php,v 1.6 2008/06/18 14:50:43 lsces Exp $
  *
  * Copyright (c) 2004 bitweaver.org
  * Copyright (c) 2003 tikwiki.org
@@ -8,8 +8,8 @@
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
  *
- * $Id: remove_group.php,v 1.5 2008/06/18 13:18:20 lsces Exp $
- * @package group
+ * $Id: remove_group.php,v 1.6 2008/06/18 14:50:43 lsces Exp $
+ * @package groups
  * @subpackage functions
  */
 
