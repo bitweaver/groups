@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/admin_layout_inc.php,v 1.4 2008/06/18 13:18:20 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/admin_layout_inc.php,v 1.5 2008/06/18 18:47:32 lsces Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: admin_layout_inc.php,v 1.4 2008/06/18 13:18:20 lsces Exp $
+ * $Id: admin_layout_inc.php,v 1.5 2008/06/18 18:47:32 lsces Exp $
  * @package groups
  * @subpackage functions
  */
@@ -129,7 +129,7 @@ $gBitSmarty->assign_by_ref( 'allModules', $allModules );
 // we only allow the modules that the site admin has allowed for groups
 foreach( $allModules as $package=>$modules ){
 	foreach( $modules as $tpl=>$desc ){
-		$conf = 'group_mod_'.strtolower($package)."_".( str_replace( ' ', '_', $desc ) );
+		$conf = 'gm_'.strtolower($package)."_".( str_replace( ' ', '_', $desc ) );
 		if ( $gBitSystem->getConfig( $conf ) ){
 			$allowedModules[$package][$tpl] = $desc;
 		}

@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.13 2008/04/11 17:37:42 spiderr Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.14 2008/06/18 18:47:32 lsces Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -79,7 +79,7 @@ $allModules = $gBitThemes->getAllModules();
 ksort( $allModules );
 foreach( $allModules as $package=>$modules ){
 	foreach( $modules as $tpl=>$desc ){
-		$ref = 'group_mod_'.strtolower($package)."_".( str_replace( ' ', '_', $desc ) );
+		$ref = 'gm_'.strtolower($package)."_".( str_replace( ' ', '_', $desc ) );
 		$formGroupModules[$package][$ref] = $desc;
 	}
 }
