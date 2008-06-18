@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.32 2008/06/18 18:48:20 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.33 2008/06/18 18:54:49 lsces Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: edit.php,v 1.32 2008/06/18 18:48:20 lsces Exp $
+ * $Id: edit.php,v 1.33 2008/06/18 18:54:49 lsces Exp $
  * @package groups
  * @subpackage functions
  */
@@ -228,8 +228,8 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 		}
 		//----- end set access perms -----//
 
-//		header( "Location: ".$gContent->getDisplayUrl() );
-//		die;
+		header( "Location: ".$gContent->getDisplayUrl() );
+		die;
 	} else {
 		$gBitSmarty->assign_by_ref( 'errors', $gContent->mErrors );
 	}
