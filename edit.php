@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.34 2008/06/18 19:32:49 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.35 2008/06/25 22:21:10 spiderr Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: edit.php,v 1.34 2008/06/18 19:32:49 wjames5 Exp $
+ * $Id: edit.php,v 1.35 2008/06/25 22:21:10 spiderr Exp $
  * @package groups
  * @subpackage functions
  */
@@ -246,5 +246,5 @@ require_once(GROUP_PKG_PATH.'options_inc.php');
 if ( $gContent->isValid() && empty( $gContent->mInfo['is_public'] ) ){ $gContent->mInfo['is_public'] = 'n'; }
 
 // Display the template
-$gBitSystem->display( 'bitpackage:group/edit_group.tpl', tra('Group') );
+$gBitSystem->display( 'bitpackage:group/edit_group.tpl', tra('Group') , array( 'display_mode' => 'edit' ));
 ?>

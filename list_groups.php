@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/Attic/list_groups.php,v 1.4 2008/06/18 13:18:20 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/Attic/list_groups.php,v 1.5 2008/06/25 22:21:11 spiderr Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -72,6 +72,6 @@ $gBitSmarty->assign_by_ref( 'groupsList', $groupsList );
 $gBitSmarty->assign_by_ref( 'listInfo', $_REQUEST['listInfo'] );
 
 // Display the template
-$gBitSystem->display( 'bitpackage:group/list_groups.tpl', tra( 'Group' ) );
+$gBitSystem->display( 'bitpackage:group/list_groups.tpl', tra( 'Group' ) , array( 'display_mode' => 'list' ));
 
 ?>

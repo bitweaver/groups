@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/about.php,v 1.5 2008/06/18 13:18:20 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/about.php,v 1.6 2008/06/25 22:21:10 spiderr Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -34,5 +34,5 @@ if( ($board = $gContent->getBoard()) && ($mailingList = $board->getBoardMailingL
 }
 
 // Display the template
-$gBitSystem->display( 'bitpackage:group/group_about.tpl', tra( 'Group' ) );
+$gBitSystem->display( 'bitpackage:group/group_about.tpl', tra( 'Group' ) , array( 'display_mode' => 'display' ));
 ?>

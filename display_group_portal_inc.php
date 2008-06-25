@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_portal_inc.php,v 1.2 2008/06/18 13:18:20 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_portal_inc.php,v 1.3 2008/06/25 22:21:10 spiderr Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: display_group_portal_inc.php,v 1.2 2008/06/18 13:18:20 lsces Exp $
+ * $Id: display_group_portal_inc.php,v 1.3 2008/06/25 22:21:10 spiderr Exp $
  * @package groups
  * @subpackage functions
  */
@@ -37,6 +37,6 @@ $recentHash = $_REQUEST;
 $recentHash['sort_mode'] = "created_desc";
 $recentGroupsList = $gContent->getList( $recentHash );
 $gBitSmarty->assign('recentGroups', $recentGroupsList);
-$gBitSystem->display( 'bitpackage:group/group_home.tpl', tra( 'Groups' ) );
+$gBitSystem->display( 'bitpackage:group/group_home.tpl', tra( 'Groups' ) , array( 'display_mode' => 'display' ));
 
 ?>

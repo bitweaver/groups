@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/files.php,v 1.4 2008/06/18 13:18:20 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/files.php,v 1.5 2008/06/25 22:21:10 spiderr Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -44,5 +44,5 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 $gBitSmarty->assign('fileList',$gContent->mStorage);
 
 // Display the template
-$gBitSystem->display( 'bitpackage:group/edit_group_files.tpl', tra('Group File') );
+$gBitSystem->display( 'bitpackage:group/edit_group_files.tpl', tra('Group File') , array( 'display_mode' => 'display' ));
 ?>

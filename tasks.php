@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/tasks.php,v 1.5 2008/06/18 13:18:20 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/tasks.php,v 1.6 2008/06/25 22:21:11 spiderr Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -68,5 +68,5 @@ if ( isset($_REQUEST['send_email']) && $gBitSystem->isPackageActive('switchboard
 
 // display
 $gBitSystem->setBrowserTitle( $gContent->getTitle() ." ".  tra( 'Group Tasks' ) );
-$gBitSystem->display( "bitpackage:group/edit_group_tasks.tpl" );
+$gBitSystem->display( "bitpackage:group/edit_group_tasks.tpl" , NULL, array( 'display_mode' => 'display' ));
 ?>

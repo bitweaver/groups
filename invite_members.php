@@ -110,5 +110,5 @@ $gBitSmarty->assign_by_ref( 'invites', $invites );
 
 // display
 $gBitSystem->setBrowserTitle( $gContent->getTitle() ." ".  tra( 'Group Invite Members' ) );
-$gBitSystem->display( "bitpackage:group/edit_members_invites.tpl" );
+$gBitSystem->display( "bitpackage:group/edit_members_invites.tpl" , NULL, array( 'display_mode' => 'display' ));
 ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.2 2008/06/18 13:18:20 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.3 2008/06/25 22:21:10 spiderr Exp $
  * @package groups
  * @subpackage functions
  */
@@ -136,5 +136,5 @@ if ( isset ( $_REQUEST['content_type_guid'] ) && isset( $gLibertySystem->mConten
 	$pageTitle = tra("Group");
 }
 
-$gBitSystem->display( 'bitpackage:kernel/dynamic.tpl', $pageTitle );
+$gBitSystem->display( 'bitpackage:kernel/dynamic.tpl', $pageTitle , array( 'display_mode' => 'display' ));
 ?>

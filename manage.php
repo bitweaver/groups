@@ -81,5 +81,5 @@ $gBitSmarty->assign_by_ref( 'groupMembers', $groupMembers );
 
 // display
 $gBitSystem->setBrowserTitle( $gContent->getTitle() ." ".  tra( 'Group Members' ) );
-$gBitSystem->display( "bitpackage:group/edit_members_roles.tpl" );
+$gBitSystem->display( "bitpackage:group/edit_members_roles.tpl" , NULL, array( 'display_mode' => 'display' ));
 ?>

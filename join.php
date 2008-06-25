@@ -155,5 +155,5 @@ $userEmailPref = $gContent->getUserEmailPref();
 $gBitSmarty->assign( 'userEmailPref', $userEmailPref );
 
 // display
-$gBitSystem->display( 'bitpackage:group/user_prefs.tpl', tra('Join')." ".$gContent->getTitle() );
+$gBitSystem->display( 'bitpackage:group/user_prefs.tpl', tra('Join')." ".$gContent->getTitle() , array( 'display_mode' => 'display' ));
 ?>
