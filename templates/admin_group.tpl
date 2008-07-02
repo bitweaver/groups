@@ -21,7 +21,7 @@
 					{formlabel label="Allowed Content Types"}
 					{forminput}
 						{html_checkboxes options=$formGroupContent.guids name=group_content separator="<br />" checked=$formGroupContent.checked}
-						{formhelp note="You can select what content types groups can create and associate with their group. This creates a default list of allowed content. Additionally, groups can't individually limit from this list what content types their group members can create.."}
+						{formhelp note="You can select what content types groups can create and associate with their group. This creates a default list of allowed content. Additionally, groups can individually limit from this list what content types their group members can create.."}
 					{/forminput}
 				</div>
 			{/legend}
