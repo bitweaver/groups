@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.95 2008/07/03 20:21:32 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.96 2008/07/10 20:59:58 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -792,7 +792,7 @@ class BitGroup extends LibertyMime {
 	function linkContent( $pParamHash ) {
 		if( $this->isValid() && isset( $pParamHash['content_id'] ) && $this->verifyId( $pParamHash['content_id'] ) ){
 			if( $this->mDb->getOne( "SELECT `group_content_id` FROM `".BIT_DB_PREFIX."groups_content_cnxn_map` WHERE `group_content_id`=? AND `to_content_id`=?", array( $this->mContentId, $pParamHash['content_id'] ) ) ) {
-				$query = "UPDATE `".BIT_DB_PREFIX."groups_content_cnxn_map` SET `to_title`= ? WHERE `group_content_id` = ? AND to_content_id` = ? ";
+				$query = "UPDATE `".BIT_DB_PREFIX."groups_content_cnxn_map` SET `to_title`= ? WHERE `group_content_id` = ? AND `to_content_id` = ? ";
 			} else {
 				$query = "INSERT INTO `".BIT_DB_PREFIX."groups_content_cnxn_map` ( `to_title`, `group_content_id`, `to_content_id` ) VALUES (?,?,?)";
 			}
@@ -1126,12 +1126,32 @@ function group_content_preview( &$pObject) {
 function group_content_edit( &$pObject, &$pParamHash ) {
 	global $gBitSystem, $gBitSmarty;
 	$errors = NULL;
-	if( $gBitSystem->isPackageActive( 'group' ) && !empty( $_REQUEST['connect_group_content_id'] ) ) {
-		$group = new BitGroup( NULL, $_REQUEST['connect_group_content_id'] );
-		$group->load();
-		$group->verifyLinkContentPermission( $pObject );
-		$group->setGroupStyle();
-		$gBitSmarty->assign( "connect_group_content_id", $group->mContentId );
+	if( $gBitSystem->isPackageActive( 'group' ) ){
+		$connect_group_content_id = NULL;
+		// when creating new content via a group we pass the group content id to the edit form
+		if ( !empty( $_REQUEST['connect_group_content_id'] ) ) {
+			$connect_group_content_id = $_REQUEST['connect_group_content_id'];
+		}else{
+			/* when content is already assigned to a group we load up the first one into the form
+			   this is to help content types like gmap which may have subcontent edit forms ajaxed in and need the group id
+			   to keep the mappings of sub related content consistant. 
+			   we only bother for the first group we find since we don't care to obsess about this but mostly want 
+			   ensure this is right for groups that are asserting administrative control
+			 */
+			$listHash['mapped_content_id'] = $pObject->mContentId;
+			$group = new BitGroup();
+			$groups = $group->getList( $listHash );
+			if ( count( $groups ) == 1 ) {
+				$connect_group_content_id = $groups[0]['content_id'];
+			}
+		}
+		if ( !empty( $connect_group_content_id ) ){
+			$group2 = new BitGroup( NULL, $connect_group_content_id );
+			$group2->load();
+			$group2->verifyLinkContentPermission( $pObject );
+			$group2->setGroupStyle();
+			$gBitSmarty->assign( "connect_group_content_id", $group2->mContentId );
+		}
 	}
 }
 
