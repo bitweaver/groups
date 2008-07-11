@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/admin_layout_inc.php,v 1.5 2008/06/18 18:47:32 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/admin_layout_inc.php,v 1.6 2008/07/11 22:17:48 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: admin_layout_inc.php,v 1.5 2008/06/18 18:47:32 lsces Exp $
+ * $Id: admin_layout_inc.php,v 1.6 2008/07/11 22:17:48 wjames5 Exp $
  * @package groups
  * @subpackage functions
  */
@@ -44,7 +44,7 @@ if ( isset( $_REQUEST['submitcolumns'] ) ){
 		}
 		// force in connect_group_content_id so that we're always joining to group stuff.
 		if( !strpos( $moduleHash['params'], $groupParam ) ){
-			$moduleHash['params'] .= $groupParam;
+			$moduleHash['params'] .= " ".$groupParam;
 		}
 		switch ( $moduleHash['layout_area'] ){
 			case "unassign":
@@ -62,7 +62,7 @@ if ( isset( $_REQUEST['submitcolumns'] ) ){
 	$moduleHash['layout'] = $layout_name;
 	// force in connect_group_content_id so that we're always joining to group stuff.
 	if( !strpos( $moduleHash['params'], $groupParam ) ){
-		$moduleHash['params'] .= $groupParam;
+		$moduleHash['params'] .= " ".$groupParam;
 	}
 	$gBitThemes->storeModule( $moduleHash );
 	$reload = TRUE;
@@ -71,7 +71,7 @@ if ( isset( $_REQUEST['submitcolumns'] ) ){
 		$moduleHash['layout'] = $layout_name;
 		// force in connect_group_content_id so that we're always joining to group stuff.
 		if( !strpos( $moduleHash['params'], $groupParam ) ){
-			$moduleHash['params'] .= $groupParam;
+			$moduleHash['params'] .= " ".$groupParam;
 		}
 		$gBitThemes->storeModule( $moduleHash );
 	}
