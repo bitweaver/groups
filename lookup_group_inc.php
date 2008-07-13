@@ -41,5 +41,9 @@ if( empty( $gContent ) || !is_object( $gContent ) || !$gContent->isValid() ) {
 
 	$gContent->load();
 	$gBitSmarty->assign_by_ref( "gContent", $gContent );
+	
+	// ControlGroupInfo is for customizing layouts in other parts of the site (see BitGroup::group_content_display) 
+	// but we need it here too if we want to apply layout features consistently while browsing groups/ too and keep our tpls simple
+	$gBitSmarty->assign_by_ref( "controlGroupInfo", $gContent->mInfo );
 }
 ?>

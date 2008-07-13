@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.97 2008/07/13 16:02:35 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.98 2008/07/13 17:21:38 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -406,11 +406,15 @@ class BitGroup extends LibertyMime {
 			$bindVars[] = '%' . strtoupper( $find ). '%';
 		}
 
-		$query = "SELECT g.*, lc.`content_id`, lcds.`data` AS `summary`, lc.`title`, lc.`data`, ug.* $selectSql
+		$query = "SELECT g.*, lc.`content_id`, lcds.`data` AS `summary`, lc.`title`, lc.`data`, 
+			lfp.storage_path AS `image_attachment_path`, 
+			ug.* $selectSql
 			FROM `".BIT_DB_PREFIX."groups` g 
 			INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = g.`content_id` ) 
 			INNER JOIN `".BIT_DB_PREFIX."users_groups` ug ON( ug.`group_id` = g.`group_id` ) 
 			LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_data` lcds ON (lc.`content_id` = lcds.`content_id` AND lcds.`data_type`='summary')
+			LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON( la.`content_id` = lc.`content_id` AND la.`is_primary` = 'y' ) 
+			LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_files` lfp ON( lfp.`file_id` = la.`foreign_id` )
 			$joinSql
 			WHERE lc.`content_type_guid` = ? $whereSql
 			ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
@@ -424,6 +428,7 @@ class BitGroup extends LibertyMime {
 		$ret = array();
 		while( $res = $result->fetchRow() ) {
 			$res['num_members'] = $this->getMembersCount( $res['group_id'] );
+			$res['thumbnail_url'] = liberty_fetch_thumbnails( array( "storage_path" => $res['image_attachment_path'] ) );
 			$ret[] = $res;
 		}
 		$pParamHash["cant"] = $this->mDb->getOne( $query_cant, $bindVars );
@@ -1095,6 +1100,9 @@ function group_content_display( &$pObject, &$pParamHash ) {
 	if( !empty($group_id) ) {
 		// apply group theme
 		$group->setGroupStyle( $group_id );
+		
+		// make data available to smarty as controlling group info for theming - similarly set in lookup_group_inc
+		$gBitSmarty->assign_by_ref( 'controlGroupInfo', $groups[0] );
 
 		// apply group layout
 		if ( $gBitSystem->isFeatureActive('group_layouts') ){
@@ -1132,6 +1140,7 @@ function group_content_edit( &$pObject, &$pParamHash ) {
 	$errors = NULL;
 	if( $gBitSystem->isPackageActive( 'group' ) ){
 		$connect_group_content_id = NULL;
+
 		// when creating new content via a group we pass the group content id to the edit form
 		if ( !empty( $_REQUEST['connect_group_content_id'] ) ) {
 			$connect_group_content_id = $_REQUEST['connect_group_content_id'];
@@ -1155,7 +1164,11 @@ function group_content_edit( &$pObject, &$pParamHash ) {
 			$group2->verifyLinkContentPermission( $pObject );
 			$group2->setGroupStyle();
 			$gBitSmarty->assign( "connect_group_content_id", $group2->mContentId );
+
+			// make data available to smarty as controlling group info for theming - similarly set in lookup_group_inc
+			$gBitSmarty->assign_by_ref( 'controlGroupInfo', $group2->mInfo );
 		}
+		
 	}
 }
 
