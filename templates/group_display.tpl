@@ -31,6 +31,9 @@
 						<th>{tr}Replies{/tr}</th>
 						<th>{tr}Started{/tr}</th>
 						<th>{tr}Last Reply{/tr}</th>
+						{if $gContent->hasUserPermission('p_boards_edit') || $gContent->hasUserPermission('p_boards_post_edit')}
+							<th>{tr}Actions{/tr}</th>
+						{/if}
 					</tr>
 					{foreach item=thread from=$topics}
 					<tr class="{cycle values="even,odd"} {if $gBitSystem->isFeatureActive('boards_post_anon_moderation') && $thread.unreg > 0}unapproved{elseif $thread.th_moved>0}moved{/if} {if $thread.th_sticky==1} highlight{/if}" >
@@ -59,7 +62,7 @@
 						</td>
 
 						{if $gContent->hasUserPermission('p_boards_edit') || $gContent->hasUserPermission('p_boards_post_edit')}
-							<td style="text-align:center;">{if $thread.unreg > 0}<a class="highlight" href="{$thread.url}" title="{$thread.title|escape}">{$thread.unreg}</a>{/if}</td>
+							<td style="text-align:center;">{if $thread.unreg > 0}<a class="highlight" href="{$thread.url}" title="{$thread.title|escape}">{$thread.unreg}</a>{else}-{/if}</td>
 						{/if}
 
 					</tr>
