@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.96 2008/07/10 20:59:58 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.97 2008/07/13 16:02:35 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -101,6 +101,7 @@ class BitGroup extends LibertyMime {
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
 			$query = "SELECT s.*, lc.*, lcds.`data` AS `summary`, lcda.`data` AS `after_registration`, ug.*, " .
+			"lfp.storage_path AS `image_attachment_path`, " .
 			"uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name, " .
 			"uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name " .
 			"$selectSql " .
@@ -109,6 +110,8 @@ class BitGroup extends LibertyMime {
 			"INNER JOIN `".BIT_DB_PREFIX."users_groups` ug ON( ug.`group_id` = s.`group_id` ) " .
 			"LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_data` lcds ON (lc.`content_id` = lcds.`content_id` AND lcds.`data_type`='summary')" .
 			"LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_data` lcda ON (lc.`content_id` = lcda.`content_id` AND lcda.`data_type`='after_registration')" .
+			"LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON( la.`content_id` = lc.`content_id` AND la.`is_primary` = 'y' )" .
+			"LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_files` lfp ON( lfp.`file_id` = la.`foreign_id` )" .
 			"LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON( uue.`user_id` = lc.`modifier_user_id` )" .
 			"LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON( uuc.`user_id` = lc.`user_id` )" .
 			"WHERE s.`$lookupColumn`=? $whereSql";
@@ -124,6 +127,7 @@ class BitGroup extends LibertyMime {
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
 				$this->mInfo['parsed_data'] = $this->parseData();
 				$this->mInfo['num_members'] = $this->getMembersCount( $this->mGroupId );
+				$this->mInfo['thumbnail_url'] = liberty_fetch_thumbnails( array( "storage_path" => $this->mInfo['image_attachment_path'] ) );
 
 				$this->mContentTypePrefs = $this->getContentTypePrefs();
 				$this->mContentTypeData = $this->getContentTypeData();

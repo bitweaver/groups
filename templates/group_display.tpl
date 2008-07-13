@@ -14,7 +14,8 @@
 	</div><!-- end .floaticon -->
 
 	<div class="header">
-		<h1>{$gContent->mInfo.title|escape|default:"Group"}</h1>
+		<h1><img class="thumb" style="vertical-align:middle;" src="{$gContent->mInfo.thumbnail_url.avatar}" alt="Group Image" title="{$gContent->mInfo.title|escape}" />
+			{$gContent->mInfo.title|escape|default:"Group"}</h1>
 		<p>{$gContent->mInfo.summary|escape}</p>
 	</div><!-- end .header -->
 

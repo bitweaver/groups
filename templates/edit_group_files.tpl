@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group_files.tpl,v 1.2 2008/04/12 22:39:44 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group_files.tpl,v 1.3 2008/07/13 16:02:36 wjames5 Exp $ *}
 {strip}
 <div class="floaticon">{bithelp}</div>
 
@@ -17,23 +17,28 @@
 		{if $fileList}
 			<table class="data">
 				<tr>
-					<th style="width:50%;">{tr}File{/tr}</th>
-					<th style="width:20%;">{tr}Type{/tr}</th>
+					<th style="width:40%;">{tr}File{/tr}</th>
+					<th style="width:10%;">{tr}Type{/tr}</th>
 					<th style="width:10%;">{tr}Size{/tr}</th>
+					<th style="width:20%;">{tr}Last Modified{/tr}</th>
+					<th style="width:20%;">{tr}Uploaded by{/tr}</th>
 				</tr>
 				{foreach item=item from=$fileList}
 					<tr class="{cycle values="even,odd"}" >
 						<td style="text-align:left;">
 							<a href="{$smarty.const.BIT_ROOT_URI}{$item.storage_path}">{$item.filename}</a>
 						</td>
-						<td style="text-align:left;">
+						<td style="text-align:center;">
 							{$item.mime_type}
 						</td>
 						<td style="text-align:center;">
 							{$item.file_size|display_bytes}
 						</td>
+						<td style="text-align:right;">
+							{$item.last_modified|bit_short_datetime}
+						</td>
 						<td style="text-align:center;">
-							{$item.modifier_user}
+							{$item.user_id}
 						</td>
 					</tr>
 				{/foreach}
