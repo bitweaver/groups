@@ -25,8 +25,14 @@
 
 			<div class="floaticon"><a href="{$smarty.const.BOARDS_PKG_URL}index.php?b={$board_id}">View All</a></div>
 			<h2>Discussions</h2>
-			{foreach item=thread from=$topics}
 				<table class="data">
+					<tr>
+						<th>{tr}Title{/tr}</th>
+						<th>{tr}Replies{/tr}</th>
+						<th>{tr}Started{/tr}</th>
+						<th>{tr}Last Reply{/tr}</th>
+					</tr>
+					{foreach item=thread from=$topics}
 					<tr class="{cycle values="even,odd"} {if $gBitSystem->isFeatureActive('boards_post_anon_moderation') && $thread.unreg > 0}unapproved{elseif $thread.th_moved>0}moved{/if} {if $thread.th_sticky==1} highlight{/if}" >
 						<td style="white-space:nowrap;">{* topic status icons *}
 							{if $thread.th_moved>0}
@@ -37,13 +43,10 @@
 									{include file="bitpackage:boards/flipswitch.tpl"}
 								{/foreach}
 							{/if}
-						</td>
-
-						<td>
 							<a href="{$thread.url}" title="{$thread.title|escape}">{$thread.title|escape}</a>
 						</td>
 
-						<td style="text-align:center;">{if $thread.post_count-1}{$thread.post_count-1}{/if}</td>
+						<td style="text-align:center;">{if $thread.post_count-1}{$thread.post_count-1}{else}-{/if}</td>
 
 						<td style="text-align:center;">
 							{$thread.flc_created|reltime:short|escape}<br/>
@@ -51,7 +54,7 @@
 						</td>
 
 						<td style="text-align:center;">
-							{if $thread.post_count > 1}{$thread.llc_last_modified|reltime:short|escape}{else}{/if}<br/>
+							{if $thread.post_count > 1}{$thread.llc_last_modified|reltime:short|escape}{else}-{/if}<br/>
 							{if $thread.post_count > 1}{if $thread.llc_user_id < 0}{$thread.l_anon_name|escape}{else}{displayname user_id=$thread.llc_user_id}{/if}{else}{/if}
 						</td>
 
@@ -60,10 +63,12 @@
 						{/if}
 
 					</tr>
+					{foreachelse}
+					<tr>
+						<td>{tr}No records found{/tr}</td>
+					</tr>
+					{/foreach}
 				</table>
-			{foreachelse}
-				{tr}No records found{/tr}
-			{/foreach}
 			{if $gBitUser->isAdmin() || $gContent->isOwner() || ($gBitUser->isInGroup( $gContent->mGroupId ) && $gContent->hasUserPermission('p_group_group_msgs_create'))}
 				<div class="navbar">
 					<a class="button" title="{tr}New Topic{/tr}" href="{$smarty.const.BOARDS_PKG_URL}index.php?b={$board_id}&amp;post_comment_request=1#editcomments">{biticon ipackage="icons" iname="mail-message-new" iexplain="New Topic" iforce="icon"} {tr}New Topic{/tr}</a>
