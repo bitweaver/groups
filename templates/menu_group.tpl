@@ -21,8 +21,8 @@
 			{/if}
 
 			{if $groupContent->mContentTypeData}
-			<li><a class="item">{tr}Content{/tr}</a>
-				<ul style="margin-left:10px">
+			<li><a class="item" href="#">{tr}Content{/tr}</a>
+				<ul>
 					{foreach item=name key=type from=$groupContent->mContentTypeData}
 					<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$groupContent->mGroupId}&content_type_guid={$type}">{tr}{$name}{/tr}</a></li>
 					{if $contentTypeEditUrl && $name == $contentTypeDesc && $groupContent->hasUserPermission( 'p_group_group_content_create' )}
