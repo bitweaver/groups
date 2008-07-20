@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group_files.tpl,v 1.3 2008/07/13 16:02:36 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group_files.tpl,v 1.4 2008/07/20 19:14:03 wjames5 Exp $ *}
 {strip}
 <div class="floaticon">{bithelp}</div>
 
@@ -45,10 +45,13 @@
 			</table>
 		{/if}
 		{if $gContent->hasEditPermission() || $gContent->hasUserPermission('p_group_group_att_upload') } 
-			{form enctype="multipart/form-data" id="editgroupform"}
+			{assign var="formid" value="editgroupform"}
+			{form enctype="multipart/form-data" id=$formid}
 				<input type="hidden" name="group_id" value="{$gContent->mGroupId}" />
+				<input type="hidden" name="content_id" value="{$gContent->mContentId}" />
+				<input type="hidden" name="title" value="{$gContent->getTitle()}" />
 				{legend legend="Upload File"}
-					{include file="bitpackage:liberty/edit_storage.tpl"}
+					{include file="bitpackage:liberty/edit_storage.tpl" formid=$formid}
 				{/legend}
 				<div class="row submit">
 					<input type="submit" name="save_group" value="{tr}Upload{/tr}" />

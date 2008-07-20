@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/files.php,v 1.6 2008/07/13 16:02:35 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/files.php,v 1.7 2008/07/20 19:14:03 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -47,7 +47,13 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 }
 
 $gBitSmarty->assign('fileList',$gContent->mStorage);
-$gBitThemes->loadAjax( 'mochikit' );
+$gBitThemes->loadAjax( 'mochikit', array( 'DOM.js' ) );
+
+// since the carpet moved under automatic inclusion of LibertyAttachment.js if ajax is enabled we have to force it here.
+if( $gBitSystem->getConfig("liberty_attachment_style") == "ajax" ){
+	$gBitThemes->loadJavascript( LIBERTY_PKG_PATH.'scripts/LibertyAttachment.js', TRUE );
+	$gBitThemes->loadJavascript( GROUP_PKG_PATH.'scripts/LibertyAttachment.js', TRUE );
+}
 
 // Display the template
 $gBitSystem->display( 'bitpackage:group/edit_group_files.tpl', tra('Group File') , array( 'display_mode' => 'display' ));
