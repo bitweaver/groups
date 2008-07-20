@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.98 2008/07/13 17:21:38 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.99 2008/07/20 16:37:30 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1144,7 +1144,7 @@ function group_content_edit( &$pObject, &$pParamHash ) {
 		// when creating new content via a group we pass the group content id to the edit form
 		if ( !empty( $_REQUEST['connect_group_content_id'] ) ) {
 			$connect_group_content_id = $_REQUEST['connect_group_content_id'];
-		}else{
+		}elseif( $pObject->isValid() ){
 			/* when content is already assigned to a group we load up the first one into the form
 			   this is to help content types like gmap which may have subcontent edit forms ajaxed in and need the group id
 			   to keep the mappings of sub related content consistant. 
