@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.35 2008/06/25 22:21:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.36 2008/07/29 18:08:35 lsces Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: edit.php,v 1.35 2008/06/25 22:21:10 spiderr Exp $
+ * $Id: edit.php,v 1.36 2008/07/29 18:08:35 lsces Exp $
  * @package groups
  * @subpackage functions
  */
@@ -191,7 +191,7 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 			$listHash = array( "connect_group_content_id" => $gContent->mContentId );
 			$list = $gContent->getContentList( $listHash );
 			// for each content item set custom view perms
-			foreach( $list['data'] as $content ){
+			foreach( $list as $content ){
 				$typeGuid = $content['content_type_guid'];
 				$contentId = $content['content_id'];
 				if ( !isset( $gLibertySystem->mContentTypes[$typeGuid]['content_perms'] ) ){

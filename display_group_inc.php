@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.3 2008/06/25 22:21:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.4 2008/07/29 18:08:35 lsces Exp $
  * @package groups
  * @subpackage functions
  */
@@ -36,7 +36,7 @@ if ( isset( $_REQUEST['content_type_guid'] ) ){
 	}
 }
 $contentList = $gContent->getContentList( $contentListHash );
-$gBitSmarty->assign_by_ref( "contentList", $contentList['data'] );
+$gBitSmarty->assign_by_ref( "contentList", $contentList );
 
 // topics from related board
 $listHash = array(
@@ -45,8 +45,8 @@ $listHash = array(
 	"sort_mode" => "created_asc"
 	);
 $list = $gContent->getContentList( $listHash );
-if ( $list['cant'] ){
-	$gBitSmarty->assign( 'board_id', $list['data'][0]['board_id'] );
+if ( $listHash['cant'] ){
+	$gBitSmarty->assign( 'board_id', $list[0]['board_id'] );
 	
 	// if a content_type has been requested the user just wants a list of that - no discussion topics
 	if ( empty( $_REQUEST['content_type_guid'] ) ){
@@ -59,7 +59,7 @@ if ( $list['cant'] ){
 		 */
 		require_once( BOARDS_PKG_PATH.'BitBoardTopic.php' );
 		$topicsHash = array( 
-			"content_id" =>  $list['data'][0]['content_id'],
+			"content_id" =>  $list[0]['content_id'],
 		);  
 		$topic = new BitBoardTopic();
 		$topics = $topic->getList( $topicsHash );

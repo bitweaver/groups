@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/templates/center_view_group.php,v 1.1 2008/04/07 20:00:00 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/templates/center_view_group.php,v 1.2 2008/07/29 18:08:35 lsces Exp $
  * @package bitweaver
  */
 global $gBitSmarty, $gBitSystem, $gQueryUserId, $moduleParams, $gBitUser, $gContent;
@@ -35,7 +35,7 @@ if( $gContent->isValid() && $gContent->hasViewPermission() ){
 		}
 	}
 	$contentList = $gContent->getContentList( $contentListHash );
-	$gBitSmarty->assign_by_ref( "contentList", $contentList['data'] );
+	$gBitSmarty->assign_by_ref( "contentList", $contentList );
 
 	// topics from related board
 	$listHash = array(
@@ -44,8 +44,8 @@ if( $gContent->isValid() && $gContent->hasViewPermission() ){
 		"sort_mode" => "created_asc"
 		);
 	$list = $gContent->getContentList( $listHash );
-	if ( $list['cant'] ){
-		$gBitSmarty->assign( 'board_id', $list['data'][0]['board_id'] );
+	if ( $listHash['cant'] ){
+		$gBitSmarty->assign( 'board_id', $list[0]['board_id'] );
 		
 		// if a content_type has been requested the user just wants a list of that - no discussion topics
 		if ( empty( $moduleParams['content_type_guid'] ) ){
@@ -58,7 +58,7 @@ if( $gContent->isValid() && $gContent->hasViewPermission() ){
 			 */
 			require_once( BOARDS_PKG_PATH.'BitBoardTopic.php' );
 			$topicsHash = array( 
-				"content_id" =>  $list['data'][0]['content_id'],
+				"content_id" =>  $list[0]['content_id'],
 			);  
 			$topic = new BitBoardTopic();
 			$topics = $topic->getList( $topicsHash );

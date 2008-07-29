@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.99 2008/07/20 16:37:30 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.100 2008/07/29 18:08:35 lsces Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -916,8 +916,8 @@ class BitGroup extends LibertyMime {
 
 			$boards = $this->getContentList( $listHash );
 
-			if ( $boards['cant'] && !empty( $boards['data'][0]['board_id'] ) ){
-				$boardId = $boards['data'][0]['board_id'];
+			if ( $listHash['cant'] && !empty( $boards[0]['board_id'] ) ){
+				$boardId = $boards[0]['board_id'];
 				require_once( BOARDS_PKG_PATH.'BitBoard.php' );
 				$board = new BitBoard( $boardId );
 				$board->load();
