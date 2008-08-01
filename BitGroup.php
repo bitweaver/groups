@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.101 2008/07/31 21:52:24 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.102 2008/08/01 04:18:24 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -872,7 +872,13 @@ class BitGroup extends LibertyMime {
 	 * gets a list of content type that this group allows to be attached to it
 	 */
 	function getContentTypePrefs(){
-		$ret = array();
+		/**
+		 * @TODO inclusion of bitboard is here so that group members can edit their boards
+		 * However ideally we should only include bitboard when group_content_edit calls from a board edit process of the valid mapped board object
+		 * that is to say an existing board that is already mapped to the group - e.g. the one we create for the group automagaically. But right
+		 * now I'm too tired to work it out -wjames5
+		 */
+		$ret = array( 'bitboard' );
 		if ( $this->isValid() ){
 			if ( !empty( $this->mContentTypePrefs ) ){
 				return $this->mContentTypePrefs;
