@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.36 2008/07/29 18:08:35 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.37 2008/08/08 17:15:00 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: edit.php,v 1.36 2008/07/29 18:08:35 lsces Exp $
+ * $Id: edit.php,v 1.37 2008/08/08 17:15:00 wjames5 Exp $
  * @package groups
  * @subpackage functions
  */
@@ -41,6 +41,7 @@ foreach( $gLibertySystem->mContentTypes as $cType ) {
 
 // If we are in preview mode then preview it!
 if( isset( $_REQUEST["preview"] ) ) {
+	$gContent->load();
     $gContent->preparePreview( $_REQUEST );
 	$gBitSmarty->assign('preview', 'y');
 	$gContent->invokeServices('content_preview_function');

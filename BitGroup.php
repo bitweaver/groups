@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.102 2008/08/01 04:18:24 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.103 2008/08/08 17:15:00 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -141,13 +141,46 @@ class BitGroup extends LibertyMime {
 		return( count( $this->mInfo ) );
 	}
 
+
 	/**
-	* Any method named Store inherently implies data will be written to the database
-	* @param pParamHash be sure to pass by reference in case we need to make modifcations to the hash
-	* This is the ONLY method that should be called in order to store( create or update )an group!
-	* It is very smart and will figure out what to do for you. It should be considered a black box.
-	*
-	* @param array pParams hash of values that will be used to store the page
+	 * Prepare data for preview
+	 */
+	function preparePreview( $pParamHash ) {
+		global $gBitSystem, $gBitUser;
+
+		if( empty( $this->mInfo['user_id'] ) ) {
+			$this->mInfo['user_id'] = $gBitUser->mUserId;
+			$this->mInfo['creator_user'] = $gBitUser->getField( 'login' );
+			$this->mInfo['creator_real_name'] = $gBitUser->getField( 'real_name' );
+		}
+
+		$this->mInfo['creator_user_id'] = $this->mInfo['user_id'];
+
+		if( empty( $this->mInfo['created'] ) ){
+			$this->mInfo['created'] = $gBitSystem->getUTCTime();
+		}
+
+		if( isset( $pParamHash["group"]["title"] ) ) {
+			$this->mInfo["title"] = $pParamHash["group"]["title"]; 
+		}       
+
+		if( isset( $pParamHash["group"]["summary"] ) ) {
+			$this->mInfo["description"] = $pParamHash["group"]["summary"];
+		}
+
+		if( isset( $pParamHash["format_guid"] ) ) {
+			$this->mInfo['format_guid'] = $pParamHash["format_guid"];
+		}   
+
+		if( isset( $pParamHash["group"]["edit"] ) ) {
+			$this->mInfo["data"] = $pParamHash["group"]["edit"];
+			$this->mInfo['parsed_data'] = $this->parseData();
+		}
+	}
+
+	/**
+	* @param array pParamHash hash of values that will be used to store the group
+	* be sure to pass by reference in case we need to make modifcations to the hash
 	*
 	* @return bool TRUE on success, FALSE if store could not occur. If FALSE, $this->mErrors will have reason why
 	*
