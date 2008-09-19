@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/Attic/list_groups.php,v 1.5 2008/06/25 22:21:11 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/Attic/list_groups.php,v 1.6 2008/09/19 01:34:37 laetzer Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -49,7 +49,11 @@ if( isset( $_REQUEST["submit_mult"] ) && isset( $_REQUEST["checked"] ) && $_REQU
 			}
 			$formHash['input'][] = '<input type="hidden" name="checked[]" value="'.$del.'"/>'.$info;
 		}
-		$gBitSystem->confirmDialog( $formHash, array( 'warning' => 'Are you sure you want to delete '.count( $_REQUEST["checked"] ).' groups?', 'error' => 'This cannot be undone!' ) );
+		$gBitSystem->confirmDialog( $formHash, array( 
+				'warning' => tra('Are you sure you want to delete these groups?') . ' (' . tra('Count: ') . count( $_REQUEST["checked"] ) . ')',				
+				'error' => tra('This cannot be undone!'),
+			)
+		);
 	} else {
 		foreach( $_REQUEST["checked"] as $deleteId ) {
 			$tmpPage = new BitGroup( $deleteId );

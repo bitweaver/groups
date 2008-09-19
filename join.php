@@ -42,7 +42,11 @@ if ( !empty( $_REQUEST['invite_id'] ) ){
 					// have they confirmed they want to join
 					} elseif( empty( $_REQUEST['confirm'] )) {
 						// ask them to confirm they want to joinn
-						$gBitSystem->confirmDialog( $invite, array( 'warning' => 'Do you wish to join the group '.$gContent->getTitle() ) );
+						$gBitSystem->confirmDialog( $invite, 
+							array( 
+								'warning' => tra('Do you wish to join this group?') . ' ' . $gContent->getTitle()
+							) 
+						);
 					// they want to join
 					}else{
 						// sign them up
@@ -55,8 +59,11 @@ if ( !empty( $_REQUEST['invite_id'] ) ){
 					}
 				// the invite email address and the users email address do not match, so customize the error msg
 				}else if( $gBitUser->isRegistered() ){
-					$gBitSystem->fatalPermission( NULL, tra('Your user account email does not match the email address associated with the invitation you are responding to.')."<br /><br />".
-														tra('Please check your invitation code, update your account to use the same email address as the invitation was sent to, or ask the group admin to send you an invitation to your user account email address.') );
+					$gBitSystem->fatalPermission( NULL, 
+						tra('Your user account email does not match the email address associated with the invitation you are responding to.')
+						."<br /><br />".
+						tra('Please check your invitation code, update your account to use the same email address as the invitation was sent to, or ask the group admin to send you an invitation to your user account email address.')
+					);
 				}
 			}else{
 				// no
@@ -65,16 +72,22 @@ if ( !empty( $_REQUEST['invite_id'] ) ){
 			}
 		// the invite is not attached to a registered user, but the user is logged in, so customize the error msg
 		}else if( $gBitUser->isRegistered() ){
-				$gBitSystem->fatalPermission( NULL, tra('You appear to be logged in. The invitation you are responding to is not associated with a registered user.')."<br /><br />".
-													tra('Please check your invitation code, update your account to use the same email address as the invitation was sent to, or ask the group admin to send you an invitation to your user account email address.') );
+				$gBitSystem->fatalPermission( NULL, 
+					tra('You appear to be logged in. The invitation you are responding to is not associated with a registered user.')
+					."<br /><br />".
+					tra('Please check your invitation code, update your account to use the same email address as the invitation was sent to, or ask the group admin to send you an invitation to your user account email address.')
+				);
 		}else{
 			// no 
 			// send them to registration page
-			$gBitSystem->fatalPermission( NULL, tra('You must register first to accept an invitation to a group.')."<br /><br />".
-												tra('Be sure to register with the email address your invitation was sent to. You will be automatically added to the group when you register.' ) );
+			$gBitSystem->fatalPermission( NULL, 
+				tra('You must register first to accept an invitation to a group.')
+				."<br /><br />".
+				tra('Be sure to register with the email address your invitation was sent to. You will be automatically added to the group when you register.')
+			);
 		}
 	}else{
-		$gBitSystem->fatalError( tra( 'Invalid invitation code! Please check the link you were emailed, and that you have copy-pasted it correctly' ) );
+		$gBitSystem->fatalError( tra( 'Invalid invitation code! Please check the link you were emailed, and that you have copy-pasted it correctly.') );
 	}
 }
 
