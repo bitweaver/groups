@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.103 2008/08/08 17:15:00 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.104 2008/10/03 17:20:15 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -79,6 +79,7 @@ class BitGroup extends LibertyMime {
 		) );
 		// Permission setup
 		$this->mViewContentPerm  = 'p_group_view';
+		$this->mCreateContentPerm  = 'p_group_create';
 		$this->mEditContentPerm  = 'p_group_edit';
 		$this->mAdminContentPerm = 'p_group_admin';
 

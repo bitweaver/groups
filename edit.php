@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.37 2008/08/08 17:15:00 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.38 2008/10/03 17:20:15 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: edit.php,v 1.37 2008/08/08 17:15:00 wjames5 Exp $
+ * $Id: edit.php,v 1.38 2008/10/03 17:20:15 wjames5 Exp $
  * @package groups
  * @subpackage functions
  */
@@ -27,7 +27,7 @@ if( $gContent->isValid() ) {
 	// if it has a custom theme lets theme it
 	$gContent->setGroupStyle();
 } else {
-	$gBitSystem->verifyPermission( 'p_group_edit' );
+	$gContent->verifyCreatePermission();
 }
 
 // get content types groups can associate with their group
