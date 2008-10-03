@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.104 2008/10/03 17:20:15 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.105 2008/10/03 20:48:03 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1184,7 +1184,7 @@ function group_content_preview( &$pObject) {
 }
 
 function group_content_edit( &$pObject, &$pParamHash ) {
-	global $gBitSystem, $gBitSmarty;
+	global $gBitSystem, $gBitSmarty, $gBitUser;
 	$errors = NULL;
 	if( $gBitSystem->isPackageActive( 'group' ) ){
 		$connect_group_content_id = NULL;
@@ -1215,8 +1215,20 @@ function group_content_edit( &$pObject, &$pParamHash ) {
 
 			// make data available to smarty as controlling group info for theming - similarly set in lookup_group_inc
 			$gBitSmarty->assign_by_ref( 'controlGroupInfo', $group2->mInfo );
+
+			// check if editing is shared
+			if( !$pObject->isValid() ){
+				// if the content is new and registered users can edit we assume its wiki like and check the box by default
+				$groupId = 3;
+				$assignedPerms[$groupId] = $gBitUser->getGroupPermissions( array( 'group_id' => $groupId ) );
+			}else{
+				$groupId = $group2->mGroupId;
+				$assignedPerms = $pObject->getContentPermissionsList();
+			}
+			if( !empty( $assignedPerms[$groupId][$pObject->mEditContentPerm] ) ){
+				$gBitSmarty->assign('groupEditShared', TRUE );
+			}
 		}
-		
 	}
 }
 
@@ -1288,6 +1300,7 @@ function group_content_store( &$pObject, &$pParamHash ) {
 		//----- end set access perms -----//
 		/**
 		 * Assign custom view content perm on the object to be mapped based on if group is public or not
+		 * Assign custom edit contetn perm on the object to restrict access to the group for wiki like content
 		 *
 		 * @TODO This code is nearly identical to code in edit.php - may want to move into a group class method.
 		 */
@@ -1298,6 +1311,7 @@ function group_content_store( &$pObject, &$pParamHash ) {
 		}
 		if ( isset( $gLibertySystem->mContentTypes[$typeGuid]['content_perms']['view'] ) ){
 			$viewPerm =  $gLibertySystem->mContentTypes[$typeGuid]['content_perms']['view'];
+			$editPerm =  $gLibertySystem->mContentTypes[$typeGuid]['content_perms']['edit'];
 			// foreach user group
 			$groupsHash = array();
 			$allGroups = $gBitUser->getAllGroups( $groupsHash );
@@ -1313,15 +1327,29 @@ function group_content_store( &$pObject, &$pParamHash ) {
 						$groupContent->removePermission( $groupId, $viewPerm, $contentId );
 					}
 				}
+				// if group has content edit perm by default and is not admin, not editors, and not our group
+				if ( $groupId != 1 && $groupId != 2  && $groupId != $groupContent->mGroupId  && in_array( $editPerm, $groupPerms ) ){
+					// revoke to revoke wiki like editing - we never restore this
+					$groupContent->storePermission( $groupId, $editPerm, TRUE, $contentId);
+				}
 			}
 			
-			// set custom perm for our group
+			// set custom view perm for our group
 			if ( $groupContent->mInfo['view_content_public'] != 'y' ){
 				// assign view to our group 
 				$groupContent->storePermission( $groupContent->mGroupId, $viewPerm, FALSE, $contentId );
 			}else{
 				// remove custom view perm for our group since its not needed
 				$groupContent->removePermission( $groupContent->mGroupId, $viewPerm, $contentId );
+			}
+
+			// set custom edit perm for our group for wiki like editing among group members
+			if ( $pParamHash['group_share_edit'] == 'y' ){
+				// assign edit to our group 
+                $groupContent->storePermission( $groupContent->mGroupId, $editPerm, FALSE, $contentId );
+			}else{
+				// remove custom edit perm for our group if revoked
+				$groupContent->removePermission( $groupContent->mGroupId, $editPerm, $contentId );
 			}
 		}
 		//----- end set access perms -----//
