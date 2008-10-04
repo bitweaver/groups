@@ -12,7 +12,7 @@
 		{if !$groupContent}
 			{assign var="groupContent" value=$gContent}
 		{/if}
-		{if $groupContent->mGroupId && $groupContent->hasUserPermission( 'p_group_view', TRUE, TRUE)}
+		{if $groupContent->mGroupId && $groupContent->hasViewPermission()}
 			<li><hr/><h3>{$groupContent->getTitle()}</h3></li>
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$groupContent->mGroupId}">{tr}Home{/tr}</a></li>
 			<li><a class="item" href="{$smarty.const.BOARDS_PKG_URL}index.php?b={$board_id}" title="{tr}post messages{/tr}">{tr}Forum{/tr}</a></li>
