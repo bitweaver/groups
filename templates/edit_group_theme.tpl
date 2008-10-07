@@ -12,7 +12,15 @@
 				<h1>{tr}Confirm Selection{/tr}</h1>
 				<p>{tr}The settings you have chosen has not been applied to the site yet. This allows you to test the styles before applying them to your site. To accept the change, please click on the accept button below{/tr}<p>
 				<a href="{$smarty.const.GROUP_PKG_URL}theme.php">{biticon ipackage=icons iname="large/dialog-cancel" iexplain="Cancel"}</a>
-				<a href="{$smarty.const.GROUP_PKG_URL}theme.php?group_id={$gContent->mGroupId}&amp;group_style={$smarty.request.group_style}&amp;style_variation={$smarty.request.style_variation}&amp;approved=1">{biticon ipackage=icons iname="large/dialog-ok" iexplain="Accept"}</a>
+				<a href="{$smarty.const.GROUP_PKG_URL}theme.php?
+					group_id={$gContent->mGroupId}&amp;
+					{if $smarty.request.group_style}
+						group_style={$smarty.request.group_style}&amp;
+						style_variation={$smarty.request.style_variation}&amp;
+					{else $smarty.request.remove_group_style}
+						remove_group_style=true&amp;
+					{/if}
+					approved=1">{biticon ipackage=icons iname="large/dialog-ok" iexplain="Accept"}</a>
 			</div>
 		{/if}
 
@@ -205,6 +213,11 @@
 			{/if}
 			{if $gBitSystem->isFeatureActive( 'group_themes' )}
 				{jstab title="Theme Options"}
+					{if $style}
+						<div>
+							<a href="{$smarty.const.GROUP_PKG_URL}theme.php?group_id={$gContent->mGroupId}&amp;remove_group_style=true">{tr}Clear Custom Theme (revert this group's look and feel to the website default){/tr}</a>
+						</div>
+					{/if}
 					{legend legend="Select a Theme"}
 					<ul class="data">
 						{foreach from=$stylesList item=s}
