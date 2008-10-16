@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.106 2008/10/16 17:59:08 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.107 2008/10/16 18:32:59 squareing Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -71,13 +71,6 @@ class BitGroup extends LibertyMime {
 
 		// A reference to the group's affiliated board, see getBoard() below
 		$this->mBoardObj = NULL;
-
-		// start up switchboard if it's available
-		if( $gBitSystem->isPackageActive( 'switchboard' )) {
-			global $gSwitchboardSystem;
-			// Register us as a sender.
-			$gSwitchboardSystem->registerSwitchboardSender( GROUP_PKG_NAME, array( 'message' ));
-		}
 	}
 
 	/**
