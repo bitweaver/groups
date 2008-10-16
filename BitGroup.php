@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.105 2008/10/03 20:48:03 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.106 2008/10/16 17:59:08 squareing Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -28,20 +28,6 @@ define( 'BITGROUP_CONTENT_TYPE_GUID', 'bitgroup' );
 define( 'GROUPS_ROLE_ADMIN', 1);
 define( 'GROUPS_ROLE_MANAGER', 2);
 define( 'GROUPS_ROLE_MEMBER', 3);
-
-/**
- * load up switchboard
- * we need to include bit_setup_inc incase groups  gets loaded first
- */
-if ( is_file( BIT_ROOT_PATH.'switchboard/bit_setup_inc.php' ) ){
-	require_once( BIT_ROOT_PATH.'switchboard/bit_setup_inc.php' );
-}
-
-if ($gBitSystem->isPackageActive('switchboard')) {
-	global $gSwitchboardSystem;
-	// Register us as a sender.
-	$gSwitchboardSystem->registerSwitchboardSender('group', array('message'));
-}
 
 /**
  * Load up our moderation handlers
@@ -85,6 +71,13 @@ class BitGroup extends LibertyMime {
 
 		// A reference to the group's affiliated board, see getBoard() below
 		$this->mBoardObj = NULL;
+
+		// start up switchboard if it's available
+		if( $gBitSystem->isPackageActive( 'switchboard' )) {
+			global $gSwitchboardSystem;
+			// Register us as a sender.
+			$gSwitchboardSystem->registerSwitchboardSender( GROUP_PKG_NAME, array( 'message' ));
+		}
 	}
 
 	/**
