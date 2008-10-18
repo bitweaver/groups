@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.107 2008/10/16 18:32:59 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.108 2008/10/18 09:48:44 squareing Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -363,7 +363,7 @@ class BitGroup extends LibertyMime {
 			$query = "DELETE FROM `".BIT_DB_PREFIX."groups_content_types` WHERE `group_content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
 			if( LibertyMime::expunge() ) {
-				if( $gBitUser->remove_group($this->mGroupId) ) {
+				if( $gBitUser->expungeGroup( $this->mGroupId ) ) {
 					$ret = TRUE;
 					if( !empty( $board ) ) {
 						// delete the associated board
