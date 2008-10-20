@@ -22,7 +22,7 @@ require_once(GROUP_PKG_PATH.'lookup_group_inc.php' );
 
 // must be owner or admin to edit an existing group 
 if( $gContent->isValid() ) {
-	if( !( $gContent->hasEditPermission() || $gContent->hasUserPermission('p_group_group_members_admin') ) ){
+	if( !( $gContent->hasUpdatePermission() || $gContent->hasUserPermission('p_group_group_members_admin') ) ){
 		$gBitSystem->fatalError( tra( 'You do not have permission to administrate this groups members' ) );
 	}
 

@@ -6,7 +6,7 @@
 		{if $gBitUser->hasPermission( 'p_group_view')}
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}list_groups.php">{tr}List Groups{/tr}</a></li>
 		{/if}
-		{if $gBitUser->hasPermission( 'p_group_edit' )}
+		{if $gBitUser->hasPermission( 'p_group_create' )}
 			<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}edit.php">{tr}Create Group{/tr}</a></li>
 		{/if}
 		{if !$groupContent}
@@ -40,11 +40,11 @@
 				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}manage.php?group_id={$groupContent->mGroupId}" title="assign roles">{tr}Manage members{/tr}</a></li>
 				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}tasks.php?group_id={$groupContent->mGroupId}">{tr}Management Tasks{/tr}</a></li>
 			{/if}
-			{if $groupContent->hasAdminPermission() || $groupContent->hasEditPermission() }
+			{if $groupContent->hasAdminPermission() || $groupContent->hasUpdatePermission() }
 				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}invite_members.php?group_id={$groupContent->mGroupId}">{tr}Invite members{/tr}</a></li>
 				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}edit.php?group_id={$groupContent->mGroupId}">{tr}Group settings{/tr}</a></li>
 			{/if}
-			{if ($gBitSystem->isFeatureActive( 'group_themes' ) || $gBitSystem->isFeatureActive( 'group_layouts' )) && ($groupContent->hasAdminPermission() || $groupContent->hasEditPermission()) }
+			{if ($gBitSystem->isFeatureActive( 'group_themes' ) || $gBitSystem->isFeatureActive( 'group_layouts' )) && ($groupContent->hasAdminPermission() || $groupContent->hasUpdatePermission()) }
 				<li><a class="item" href="{$smarty.const.GROUP_PKG_URL}theme.php?group_id={$groupContent->mGroupId}">{tr}Group styles{/tr}</a></li>
 			{/if}
 		{/if}

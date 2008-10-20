@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/group_home.tpl,v 1.7 2008/07/21 21:42:05 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/group_home.tpl,v 1.8 2008/10/20 21:40:10 spiderr Exp $ *}
 {strip}
 <div class="display group">
 	<div class="header">
@@ -18,7 +18,7 @@
 					<p><a href="{$smarty.const.USERS_PKG_URL}register.php">{tr}register{/tr}</a></p>
 				</div>
 			{else}
-				{if $gBitUser->hasPermission( 'p_group_edit' ) }
+				{if $gBitUser->hasPermission( 'p_group_create' ) }
 					<p><a class="item" href="{$smarty.const.GROUP_PKG_URL}edit.php">{tr}Create a Group{/tr}</a></p>
 				{/if}
 				{if $memberGroups}

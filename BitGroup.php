@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.108 2008/10/18 09:48:44 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.109 2008/10/20 21:40:10 spiderr Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -66,7 +66,7 @@ class BitGroup extends LibertyMime {
 		// Permission setup
 		$this->mViewContentPerm  = 'p_group_view';
 		$this->mCreateContentPerm  = 'p_group_create';
-		$this->mEditContentPerm  = 'p_group_edit';
+		$this->mUpdateContentPerm  = 'p_group_update';
 		$this->mAdminContentPerm = 'p_group_admin';
 
 		// A reference to the group's affiliated board, see getBoard() below
@@ -1211,7 +1211,7 @@ function group_content_edit( &$pObject, &$pParamHash ) {
 				$groupId = $group2->mGroupId;
 				$assignedPerms = $pObject->getContentPermissionsList();
 			}
-			if( !empty( $assignedPerms[$groupId][$pObject->mEditContentPerm] ) ){
+			if( !empty( $assignedPerms[$groupId][$pObject->mUpdateContentPerm] ) ){
 				$gBitSmarty->assign('groupEditShared', TRUE );
 			}
 		}
@@ -1393,8 +1393,8 @@ function group_content_user_perms( &$pObject, $pParamHash ) {
 
 		// grant admin comments if member has permission
 		if( !empty($perms['p_group_group_msgs_admin'] ) ){
-			$perms['p_boards_post_edit'] = array( 'perm_name'=>'p_boards_post_edit', 'user_id'=> $userId );
-			$perms['p_liberty_edit_comments'] = array( 'perm_name'=>'p_liberty_edit_comments', 'user_id'=> $userId );
+			$perms['p_boards_post_update'] = array( 'perm_name'=>'p_boards_post_update', 'user_id'=> $userId );
+			$perms['p_liberty_update_comments'] = array( 'perm_name'=>'p_liberty_update_comments', 'user_id'=> $userId );
 			$perms['p_liberty_admin_comments'] = array( 'perm_name'=>'p_liberty_admin_comments', 'user_id'=> $userId );
 		}
 

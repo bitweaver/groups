@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/tasks.php,v 1.6 2008/06/25 22:21:11 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/tasks.php,v 1.7 2008/10/20 21:40:10 spiderr Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -22,7 +22,7 @@ require_once(GROUP_PKG_PATH.'lookup_group_inc.php' );
 
 // must be owner or admin  
 if( $gContent->isValid() ) {
-	if( !( $gContent->hasEditPermission() || $gContent->hasUserPermission('p_group_group_members_admin') ) ){
+	if( !( $gContent->hasUpdatePermission() || $gContent->hasUserPermission('p_group_group_members_admin') ) ){
 		$gBitSystem->fatalError( tra( "You do not have permission to manage this group's tasks" ) );
 	}
 

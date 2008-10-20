@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group_files.tpl,v 1.4 2008/07/20 19:14:03 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group_files.tpl,v 1.5 2008/10/20 21:40:10 spiderr Exp $ *}
 {strip}
 <div class="floaticon">{bithelp}</div>
 
@@ -44,7 +44,7 @@
 				{/foreach}
 			</table>
 		{/if}
-		{if $gContent->hasEditPermission() || $gContent->hasUserPermission('p_group_group_att_upload') } 
+		{if $gContent->hasUpdatePermission() || $gContent->hasUserPermission('p_group_group_att_upload') } 
 			{assign var="formid" value="editgroupform"}
 			{form enctype="multipart/form-data" id=$formid}
 				<input type="hidden" name="group_id" value="{$gContent->mGroupId}" />

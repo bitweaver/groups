@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/theme.php,v 1.7 2008/10/07 18:28:13 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/theme.php,v 1.8 2008/10/20 21:40:10 spiderr Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -22,7 +22,7 @@ require_once(GROUP_PKG_PATH.'lookup_group_inc.php' );
 
 // must be owner or admin to edit an existing group 
 if( $gContent->isValid() ) {
-	if( !$gContent->hasEditPermission() ){
+	if( !$gContent->hasUpdatePermission() ){
 		$gBitSystem->fatalError( tra( "You do not have permission to edit this group's theme." ));
 	}
 	if ( !( $gBitSystem->isFeatureActive( 'group_themes' ) || $gBitSystem->isFeatureActive( 'group_layouts' )) ){
