@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.109 2008/10/20 21:40:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.110 2008/10/21 00:16:25 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1297,7 +1297,7 @@ function group_content_store( &$pObject, &$pParamHash ) {
 		}
 		if ( isset( $gLibertySystem->mContentTypes[$typeGuid]['content_perms']['view'] ) ){
 			$viewPerm =  $gLibertySystem->mContentTypes[$typeGuid]['content_perms']['view'];
-			$editPerm =  $gLibertySystem->mContentTypes[$typeGuid]['content_perms']['edit'];
+			$editPerm =  $gLibertySystem->mContentTypes[$typeGuid]['content_perms']['update'];
 			// foreach user group
 			$groupsHash = array();
 			$allGroups = $gBitUser->getAllGroups( $groupsHash );
