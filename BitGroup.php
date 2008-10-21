@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.111 2008/10/21 01:15:47 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.112 2008/10/21 02:25:25 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1212,7 +1212,7 @@ function group_content_edit( &$pObject, &$pParamHash ) {
 				$assignedPerms = $pObject->getContentPermissionsList();
 			}
 			if( !empty( $assignedPerms[$groupId][$pObject->mUpdateContentPerm] ) ){
-				$gBitSmarty->assign('groupEditShared', TRUE );
+				$gBitSmarty->assign('groupUpdateShared', TRUE );
 			}
 		}
 	}
@@ -1330,7 +1330,7 @@ function group_content_store( &$pObject, &$pParamHash ) {
 			}
 
 			// set custom update perm for our group for wiki like editing among group members
-			if ( $pParamHash['group_share_edit'] == 'y' ){
+			if ( $pParamHash['group_share_update'] == 'y' ){
 				// assign edit to our group 
                 $groupContent->storePermission( $groupContent->mGroupId, $updatePerm, FALSE, $contentId );
 			}else{
