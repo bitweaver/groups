@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.110 2008/10/21 00:16:25 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.111 2008/10/21 01:15:47 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1297,7 +1297,7 @@ function group_content_store( &$pObject, &$pParamHash ) {
 		}
 		if ( isset( $gLibertySystem->mContentTypes[$typeGuid]['content_perms']['view'] ) ){
 			$viewPerm =  $gLibertySystem->mContentTypes[$typeGuid]['content_perms']['view'];
-			$editPerm =  $gLibertySystem->mContentTypes[$typeGuid]['content_perms']['update'];
+			$updatePerm =  $gLibertySystem->mContentTypes[$typeGuid]['content_perms']['update'];
 			// foreach user group
 			$groupsHash = array();
 			$allGroups = $gBitUser->getAllGroups( $groupsHash );
@@ -1313,10 +1313,10 @@ function group_content_store( &$pObject, &$pParamHash ) {
 						$groupContent->removePermission( $groupId, $viewPerm, $contentId );
 					}
 				}
-				// if group has content edit perm by default and is not admin, not editors, and not our group
-				if ( $groupId != 1 && $groupId != 2  && $groupId != $groupContent->mGroupId  && in_array( $editPerm, $groupPerms ) ){
+				// if group has content update perm by default and is not admin, not editors, and not our group
+				if ( $groupId != 1 && $groupId != 2  && $groupId != $groupContent->mGroupId  && in_array( $updatePerm, $groupPerms ) ){
 					// revoke to revoke wiki like editing - we never restore this
-					$groupContent->storePermission( $groupId, $editPerm, TRUE, $contentId);
+					$groupContent->storePermission( $groupId, $updatePerm, TRUE, $contentId);
 				}
 			}
 			
@@ -1329,13 +1329,13 @@ function group_content_store( &$pObject, &$pParamHash ) {
 				$groupContent->removePermission( $groupContent->mGroupId, $viewPerm, $contentId );
 			}
 
-			// set custom edit perm for our group for wiki like editing among group members
+			// set custom update perm for our group for wiki like editing among group members
 			if ( $pParamHash['group_share_edit'] == 'y' ){
 				// assign edit to our group 
-                $groupContent->storePermission( $groupContent->mGroupId, $editPerm, FALSE, $contentId );
+                $groupContent->storePermission( $groupContent->mGroupId, $updatePerm, FALSE, $contentId );
 			}else{
-				// remove custom edit perm for our group if revoked
-				$groupContent->removePermission( $groupContent->mGroupId, $editPerm, $contentId );
+				// remove custom update perm for our group if revoked
+				$groupContent->removePermission( $groupContent->mGroupId, $updatePerm, $contentId );
 			}
 		}
 		//----- end set access perms -----//
