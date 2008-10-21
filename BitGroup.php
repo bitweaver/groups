@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.112 2008/10/21 02:25:25 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.113 2008/10/21 20:32:19 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1330,12 +1330,14 @@ function group_content_store( &$pObject, &$pParamHash ) {
 			}
 
 			// set custom update perm for our group for wiki like editing among group members
-			if ( $pParamHash['group_share_update'] == 'y' ){
-				// assign edit to our group 
-                $groupContent->storePermission( $groupContent->mGroupId, $updatePerm, FALSE, $contentId );
-			}else{
-				// remove custom update perm for our group if revoked
-				$groupContent->removePermission( $groupContent->mGroupId, $updatePerm, $contentId );
+			if( $pObject->isOwner() || $pObject->hasAdminPermission() ){
+				if ( !empty( $pParamHash['group_share_update'] ) && $pParamHash['group_share_update'] == 'y' ){
+					// assign edit to our group 
+					$groupContent->storePermission( $groupContent->mGroupId, $updatePerm, FALSE, $contentId );
+				}else{
+					// remove custom update perm for our group if revoked
+					$groupContent->removePermission( $groupContent->mGroupId, $updatePerm, $contentId );
+				}
 			}
 		}
 		//----- end set access perms -----//
