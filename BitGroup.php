@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.113 2008/10/21 20:32:19 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.114 2008/10/28 01:27:53 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -336,6 +336,11 @@ class BitGroup extends LibertyMime {
 
 		// Merge errors from the group checks
 		$this->mErrors = array_merge($gBitUser->mErrors, $this->mErrors);
+		
+		// if we have an error we get them all by checking parent classes for additional errors
+		if( count( $this->mErrors ) > 0 ){
+			parent::verify( $pParamHash );
+		}
 
 		return( count( $this->mErrors )== 0 );
 	}
