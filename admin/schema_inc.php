@@ -80,22 +80,21 @@ foreach( array_keys( $tables ) AS $tableName ) {
 
 $gBitInstaller->registerPackageInfo( GROUP_PKG_NAME, array(
 	'description' => "The Group package allows users to create groups to organize content.",
-	'requirements' => 'Group is dependent on <a class="external" href="http://www.bitweaver.org/wiki/boardspackage">BoardsPackage</a>, <a class="external" href="http://www.bitweaver.org/wiki/moderationpackage">ModerationPackage</a>, <a class="external" href="http://www.bitweaver.org/wiki/modcommentspackage">ModCommentsPackage</a>, <a class="external" href="http://www.bitweaver.org/wiki/libertysecurepackage">LibertySecurePackage</a>, <a class="external" href="http://www.bitweaver.org/wiki/switchboardpackage">SwitchboardPackage</a>',
 	'license' => '<a href="http://www.gnu.org/licenses/licenses.html#LGPL">LGPL</a>',
 ) );
 
 // ### Indexes
 $indices = array(
-	'groups_group_id_idx' => array('table' => 'groups', 'cols' => 'group_id', 'opts' => NULL ),
-	'groups_content_id_idx' => array( 'table' => 'groups', 'cols' => 'content_id', 'opts' => array( 'UNIQUE' ) ),
-	'groups_roles_perms_group_idx' => array( 'table' => 'groups_roles_perms_map', 'cols' => 'group_id', 'opts' => NULL ),
+	'groups_group_id_idx'            => array( 'table' => 'groups', 'cols'                 => 'group_id', 'opts'         => NULL ),
+	'groups_content_id_idx'          => array( 'table' => 'groups', 'cols'                 => 'content_id', 'opts'       => array( 'UNIQUE' ) ),
+	'groups_roles_perms_group_idx'   => array( 'table' => 'groups_roles_perms_map', 'cols' => 'group_id', 'opts'         => NULL ),
 	'groups_roles_perms_content_idx' => array( 'table' => 'groups_roles_perms_map', 'cols' => 'group_content_id', 'opts' => NULL ),
-	'groups_roles_perms_perm_idx' => array( 'table' => 'groups_roles_perms_map', 'cols' => 'perm_name', 'opts' => NULL ),
-	'groups_roles_perms_role_idx' => array( 'table' => 'groups_roles_perms_map', 'cols' => 'role_id', 'opts' => NULL ),
-	'groups_roles_users_group_idx' => array( 'table' => 'groups_roles_users_map', 'cols' => 'group_id', 'opts' => NULL ),
+	'groups_roles_perms_perm_idx'    => array( 'table' => 'groups_roles_perms_map', 'cols' => 'perm_name', 'opts'        => NULL ),
+	'groups_roles_perms_role_idx'    => array( 'table' => 'groups_roles_perms_map', 'cols' => 'role_id', 'opts'          => NULL ),
+	'groups_roles_users_group_idx'   => array( 'table' => 'groups_roles_users_map', 'cols' => 'group_id', 'opts'         => NULL ),
 	'groups_roles_users_content_idx' => array( 'table' => 'groups_roles_users_map', 'cols' => 'group_content_id', 'opts' => NULL ),
-	'groups_roles_users_user_idx' => array( 'table' => 'groups_roles_users_map', 'cols' => 'user_id', 'opts' => NULL ),
-	'groups_roles_users_role_idx' => array( 'table' => 'groups_roles_users_map', 'cols' => 'role_id', 'opts' => NULL ),
+	'groups_roles_users_user_idx'    => array( 'table' => 'groups_roles_users_map', 'cols' => 'user_id', 'opts'          => NULL ),
+	'groups_roles_users_role_idx'    => array( 'table' => 'groups_roles_users_map', 'cols' => 'role_id', 'opts'          => NULL ),
 );
 $gBitInstaller->registerSchemaIndexes( GROUP_PKG_NAME, $indices );
 
@@ -138,4 +137,14 @@ $gBitInstaller->registerPreferences( GROUP_PKG_NAME, array(
 	array( GROUP_PKG_NAME, 'group_list_description', 'y' ),
 	array( GROUP_PKG_NAME, 'group_list_groups', 'y' ),
 ) );
+
+// Package Requirements
+$gBitInstaller->registerRequirements( GROUP_PKG_NAME, array(
+	'liberty'       => array( 'min' => '2.1.0' ),
+	'boards'        => array( 'min' => '0.0.0' ),
+	'moderation'    => array( 'min' => '0.0.0' ),
+	'modcomments'   => array( 'min' => '0.0.0' ),
+	'libertysecure' => array( 'min' => '0.0.0' ),
+	'switchboard'   => array( 'min' => '0.0.0' ),
+));
 ?>
