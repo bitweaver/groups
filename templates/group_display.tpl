@@ -23,7 +23,7 @@
 		<div class="content">
 			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
 
-			<div class="floaticon"><a href="{$smarty.const.BOARDS_PKG_URL}index.php?b={$board_id}">View All</a></div>
+			<div class="floaticon"><a href="{$smarty.const.BOARDS_PKG_URL}index.php?b={$board_id}">{tr}View More{/tr}</a></div>
 			<h2>Discussions</h2>
 				<table class="data">
 					<tr>
