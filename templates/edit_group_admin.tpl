@@ -16,7 +16,7 @@
 			<tr class="{cycle values="odd,even"}">
 				<td>{$perm}</td>
 				{foreach from=$groupRoles item=role}
-					<td style="text-align:center;">
+					<td class="aligncenter">
 						<input type="checkbox" name="group[perms][{$role.role_id}][{$p}]" title="{$role.role_name}"
 							{if $role.role_id eq 1 } checked="checked" disabled="disabled" {elseif $role.perms.$p} checked="checked" {/if}/>
 					</td>
