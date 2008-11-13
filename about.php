@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/about.php,v 1.6 2008/06/25 22:21:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/about.php,v 1.7 2008/11/13 20:56:47 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -32,6 +32,8 @@ if( $gContent->isValid() ) {
 if( ($board = $gContent->getBoard()) && ($mailingList = $board->getBoardMailingList()) ) {
 	$gBitSmarty->assign( 'boardsMailingList', $mailingList );
 }
+
+$gBitSmarty->assign( 'group_display_mode', 'about' );
 
 // Display the template
 $gBitSystem->display( 'bitpackage:group/group_about.tpl', tra( 'Group' ) , array( 'display_mode' => 'display' ));

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/files.php,v 1.8 2008/10/20 21:40:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/files.php,v 1.9 2008/11/13 20:56:47 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -54,6 +54,8 @@ if( $gBitSystem->getConfig("liberty_attachment_style") == "ajax" ){
 	$gBitThemes->loadJavascript( LIBERTY_PKG_PATH.'scripts/LibertyAttachment.js', TRUE );
 	$gBitThemes->loadJavascript( GROUP_PKG_PATH.'scripts/LibertyAttachment.js', TRUE );
 }
+
+$gBitSmarty->assign( 'group_display_mode', 'files' );
 
 // Display the template
 $gBitSystem->display( 'bitpackage:group/edit_group_files.tpl', tra('Group File') , array( 'display_mode' => 'display' ));

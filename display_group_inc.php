@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.4 2008/07/29 18:08:35 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.5 2008/11/13 20:56:47 wjames5 Exp $
  * @package groups
  * @subpackage functions
  */
@@ -128,12 +128,15 @@ if ( isset ( $_REQUEST['content_type_guid'] ) && isset( $gLibertySystem->mConten
 
 		$pageTitle = tra('List Group '.$contentDesc.'s');
 
+		$gBitSmarty->assign( 'group_display_mode', $contentType );
 	}
 }else{
 	// Display the template
 	$gDefaultCenter = 'bitpackage:group/group_display.tpl';
 	$gBitSmarty->assign_by_ref( 'gDefaultCenter', $gDefaultCenter );
 	$pageTitle = tra("Group");
+	
+	$gBitSmarty->assign( 'group_display_mode', 'summary' );
 }
 
 $gBitSystem->display( 'bitpackage:kernel/dynamic.tpl', $pageTitle , array( 'display_mode' => 'display' ));

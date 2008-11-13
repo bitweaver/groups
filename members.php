@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/members.php,v 1.9 2008/06/25 22:21:11 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/members.php,v 1.10 2008/11/13 20:56:47 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -39,6 +39,7 @@ $groupMembers = $gContent->getMembers();
 $gBitSmarty->assign_by_ref( 'groupMembers', $groupMembers );
 
 // display
+$gBitSmarty->assign( 'group_display_mode', 'members' );
 $gBitSystem->setBrowserTitle( $gContent->getTitle() ." ".  tra( 'Group Members' ) );
 $gBitSystem->display( "bitpackage:group/list_members.tpl" , NULL, array( 'display_mode' => 'display' ));
 ?>
