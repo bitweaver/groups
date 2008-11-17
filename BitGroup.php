@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.115 2008/11/17 18:24:29 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.116 2008/11/17 19:12:50 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -90,7 +90,8 @@ class BitGroup extends LibertyMime {
 			$query = "SELECT s.*, lc.*, lcds.`data` AS `summary`, lcda.`data` AS `after_registration`, ug.*, " .
 			"lfp.storage_path AS `image_attachment_path`, " .
 			"uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name, " .
-			"uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name " .
+			"uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name, " .
+			"brd.`board_id`" .
 			"$selectSql " .
 			"FROM `".BIT_DB_PREFIX."groups` s " .
 			"INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = s.`content_id` ) $joinSql" .
@@ -99,6 +100,8 @@ class BitGroup extends LibertyMime {
 			"LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_data` lcda ON (lc.`content_id` = lcda.`content_id` AND lcda.`data_type`='after_registration')" .
 			"LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON( la.`content_id` = lc.`content_id` AND la.`is_primary` = 'y' )" .
 			"LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_files` lfp ON( lfp.`file_id` = la.`foreign_id` )" .
+			"LEFT OUTER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( lc.`content_id` = gccm.`group_content_id` )" .
+			"LEFT OUTER JOIN `".BIT_DB_PREFIX."boards` brd ON (gccm.`to_content_id` = brd.`content_id`)" .
 			"LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON( uue.`user_id` = lc.`modifier_user_id` )" .
 			"LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON( uuc.`user_id` = lc.`user_id` )" .
 			"WHERE s.`$lookupColumn`=? $whereSql";
@@ -947,16 +950,24 @@ class BitGroup extends LibertyMime {
 	 */
 	function getBoard(){
 		if ( $this->isValid() && !is_object( $this->mBoardObj ) ){
-			$listHash = array(
-				"connect_group_content_id" => $this->mContentId,
-				"content_type_guid" => "bitboard",
-				"sort_mode" => "created_asc"
-				);
+			if( !empty( $this->mInfo['board_id'] ) ){
+				$boardId = $this->mInfo['board_id'];
+			}else{
+				// exists in case we ever want to allow groups to have more than one board
+				// for now load should get the board_id
+				$listHash = array(
+					"connect_group_content_id" => $this->mContentId,
+					"content_type_guid" => "bitboard",
+					"sort_mode" => "created_asc"
+					);
 
-			$boards = $this->getContentList( $listHash );
+				$boards = $this->getContentList( $listHash );
+				if ( $listHash['cant'] && !empty( $boards[0]['board_id'] ) ){
+					$boardId = $boards[0]['board_id'];
+				}
+			}
 
-			if ( $listHash['cant'] && !empty( $boards[0]['board_id'] ) ){
-				$boardId = $boards[0]['board_id'];
+			if( $boardId ){
 				require_once( BOARDS_PKG_PATH.'BitBoard.php' );
 				$board = new BitBoard( $boardId );
 				$board->load();

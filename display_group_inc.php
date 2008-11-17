@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.5 2008/11/13 20:56:47 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.6 2008/11/17 19:12:50 wjames5 Exp $
  * @package groups
  * @subpackage functions
  */
@@ -46,8 +46,6 @@ $listHash = array(
 	);
 $list = $gContent->getContentList( $listHash );
 if ( $listHash['cant'] ){
-	$gBitSmarty->assign( 'board_id', $list[0]['board_id'] );
-	
 	// if a content_type has been requested the user just wants a list of that - no discussion topics
 	if ( empty( $_REQUEST['content_type_guid'] ) ){
 		/*  boards package dependancy

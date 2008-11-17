@@ -12,7 +12,7 @@
 		<div class="content">
 			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
 
-			<div class="floaticon"><a href="{$smarty.const.BOARDS_PKG_URL}index.php?b={$board_id}">{tr}View More{/tr}</a></div>
+			<div class="floaticon"><a href="{$smarty.const.BOARDS_PKG_URL}index.php?b={$gContent->mInfo.board_id}">{tr}View More{/tr}</a></div>
 			<h2>Discussions</h2>
 				<table class="data">
 					<tr>
@@ -63,7 +63,7 @@
 				</table>
 			{if $gBitUser->isAdmin() || $gContent->isOwner() || ($gBitUser->isInGroup( $gContent->mGroupId ) && $gContent->hasUserPermission('p_group_group_msgs_create'))}
 				<div class="navbar">
-					<a class="button" title="{tr}New Topic{/tr}" href="{$smarty.const.BOARDS_PKG_URL}index.php?b={$board_id}&amp;post_comment_request=1#editcomments">{biticon ipackage="icons" iname="mail-message-new" iexplain="New Topic" iforce="icon"} {tr}New Topic{/tr}</a>
+					<a class="button" title="{tr}New Topic{/tr}" href="{$smarty.const.BOARDS_PKG_URL}index.php?b={$gContent->mInfo.board_id}&amp;post_comment_request=1#editcomments">{biticon ipackage="icons" iname="mail-message-new" iexplain="New Topic" iforce="icon"} {tr}New Topic{/tr}</a>
 				</div>
 			{/if}
 
