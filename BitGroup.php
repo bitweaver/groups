@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.114 2008/10/28 01:27:53 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.115 2008/11/17 18:24:29 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1157,6 +1157,15 @@ function group_content_display( &$pObject, &$pParamHash ) {
 			$group2 = new BitGroup ( null, $group_id );
 			$group2->load();
 			$group2->injectGroupLayoutModules();
+		}elseif( $gBitSystem->isFeatureActive( 'group_admin_content' ) ) {
+			// if we have strict admin control thus one to one content to group relations ship
+			// then we assume we are using it in sophisticated ways so we need ref for the controlling group
+
+			// the reason is is an else to group_layouts is because the controlling group is already assigned by ref in injectGroupLayoutModules()
+			// now we can add our custom groupcontent layout to it
+			$group2 = new BitGroup ( null, $group_id );
+			$group2->load();
+			$gBitSmarty->assign_by_ref( 'groupContent', $group2 );
 		}
 	}
 
