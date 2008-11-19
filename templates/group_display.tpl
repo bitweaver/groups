@@ -1,4 +1,5 @@
 {include file="bitpackage:liberty/services_inc.tpl" serviceLocation='nav' serviceHash=$gContent->mInfo}
+{strip}
 <div class="display group">
 	{include file="bitpackage:group/group_icons.tpl}
 	
@@ -98,4 +99,5 @@
 		</div><!-- end .content -->
 	</div><!-- end .body -->
 </div><!-- end .group -->
+{/strip}
 {include file="bitpackage:liberty/services_inc.tpl" serviceLocation='view' serviceHash=$gContent->mInfo}
