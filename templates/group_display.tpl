@@ -3,7 +3,7 @@
 	{include file="bitpackage:group/group_icons.tpl}
 	
 	<div class="header">
-		<h1>{if $gContent->mInfo.thumbnail_url}<img class="thumb" style="vertical-align:middle;" src="{$gContent->mInfo.thumbnail_url.avatar}" alt="Group Image" title="{$gContent->mInfo.title|escape}" />{/if}
+		<h1>{if $gContent->mInfo.thumbnail_url}<img class="thumb" style="vertical-align:middle;" src="{$gContent->mInfo.thumbnail_url.avatar}" alt="Group Image" title="{$gContent->mInfo.title|escape}" />&nbsp;{/if}
 			{$gContent->mInfo.title|escape|default:"Group"}</h1>
 		<p>{$gContent->mInfo.summary|escape}</p>
 	</div><!-- end .header -->

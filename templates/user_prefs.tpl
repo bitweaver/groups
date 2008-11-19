@@ -1,7 +1,9 @@
 {strip}
 <div class="join display group">
 	<div class="header">
-		<h1>{if !$gBitUser->isInGroup( $gContent->mGroupId )}{tr}Join{/tr}{else}{tr}Preferences{/tr}{/if}</h1>
+		<h1>{if $gContent->mInfo.thumbnail_url}<img class="thumb" style="vertical-align:middle;" src="{$gContent->mInfo.thumbnail_url.avatar}" alt="Group Image" title="{$gContent->mInfo.title|escape}" />&nbsp;{/if}
+			{$gContent->mInfo.title|escape|default:"Group"}</h1>
+		<h2>{if !$gBitUser->isInGroup( $gContent->mGroupId )}{tr}Join{/tr}{else}{tr}Preferences{/tr}{/if}</h2>
 	</div><!-- end .header -->
 
 	<div class="body">

@@ -1,12 +1,12 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group_files.tpl,v 1.5 2008/10/20 21:40:10 spiderr Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group_files.tpl,v 1.6 2008/11/19 17:23:20 wjames5 Exp $ *}
 {strip}
 <div class="floaticon">{bithelp}</div>
 
 <div class="admin group">
 	<div class="header">
-		<h1>
-			{$gContent->mInfo.title|escape} {tr}Files{/tr}
-		</h1>
+		<h1>{if $gContent->mInfo.thumbnail_url}<img class="thumb" style="vertical-align:middle;" src="{$gContent->mInfo.thumbnail_url.avatar}" alt="Group Image" title="{$gContent->mInfo.title|escape}" />&nbsp;{/if}
+			{$gContent->mInfo.title|escape|default:"Group"}</h1>
+		<h2>{tr}Files{/tr}</h2>
 	</div>
 
  	{if $errors}

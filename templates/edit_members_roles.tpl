@@ -1,8 +1,11 @@
 {strip}
 <div class="admin group">
 	<div class="header">
-		<h1>Manage Members</h1>
+		<h1>{if $gContent->mInfo.thumbnail_url}<img class="thumb" style="vertical-align:middle;" src="{$gContent->mInfo.thumbnail_url.avatar}" alt="Group Image" title="{$gContent->mInfo.title|escape}" />&nbsp;{/if}
+			{$gContent->mInfo.title|escape|default:"Group"}</h1>
+		<h2>Manage Members</h2>
 	</div><!-- end .header -->
+
 	<div class="body">
 		<div class="content">
 			{form enctype="multipart/form-data" id="editmemberroles"}

@@ -3,12 +3,13 @@
 	{include file="bitpackage:group/group_icons.tpl}
 
 	<div class="header">
-		<h1>{$gContent->mInfo.title|escape}</h1>
+		<h1>{if $gContent->mInfo.thumbnail_url}<img class="thumb" style="vertical-align:middle;" src="{$gContent->mInfo.thumbnail_url.avatar}" alt="Group Image" title="{$gContent->mInfo.title|escape}" />&nbsp;{/if}
+			{$gContent->mInfo.title|escape|default:"Group"}</h1>
+		<h2>About this group</h2>
 	</div><!-- end .header -->
 
 	<div class="body">
 		<div class="content">
-			<h2>About this group</h2>
 			<div class="row">
 				{formlabel label="Members"}
 				<div class="forminput">{$gContent->mInfo.num_members}</div>

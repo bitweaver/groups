@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.11 2008/05/18 20:56:51 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.12 2008/11/19 17:23:20 wjames5 Exp $ *}
 {strip}
 <div class="floaticon">{bithelp}</div>
 
@@ -11,13 +11,15 @@
 	{/if}
 
 	<div class="header">
-		<h1>
-			{if $gContent->mInfo.group_id}
-				{tr}{tr}Edit{/tr} {$gContent->mInfo.title|escape}{/tr}
-			{else}
+		{if $gContent->mInfo.group_id}
+			<h1>{if $gContent->mInfo.thumbnail_url}<img class="thumb" style="vertical-align:middle;" src="{$gContent->mInfo.thumbnail_url.avatar}" alt="Group Image" title="{$gContent->mInfo.title|escape}" />&nbsp;{/if}
+				{$gContent->mInfo.title|escape|default:"Group"}</h1>
+			<h2>{tr}Group Settings{/tr}</h2>
+		{else}
+			<h1>
 				{tr}Create New Group{/tr}
-			{/if}
-		</h1>
+			</h1>
+		{/if}
 	</div>
 
  	{if $errors}

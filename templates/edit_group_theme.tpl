@@ -2,7 +2,9 @@
 
 <div class="admin themes">
 	<div class="header">
-		<h1> {tr}Group Styles Manager{/tr}</h1>
+		<h1>{if $gContent->mInfo.thumbnail_url}<img class="thumb" style="vertical-align:middle;" src="{$gContent->mInfo.thumbnail_url.avatar}" alt="Group Image" title="{$gContent->mInfo.title|escape}" />{/if}
+			&nbsp;{$gContent->mInfo.title|escape|default:"Group"}</h1>
+		<h2> {tr}Group Styles Manager{/tr}</h2>
 	</div>
 
 	<div class="body">
