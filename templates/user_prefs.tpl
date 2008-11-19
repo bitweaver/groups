@@ -18,7 +18,7 @@
 					{if !$gBitUser->isInGroup( $gContent->mGroupId )}
 						{assign var="legendtext" value="How do you want to read this group?"}
 					{else}
-						{assign var="legendtext" value="Membership preferences"}
+						{assign var="legendtext" value="Notification preferences"}
 					{/if}
 					{legend legend=$legendtext}
 						<input type="hidden" name="group_id" value="{$gContent->mInfo.group_id}" />
