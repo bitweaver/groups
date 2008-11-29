@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.120 2008/11/29 21:12:04 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.121 2008/11/29 22:00:43 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1318,7 +1318,10 @@ function group_content_store( &$pObject, &$pParamHash ) {
 	global $gBitSystem, $gLibertySystem, $gBitUser;
 	$errors = NULL;
 
-	if( $gBitSystem->isPackageActive( 'group' ) && !empty( $pParamHash['connect_group_content_id'] ) ) {
+	if( $gBitSystem->isPackageActive( 'group' ) ){
+
+	//----- content to group mapping -----//
+	if( !empty( $pParamHash['connect_group_content_id'] ) ) {
 		$groupContent = new BitGroup( NULL, $pParamHash['connect_group_content_id'] );
 		$groupContent->load();
 		$groupContent->verifyLinkContentPermission( $pObject );
@@ -1390,6 +1393,34 @@ function group_content_store( &$pObject, &$pParamHash ) {
 		//----- end set access perms -----//
 
 	}
+	//----- end content to group mapping -----//
+
+	//----- change of email address  -----//
+	// this updates the users email address if the user is subscribed to any mailing lists
+	if( !empty( $pParamHash['chgemail'] ) && $gBitSystem->isPackageActive( 'boards' ) ){
+		require_once( UTIL_PKG_PATH.'mailman_lib.php' );
+
+		$query = "SELECT lcp.`pref_value`
+					FROM `".BIT_DB_PREFIX."liberty_content_prefs` lcp
+					INNER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON lcp.`content_id` = gccm.`to_content_id`
+					INNER JOIN `".BIT_DB_PREFIX."groups` g ON g.`content_id` = gccm.`group_content_id`
+					INNER JOIN `".BIT_DB_PREFIX."users_groups_map` ugm ON ugm.`group_id` = g.`group_id`
+					WHERE lcp.`pref_name` = ? AND ugm.`user_id` = ?";
+		$bindVars = array( 'boards_mailing_list',$pObject->mUserId );
+
+		$mailingLists = $pObject->mDb->getArray( $query, $bindVars, 99999, 0 );
+
+		foreach( $mailingLists as $key=>$val ){
+			if ( mailman_findmember($val['pref_value'],$pParamHash['org_email']) ){
+				// delete and replace it
+				mailman_remove_member( $board->getPreference( 'boards_mailing_list' ), $pParamHash['org_email'] );
+				mailman_addmember( $board->getPreference( 'boards_mailing_list' ), $pUser->getField('email') );
+			}
+		}
+	}
+	//----- end change of email address  -----//
+
+	} // end check group package is active
 	return( $errors );
 }
 
