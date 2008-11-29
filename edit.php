@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.39 2008/10/20 21:40:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.40 2008/11/29 01:57:01 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: edit.php,v 1.39 2008/10/20 21:40:10 spiderr Exp $
+ * $Id: edit.php,v 1.40 2008/11/29 01:57:01 tekimaki_admin Exp $
  * @package groups
  * @subpackage functions
  */
@@ -231,6 +231,7 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 		header( "Location: ".$gContent->getDisplayUrl() );
 		die;
 	} else {
+	      	$gContent->preparePreview( $_REQUEST );
 		$gBitSmarty->assign_by_ref( 'errors', $gContent->mErrors );
 	}
 }

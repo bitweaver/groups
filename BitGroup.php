@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.116 2008/11/17 19:12:50 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.117 2008/11/29 01:57:01 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -179,7 +179,6 @@ class BitGroup extends LibertyMime {
 	function store( &$pParamHash ) {
 		global $gBitUser, $gBitSystem;
 		$this->mDb->StartTrans();
-
 		// Verify and then store group and content.
 		if( $this->verify( $pParamHash ) && $gBitUser->storeGroup( $pParamHash ) && LibertyMime::store( $pParamHash ) ) {
 			$table = BIT_DB_PREFIX."groups";
@@ -197,6 +196,7 @@ class BitGroup extends LibertyMime {
 				$gBitUser->addUserToGroup( $gBitUser->mUserId, $this->mGroupId );
 				// Restore the group in users table to update the home link now that we have a group id
 				$pParamHash['home'] = GROUP_PKG_URL."index.php?group_id=".$this->mGroupId;
+				// Restore the home now
 				$gBitUser->storeGroup( $pParamHash );
 				// Autogenerate a board for this group
 				if ( $gBitSystem->isPackageActive( 'boards' ) ){
@@ -211,6 +211,9 @@ class BitGroup extends LibertyMime {
 					if ( $board->store( $boardHash ) ){
 						$this->linkContent( $board->mInfo );
 						$this->mBoardObj = &$board;
+					} else {
+					  $this->mErrors['board'] = tra('Unknown error while creating the board.');
+					  $this->mErrors = array_merge($this->mErrors, $board->mErrors);
 					}
 				}
 			}
@@ -224,8 +227,15 @@ class BitGroup extends LibertyMime {
 				$board->storePreference( 'moderate_comments', $modComments );
 			}
 
-			$this->mDb->CompleteTrans();
-			$this->load();
+			if( count($this->mErrors) == 0) {
+				$this->mDb->CompleteTrans();
+				$this->load();
+			} else {
+				$this->mDb->RollbackTrans();
+				// Clear out the IDs
+				$this->mContentId = NULL;
+				$this->mGroupId = NULL;
+			}
 		}
 
 		return( count( $this->mErrors )== 0 );
@@ -950,6 +960,7 @@ class BitGroup extends LibertyMime {
 	 */
 	function getBoard(){
 		if ( $this->isValid() && !is_object( $this->mBoardObj ) ){
+			$boardId = false;
 			if( !empty( $this->mInfo['board_id'] ) ){
 				$boardId = $this->mInfo['board_id'];
 			}else{
