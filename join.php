@@ -160,8 +160,11 @@ if( $gBitUser->isInGroup( $gContent->mGroupId ) ){
 }
 
 // are we using a mailing list
-$hasMailList = $gContent->getBoard()->getPreference('boards_mailing_list');
-$gBitSmarty->assign( 'hasMailList', $hasMailList );
+$board = $gContent->getBoard();
+if( !empty($board) ) {
+	$hasMailList = $board->getPreference('boards_mailing_list');
+	$gBitSmarty->assign( 'hasMailList', $hasMailList );
+}
 
 // get the users current email pref
 $userEmailPref = $gContent->getUserEmailPref();
