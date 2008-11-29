@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.117 2008/11/29 01:57:01 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.118 2008/11/29 05:36:52 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1398,6 +1398,7 @@ function group_content_expunge( &$pObject, &$pParamHash ) {
 	return( $errors );
 }
 
+// modifies the user's permissions hash for the given object
 function group_content_user_perms( &$pObject, $pParamHash ) {
 	global $gBitUser;
 	if ( $gBitUser->isRegistered() ){
