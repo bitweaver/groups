@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.12 2008/11/19 17:23:20 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.13 2008/11/29 17:12:57 wjames5 Exp $ *}
 {strip}
 <div class="floaticon">{bithelp}</div>
 
@@ -50,7 +50,14 @@
 						</div>
 
 						{textarea name="group[edit]" label="Long Description" help="The description of the group or other group message. By default this appears at the top of your group home page"}{$gContent->mInfo.data}{/textarea}
-						{textarea name="group[after_registration]" noformat=true help="The message shown after a user registers. If none is provided then the user will be sent to the group directly." id="after_reg" label="After Registration Message"}{$gContent->mInfo.after_registration}{/textarea}
+						
+						<div class="row">
+							{formlabel label="After Registration Message"}
+							{forminput}
+								<textarea cols="50" rows="10" name="group[after_registration]">{$gContent->mInfo.after_registration}</textarea>
+								{formhelp note="The message shown after a user registers. If none is provided then the user will be sent to the group directly." id="after_reg" label="After Registration Message"}
+							{/forminput}
+						</div>
 
 						{* any simple service edit options *}
 						{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
