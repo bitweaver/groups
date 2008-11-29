@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.118 2008/11/29 05:36:52 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.119 2008/11/29 12:40:32 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -178,6 +178,11 @@ class BitGroup extends LibertyMime {
 	**/
 	function store( &$pParamHash ) {
 		global $gBitUser, $gBitSystem;
+		// Merge down groups prefix. This is a hack but is faster
+		// than rewriting verify to use things from the "group" prefix.
+		// @TODO: Rewire verify() to pull all data from 'group' prefix
+		$pParamHash = array_merge($pParamHash, $pParamHash['group']);
+
 		$this->mDb->StartTrans();
 		// Verify and then store group and content.
 		if( $this->verify( $pParamHash ) && $gBitUser->storeGroup( $pParamHash ) && LibertyMime::store( $pParamHash ) ) {

@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.40 2008/11/29 01:57:01 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.41 2008/11/29 12:40:32 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: edit.php,v 1.40 2008/11/29 01:57:01 tekimaki_admin Exp $
+ * $Id: edit.php,v 1.41 2008/11/29 12:40:32 tekimaki_admin Exp $
  * @package groups
  * @subpackage functions
  */
@@ -67,7 +67,7 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 	$membersPostMsgsStatus = in_array( 'p_group_group_msgs_create', array_keys( $groupRoles[3]['perms'] ) )?TRUE:FALSE;
 
 	// store it
-	if( $gContent->store( $_REQUEST['group'] ) ) {
+	if( $gContent->store( $_REQUEST ) ) {
 		// if its new store set the creator's email pref to receive email
 		if( $gContent->mInfo['last_modified'] == $gContent->mInfo['created'] ){
 			$gContent->storeUserEmailPref( 'email' );
