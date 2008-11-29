@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.119 2008/11/29 12:40:32 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.120 2008/11/29 21:12:04 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -223,13 +223,19 @@ class BitGroup extends LibertyMime {
 				}
 			}
 
+			// @TODO: This should be in boards
 			if ( $gBitSystem->isPackageActive( 'boards' ) ){
 				if ( empty( $board ) || !is_object( $board ) ){
 					$board = $this->getBoard();
 				}
 				// pass moderate messages selection on to our group board
 				$modComments = $pParamHash['group_pkg_store']['mod_msgs'] == 'y'?$pParamHash['group_pkg_store']['mod_msgs']:NULL;
-				$board->storePreference( 'moderate_comments', $modComments );
+				$board->storePreference( 'moderate_comments', $modComments );				
+				$list = $board->getPreference('boards_mailing_list');
+				if (!empty($list)) {
+					require_once(UTIL_PKG_PATH.'mailman_lib.php');
+					mailman_setmoderated($list, $modComments == 'y' ? 1 : 0);
+				}
 			}
 
 			if( count($this->mErrors) == 0) {
@@ -701,13 +707,13 @@ class BitGroup extends LibertyMime {
 		if ( !is_object( $pUser ) ){
 			$pUser = &$gBitUser;
 		}
-		// if the content is this and its board has a mailing list then act on that
+		// if this group has a board which has a mailing list then act on that
 		if ( ($board = $this->getBoard()) && $board->getPreference( 'boards_mailing_list' ) ){
 			require_once( UTIL_PKG_PATH.'mailman_lib.php' );
 			mailman_remove_member( $board->getPreference( 'boards_mailing_list' ), $pUser->getField( 'email' ) );
 		}
-		// no mailing list then store in switchboard
-		if ( $gBitSystem->isPackageActive('switchboard') ) {
+		// if no mailing list delete from switchboard
+		elseif ( $gBitSystem->isPackageActive('switchboard') ) {
 			global $gSwitchboardSystem;
 			$gSwitchboardSystem->deleteUserPref($pUser->mUserId, 'group', 'message', $this->mContentId ); 
 		}
@@ -719,7 +725,7 @@ class BitGroup extends LibertyMime {
 		if ( !is_object( $pUser ) ){
 			$pUser = &$gBitUser;
 		}
-		// if the content is this and its board has a mailing list then act on that
+		// if this group has a board which has a mailing list then get prefs from it
 		if ( ($board = $this->getBoard()) && $board->getPreference( 'boards_mailing_list' ) ){
 			require_once( UTIL_PKG_PATH.'mailman_lib.php' );
 			if ( mailman_findmember($board->getPreference('boards_mailing_list'),$gBitUser->getField('email')) ){
@@ -728,8 +734,8 @@ class BitGroup extends LibertyMime {
 				$ret = 'none';
 			}
 		}
-		// no mailing list then store in switchboard
-		if ( $gBitSystem->isPackageActive('switchboard') ) {
+		// no mailing list then get pref from switchboard
+		elseif ( $gBitSystem->isPackageActive('switchboard') ) {
 			global $gSwitchboardSystem;
 			if ( ($rslt = $gSwitchboardSystem->loadContentPrefs( $pUser->mUserId, $this->mContentId ) ) ){
 				$ret =  $rslt[0]['delivery_style'];
