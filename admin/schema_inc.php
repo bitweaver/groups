@@ -127,6 +127,7 @@ $gBitInstaller->registerUserPermissions( GROUP_PKG_NAME, array(
 	array( 'p_group_create', 'Can create groups', 'registered', GROUP_PKG_NAME ),
 	array( 'p_group_view', 'Can view groups', 'basic',  GROUP_PKG_NAME ),
 	array( 'p_group_remove', 'Can delete groups', 'admin',  GROUP_PKG_NAME ),
+	array( 'p_group_edit_unmapped', 'Can create content items independent of groups', 'editors', GROUP_PKG_NAME ),
 ) );
 
 // ### Default Preferences

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.121 2008/11/29 22:00:43 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.122 2008/11/30 00:10:44 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1261,6 +1261,8 @@ function group_content_edit( &$pObject, &$pParamHash ) {
 			if( !empty( $assignedPerms[$groupId][$pObject->mUpdateContentPerm] ) ){
 				$gBitSmarty->assign('groupUpdateShared', TRUE );
 			}
+		}elseif( $gBitSystem->isFeatureActive('group_map_required') && !($gBitUser->isAdmin() || $pObject->hasUserPermission( 'p_group_edit_unmapped' )) ){
+			$gBitSystem->fatalError( tra("You do not have permission to create or edit content outside of groups.") );
 		}
 	}
 }
@@ -1422,6 +1424,31 @@ function group_content_store( &$pObject, &$pParamHash ) {
 
 	} // end check group package is active
 	return( $errors );
+}
+
+function group_content_verify( &$pObject, &$pParamHash ) {
+	global $gBitSystem, $gBitUser;
+	if ( $gBitSystem->isPackageActive( 'group' ) && !$pObject->isContentType( BITCOMMENT_CONTENT_TYPE_GUID ) && !$pObject->isContentType( BITUSER_CONTENT_TYPE_GUID ) ) {		
+		// if mapping is required we need a group content id, we'll try to get one unless the user can bypass this process
+		// we ignore comments and users since they are never mapped
+		if( $gBitSystem->isFeatureActive('group_map_required') && !($gBitUser->isAdmin() || $pObject->hasUserPermission( 'p_group_edit_unmapped' )) ){
+			$connect_group_content_id = NULL;
+
+			if ( !empty( $pParmaHash['connect_group_content_id'] ) ) {
+				$connect_group_content_id = $pParamHash['connect_group_content_id'];
+			}elseif( $pObject->isValid() ){
+				$group = new BitGroup();
+				$groups = $group->getList( $listHash );
+				if ( count( $groups ) == 1 ) {
+					// also assign it to the hash - this will save us a step when the store service is called
+					$pParamHash['connect_group_content_id'] = $connect_group_content_id = $groups[0]['content_id'];
+				}
+			}
+			if ( empty( $connect_group_content_id ) ){
+				$pObject->mErrors['group_mappping'] = tra("You do not have permission to edit content outside of groups. Please copy your changes to some other work space, you can't not save your changes.");
+			}
+		}
+	}
 }
 
 function group_content_expunge( &$pObject, &$pParamHash ) {

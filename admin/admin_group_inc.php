@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.14 2008/06/18 18:47:32 lsces Exp $
+// $Header: /cvsroot/bitweaver/_bit_groups/admin/admin_group_inc.php,v 1.15 2008/11/30 00:10:44 wjames5 Exp $
 // Copyright (c) 2008 bitweaver Group
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -24,6 +24,10 @@ $formGroupFeatures = array(
 	"group_admin_content" => array(
 		'label' => 'Allow Linked Content Administration',
 		'note' => 'Enable groups to have administrative control over content that has been linked to them. This will limit content to be joinable to only one group.',
+	),
+	"group_map_required" => array(
+		'label' => 'Require new content is linked to a group',
+		'note' => 'Requires users to create content within the context of a group; This is important if you are using groups to manage access to content. Admins can always bypass this requirement, as can users with the permission p_group_edit_unmapped.',
 	),
 );
 $gBitSmarty->assign( 'formGroupFeatures',$formGroupFeatures );
