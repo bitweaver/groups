@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.122 2008/11/30 00:10:44 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.123 2008/11/30 01:13:09 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1154,6 +1154,7 @@ function group_content_list_sql( &$pObject, $pParamHash=NULL ) {
 function group_content_display( &$pObject, &$pParamHash ) {
 	global $gBitSystem, $gBitSmarty, $gBitThemes;
 	$listHash['mapped_content_id'] = $pObject->mContentId;
+	$listHash['offset'] = 0;
 	$group = new BitGroup();
 	$groups = $group->getList( $listHash );
 
@@ -1233,6 +1234,7 @@ function group_content_edit( &$pObject, &$pParamHash ) {
 			   ensure this is right for groups that are asserting administrative control
 			 */
 			$listHash['mapped_content_id'] = $pObject->mContentId;
+			$listHash['offset'] = 0;
 			$group = new BitGroup();
 			$groups = $group->getList( $listHash );
 			if ( count( $groups ) == 1 ) {
@@ -1280,6 +1282,7 @@ function group_comment_store( &$pObject, &$pParamHash ) {
 
 				// Get the groups the root is in
 				$listHash['mapped_content_id'] = $pParamHash['root_id'];
+				$listHash['offset'] = 0;
 				$group = new BitGroup();
 				$groups = $group->getList( $listHash );
 
@@ -1437,6 +1440,8 @@ function group_content_verify( &$pObject, &$pParamHash ) {
 			if ( !empty( $pParmaHash['connect_group_content_id'] ) ) {
 				$connect_group_content_id = $pParamHash['connect_group_content_id'];
 			}elseif( $pObject->isValid() ){
+				$listHash['mapped_content_id'] = $pObject->mContentId;
+				$listHash['offset'] = 0;
 				$group = new BitGroup();
 				$groups = $group->getList( $listHash );
 				if ( count( $groups ) == 1 ) {
