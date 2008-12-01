@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.41 2008/11/29 12:40:32 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.42 2008/12/01 00:58:34 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: edit.php,v 1.41 2008/11/29 12:40:32 tekimaki_admin Exp $
+ * $Id: edit.php,v 1.42 2008/12/01 00:58:34 wjames5 Exp $
  * @package groups
  * @subpackage functions
  */
@@ -240,6 +240,10 @@ if( !empty( $_REQUEST["save_group"] ) ) {
  * we ask for a fresh list since it might have changed
  */
 $formGroupContent['checked'] = $gContent->getContentTypePrefs();
+if( !$gContent->isValid() ){
+	// if content is new our prefs will be nearly empty, so we fill them with all options, the form thus becomes opt out
+	$formGroupContent['checked'] = array_merge( $formGroupContent['checked'], array_keys( $formGroupContent['guids'] ) );
+}
 $gBitSmarty->assign( 'formGroupContent', $formGroupContent );
 
 // get options hash
