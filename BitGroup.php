@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.125 2008/12/01 19:32:16 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.126 2008/12/01 21:14:43 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1446,7 +1446,7 @@ function group_content_verify( &$pObject, &$pParamHash ) {
 		if( $gBitSystem->isFeatureActive('group_map_required') && !($gBitUser->isAdmin() || $pObject->hasUserPermission( 'p_group_edit_unmapped' )) ){
 			$connect_group_content_id = NULL;
 
-			if ( !empty( $pParmaHash['connect_group_content_id'] ) ) {
+			if ( !empty( $pParamHash['connect_group_content_id'] ) ) {
 				$connect_group_content_id = $pParamHash['connect_group_content_id'];
 			}elseif( $pObject->isValid() ){
 				$listHash['mapped_content_id'] = $pObject->mContentId;
