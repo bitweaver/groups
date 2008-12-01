@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.123 2008/11/30 01:13:09 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.124 2008/12/01 16:09:32 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1220,7 +1220,7 @@ function group_content_preview( &$pObject) {
 function group_content_edit( &$pObject, &$pParamHash ) {
 	global $gBitSystem, $gBitSmarty, $gBitUser;
 	$errors = NULL;
-	if( $gBitSystem->isPackageActive( 'group' ) ){
+	if( $gBitSystem->isPackageActive( 'group' ) && $pObject->mContentTypeGuid != BITGROUP_CONTENT_TYPE_GUID ){
 		$connect_group_content_id = NULL;
 
 		// when creating new content via a group we pass the group content id to the edit form
@@ -1431,7 +1431,10 @@ function group_content_store( &$pObject, &$pParamHash ) {
 
 function group_content_verify( &$pObject, &$pParamHash ) {
 	global $gBitSystem, $gBitUser;
-	if ( $gBitSystem->isPackageActive( 'group' ) && !$pObject->isContentType( BITCOMMENT_CONTENT_TYPE_GUID ) && !$pObject->isContentType( BITUSER_CONTENT_TYPE_GUID ) ) {		
+	if ( $gBitSystem->isPackageActive( 'group' ) 
+		&& $pObject->mContentTypeGuid != BITCOMMENT_CONTENT_TYPE_GUID 
+		&& $pObject->mContentTypeGuid != BITUSER_CONTENT_TYPE_GUID 
+		&& $pObject->mContentTypeGuid != BITGROUP_CONTENT_TYPE_GUID ) {		
 		// if mapping is required we need a group content id, we'll try to get one unless the user can bypass this process
 		// we ignore comments and users since they are never mapped
 		if( $gBitSystem->isFeatureActive('group_map_required') && !($gBitUser->isAdmin() || $pObject->hasUserPermission( 'p_group_edit_unmapped' )) ){
