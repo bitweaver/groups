@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.124 2008/12/01 16:09:32 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.125 2008/12/01 19:32:16 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -181,7 +181,9 @@ class BitGroup extends LibertyMime {
 		// Merge down groups prefix. This is a hack but is faster
 		// than rewriting verify to use things from the "group" prefix.
 		// @TODO: Rewire verify() to pull all data from 'group' prefix
-		$pParamHash = array_merge($pParamHash, $pParamHash['group']);
+		if( !empty( $pParamHash['group'] ) ){
+			$pParamHash = array_merge($pParamHash, $pParamHash['group']);
+		}
 
 		$this->mDb->StartTrans();
 		// Verify and then store group and content.
@@ -212,6 +214,7 @@ class BitGroup extends LibertyMime {
 							"data" => tra('Message board for the ').$pParamHash['title']." ".tra('Group'),
 							'boards_mailing_list' => preg_replace( '/[^a-z0-9]/', '', strtolower( $pParamHash['content_store']['title'] ) ),
 							'boards_mailing_list_password' => substr( md5( rand() ), 0, 8 ),
+							'group' => array( 'bypass_map_required' => TRUE ),
 						);
 					if ( $board->store( $boardHash ) ){
 						$this->linkContent( $board->mInfo );
@@ -1431,10 +1434,13 @@ function group_content_store( &$pObject, &$pParamHash ) {
 
 function group_content_verify( &$pObject, &$pParamHash ) {
 	global $gBitSystem, $gBitUser;
+	// services are tripped even on native group object its board and other content we don't map to groups - we ignore those
+	$excludePackages = array( BITCOMMENT_CONTENT_TYPE_GUID, BITUSER_CONTENT_TYPE_GUID, BITGROUP_CONTENT_TYPE_GUID );
+
 	if ( $gBitSystem->isPackageActive( 'group' ) 
-		&& $pObject->mContentTypeGuid != BITCOMMENT_CONTENT_TYPE_GUID 
-		&& $pObject->mContentTypeGuid != BITUSER_CONTENT_TYPE_GUID 
-		&& $pObject->mContentTypeGuid != BITGROUP_CONTENT_TYPE_GUID ) {		
+		 && !in_array( $pObject->mContentTypeGuid, $excludePackages ) 
+		 && !( $pObject->mContentTypeGuid == BITBOARD_CONTENT_TYPE_GUID && !empty( $pParamHash['group']['bypass_map_required'] ) )		
+		){
 		// if mapping is required we need a group content id, we'll try to get one unless the user can bypass this process
 		// we ignore comments and users since they are never mapped
 		if( $gBitSystem->isFeatureActive('group_map_required') && !($gBitUser->isAdmin() || $pObject->hasUserPermission( 'p_group_edit_unmapped' )) ){
