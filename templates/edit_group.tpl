@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.14 2008/12/01 00:32:19 tekimaki_admin Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.15 2008/12/01 15:51:56 wjames5 Exp $ *}
 {strip}
 <div class="floaticon">{bithelp}</div>
 
@@ -79,6 +79,16 @@
 
 				{* any service edit template tabs *}
 				{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_tab_tpl}
+
+				{* primary attachmnet becomes the group logo - you may wish to customize your attachment form text accordingly *}
+                {if $gBitUser->hasPermission('p_liberty_attach_attachments') }
+                {jstab title="Attachments"}
+                    {legend legend="Attachments"}
+                        {include file="bitpackage:liberty/edit_storage.tpl"}
+                    {/legend}
+                {/jstab}
+                {/if} 
+
 			{/jstabs}
 		{/form}
 	</div><!-- end .body -->

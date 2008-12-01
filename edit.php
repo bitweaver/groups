@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.42 2008/12/01 00:58:34 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.43 2008/12/01 15:51:56 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: edit.php,v 1.42 2008/12/01 00:58:34 wjames5 Exp $
+ * $Id: edit.php,v 1.43 2008/12/01 15:51:56 wjames5 Exp $
  * @package groups
  * @subpackage functions
  */
@@ -250,6 +250,10 @@ $gBitSmarty->assign( 'formGroupContent', $formGroupContent );
 require_once(GROUP_PKG_PATH.'options_inc.php'); 
 // if is_public is empty in the hash, set it ot "n" to make our template work nice
 if ( $gContent->isValid() && empty( $gContent->mInfo['is_public'] ) ){ $gContent->mInfo['is_public'] = 'n'; }
+
+// to facilitate uploading a logo during group creation we include the attachment form, however it must NOT use ajax since preflight creation of the group content
+// is not compatible with the complexity of group creation
+$gBitSystem->setConfig('liberty_attachment_style', 'standard');
 
 // Display the template
 $gBitSystem->display( 'bitpackage:group/edit_group.tpl', tra('Group') , array( 'display_mode' => 'edit' ));
