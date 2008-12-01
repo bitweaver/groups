@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group_files.tpl,v 1.6 2008/11/19 17:23:20 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group_files.tpl,v 1.7 2008/12/01 19:34:33 wjames5 Exp $ *}
 {strip}
 <div class="floaticon">{bithelp}</div>
 
@@ -49,7 +49,7 @@
 			{form enctype="multipart/form-data" id=$formid}
 				<input type="hidden" name="group_id" value="{$gContent->mGroupId}" />
 				<input type="hidden" name="content_id" value="{$gContent->mContentId}" />
-				<input type="hidden" name="title" value="{$gContent->getTitle()}" />
+				<input type="hidden" id="title" name="title" value="{$gContent->getTitle()}" />
 				{legend legend="Upload File"}
 					{include file="bitpackage:liberty/edit_storage.tpl" formid=$formid}
 				{/legend}
