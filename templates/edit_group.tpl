@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.13 2008/11/29 17:12:57 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.14 2008/12/01 00:32:19 tekimaki_admin Exp $ *}
 {strip}
 <div class="floaticon">{bithelp}</div>
 
@@ -76,12 +76,6 @@
 				{jstab title="Administration"}
 					{include file="bitpackage:group/edit_group_admin.tpl"}
 				{/jstab}
-
-			{if $gBitSystem->isFeatureActive('group_email_list')}
-				{jstab title="Email List"}
-					{include file="bitpackage:group/edit_group_email_list.tpl"}
-				{/jstab}
-			{/if}
 
 				{* any service edit template tabs *}
 				{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_tab_tpl}
