@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.126 2008/12/01 21:14:43 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.127 2008/12/03 15:04:14 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -886,7 +886,7 @@ class BitGroup extends LibertyMime {
 	 **/
 	function unlinkContent( $pParamHash ) {
 		if( $this->isValid()  && isset( $pParamHash['content_id'] ) && $this->verifyId( $pParamHash['content_id'] ) ) {
-			$this->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."groups_content_cnxn_map` WHERE `group_content_id`=? AND `to_content_id`=?", array( $this->mContentId, $pPramaHash['content_id'] ) );
+			$this->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."groups_content_cnxn_map` WHERE `group_content_id`=? AND `to_content_id`=?", array( $this->mContentId, $pParamHash['content_id'] ) );
 		}
 		return( count( $this->mErrors ) == 0 );
 	}
@@ -1472,6 +1472,7 @@ function group_content_expunge( &$pObject, &$pParamHash ) {
 		$groups = $gBitDb->getArray( "SELECT g.`group_id` FROM `".BIT_DB_PREFIX."groups` g INNER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( gccm.`group_content_id` = g.`content_id` ) WHERE gccm.`to_content_id` = ?", array( $pObject->mContentId ) );
 		foreach( $groups as $group ){
 			$group = new BitGroup( $group['group_id'] );
+			$group->load();
 			$unlinkHash = array( "content_id"=>$pObject->mContentId );
 			if ( !$group->unlinkContent( $unlinkHash ) ) {
 				$errors=$group->mErrors;
