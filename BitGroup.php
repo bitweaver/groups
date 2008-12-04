@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.128 2008/12/04 19:57:22 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.129 2008/12/04 19:58:23 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -106,8 +106,6 @@ class BitGroup extends LibertyMime {
 			"LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON( uuc.`user_id` = lc.`user_id` )" .
 			"WHERE s.`$lookupColumn`=? $whereSql";
 			$result = $this->mDb->query( $query, $bindVars );
-
-			vd( $result );
 
 			if( $result && $result->numRows() ) {
 				$this->mInfo = $result->fields;
