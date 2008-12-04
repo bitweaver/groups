@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.127 2008/12/03 15:04:14 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.128 2008/12/04 19:57:22 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -101,11 +101,13 @@ class BitGroup extends LibertyMime {
 			"LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON( la.`content_id` = lc.`content_id` AND la.`is_primary` = 'y' )" .
 			"LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_files` lfp ON( lfp.`file_id` = la.`foreign_id` )" .
 			"LEFT OUTER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( lc.`content_id` = gccm.`group_content_id` )" .
-			"LEFT OUTER JOIN `".BIT_DB_PREFIX."boards` brd ON (gccm.`to_content_id` = brd.`content_id`)" .
+			"INNER JOIN `".BIT_DB_PREFIX."boards` brd ON (gccm.`to_content_id` = brd.`content_id`)" .
 			"LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON( uue.`user_id` = lc.`modifier_user_id` )" .
 			"LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON( uuc.`user_id` = lc.`user_id` )" .
 			"WHERE s.`$lookupColumn`=? $whereSql";
 			$result = $this->mDb->query( $query, $bindVars );
+
+			vd( $result );
 
 			if( $result && $result->numRows() ) {
 				$this->mInfo = $result->fields;
