@@ -68,6 +68,8 @@ if ( !empty($_REQUEST['send_invite']) && $gBitSystem->isPackageActive('switchboa
 		foreach ( $valid as $email ){
 			$inviteHash = array( 'group_id' => $gContent->mGroupId,
 								 'email' => $email );
+			// @TODO this order seems wrong or we should but a db rollback in here. 
+			// need to confirm the email was sent.
 			if ( $invite = $gContent->storeInvitation( $inviteHash ) ){
 				$inviteId = $invite['invite_id'];
 
@@ -75,13 +77,14 @@ if ( !empty($_REQUEST['send_invite']) && $gBitSystem->isPackageActive('switchboa
 				$subject = "Invitation to join ".$gContent->getTitle()." ".tra('Group');
 				// create email body text. 
 				// @TODO maybe move this to a tpl	
-				// @TODO add the website name to the link
 				$body = $gBitUser->getDisplayName()." ".$gBitUser->mInfo['email']." has invited you to join the group ".$gContent->getTitle()." at ".BIT_ROOT_URI;
 				$body .= "\n\n".$_REQUEST['email_body']."\n\nTo join this group click the following url:\n".BIT_ROOT_URI."group/join.php?invite=".$inviteId;
 				$body .= "\n\n".tra('Group Description')."\n\n".$gContent->mInfo['group_desc'];
 
 				// send email - each one must be separate since invite code is unique
-				// $gSwitchboardSystem->sendEmail( $subject, $body, array( 'email' => $email ) );
+				$recipient = array( array( 'email' => $email ) );
+				// @TODO add error handling so we know if there was a sending error
+				$gSwitchboardSystem->sendEmail( $subject, $body, $recipient );
 			}
 		}
 		$msg = tra( 'Invitations sent!' );
