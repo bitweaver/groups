@@ -78,7 +78,7 @@ if ( !empty($_REQUEST['send_invite']) && $gBitSystem->isPackageActive('switchboa
 				// create email body text. 
 				// @TODO maybe move this to a tpl	
 				$body = $gBitUser->getDisplayName()." ".$gBitUser->mInfo['email']." has invited you to join the group ".$gContent->getTitle()." at ".BIT_ROOT_URI;
-				$body .= "\n\n".$_REQUEST['email_body']."\n\nTo join this group click the following url:\n".BIT_ROOT_URI."group/join.php?invite=".$inviteId;
+				$body .= "\n\n".$_REQUEST['email_body']."\n\nTo join this group click the following url:\n".GROUP_PKG_URI."join.php?invite=".$inviteId;
 				$body .= "\n\n".tra('Group Description')."\n\n".$gContent->mInfo['group_desc'];
 
 				// send email - each one must be separate since invite code is unique
