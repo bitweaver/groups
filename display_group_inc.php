@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.6 2008/11/17 19:12:50 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.7 2008/12/06 21:17:06 wjames5 Exp $
  * @package groups
  * @subpackage functions
  */
@@ -37,6 +37,9 @@ if ( isset( $_REQUEST['content_type_guid'] ) ){
 }
 $contentList = $gContent->getContentList( $contentListHash );
 $gBitSmarty->assign_by_ref( "contentList", $contentList );
+// add information necessary for pagination
+$contentListHash['listInfo']['parameters']['group_id'] = $gContent->mGroupId;
+$gBitSmarty->assign_by_ref( "listInfo", $contentListHash['listInfo'] );
 
 // topics from related board
 $listHash = array(

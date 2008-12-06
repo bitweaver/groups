@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.27 2008/11/29 11:33:08 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/index.php,v 1.28 2008/12/06 21:17:06 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -15,7 +15,7 @@
 require_once( '../bit_setup_inc.php' );
 
 //if the request is from the search field redirect us to the list - otherwise do what we do
-if ( isset( $_REQUEST['find'] ) ){
+if ( !empty( $_REQUEST['find'] ) ){
 	header ("location: ".GROUP_PKG_URI."list_groups.php?find=".$_REQUEST['find'] );
 	die;
 }
