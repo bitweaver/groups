@@ -80,11 +80,13 @@ if ( !empty($_REQUEST['send_invite']) && $gBitSystem->isPackageActive('switchboa
 				$body = $gBitUser->getDisplayName()." ".$gBitUser->mInfo['email']." has invited you to join the group ".$gContent->getTitle()." at ".BIT_ROOT_URI;
 				$body .= "\n\n".$_REQUEST['email_body']."\n\nTo join this group click the following url:\n".GROUP_PKG_URI."join.php?invite=".$inviteId;
 				$body .= "\n\n".tra('Group Description')."\n\n".$gContent->mInfo['group_desc'];
+				// we pass in a hash so that the mailer knows which mime type we're sending. eventually when we have a tpl we can send as plain and html.
+				$bodyHash['alt_message'] = $body;
 
 				// send email - each one must be separate since invite code is unique
 				$recipient = array( array( 'email' => $email ) );
 				// @TODO add error handling so we know if there was a sending error
-				$gSwitchboardSystem->sendEmail( $subject, $body, $recipient );
+				$gSwitchboardSystem->sendEmail( $subject, $bodyHash, $recipient );
 			}
 		}
 		$msg = tra( 'Invitations sent!' );
