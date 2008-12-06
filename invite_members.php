@@ -95,23 +95,29 @@ if ( !empty($_REQUEST['send_invite']) && $gBitSystem->isPackageActive('switchboa
 }
 
 if ( !empty($_REQUEST['delete_invites']) && !empty( $_REQUEST['invites'] ) ) {
-	$deleted = TRUE;
-	foreach( $_REQUEST['invites'] as $invite ){
-		if ( !$gContent->expungeInvitation( $invite ) ){
-			$deleted = FALSE;
-			$msg = tra( 'There was a problem deleting one or more invitations.' );
-			$gBitSmarty->assign_by_ref( 'errorDeleteMsg', $msg );
+	if ( $gContent->hasUpdatePermission() || $gContent->hasUserPermission( 'p_group_group_members_admin' ) ){
+		$deleted = TRUE;
+		foreach( $_REQUEST['invites'] as $invite ){
+			if ( !$gContent->expungeInvitation( $invite ) ){
+				$deleted = FALSE;
+				$msg = tra( 'There was a problem deleting one or more invitations.' );
+				$gBitSmarty->assign_by_ref( 'errorDeleteMsg', $msg );
+			}
 		}
-	}
-	if ( $deleted ){
-		$msg = tra( 'Invitations deleted!' );
-		$gBitSmarty->assign_by_ref( 'successDeleteMsg', $msg );
+		if ( $deleted ){
+			$msg = tra( 'Invitations deleted!' );
+			$gBitSmarty->assign_by_ref( 'successDeleteMsg', $msg );
+		}
+	}else{
+		$gBitSystem->fatalError( tra( 'You do not have permission to moderate invitations to this group' ) );
 	}
 }
 
-// get a list of all pending invites
-$invites = $gContent->getInvitationsList(); 
-$gBitSmarty->assign_by_ref( 'invites', $invites );
+if( $gContent->hasUpdatePermission() || $gContent->hasUserPermission( 'p_group_group_members_admin' ) ){
+	// get a list of all pending invites
+	$invites = $gContent->getInvitationsList(); 
+	$gBitSmarty->assign_by_ref( 'invites', $invites );
+}
 
 // display
 $gBitSystem->setBrowserTitle( $gContent->getTitle() ." ".  tra( 'Group Invite Members' ) );

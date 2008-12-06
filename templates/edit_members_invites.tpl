@@ -58,6 +58,7 @@
 				{/legend}
 			{/if}
 			{/jstab}
+			{if $gContent->hasUpdatePermission() || $gContent->hasUserPermission( 'p_group_group_members_admin' )}
 			{jstab title="Open Invitations"}
 				{formfeedback success=$successDeleteMsg error=$errorDeleteMsg}
 				{if count( $invites ) > 0 }
@@ -99,6 +100,7 @@
 					There are no open invitations
 				{/if}
 			{/jstab}
+			{/if}
 		{/jstabs}
 		</div><!-- end .content -->
 	</div><!-- end .body -->
