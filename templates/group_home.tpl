@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/group_home.tpl,v 1.8 2008/10/20 21:40:10 spiderr Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/group_home.tpl,v 1.9 2008/12/06 23:22:35 wjames5 Exp $ *}
 {strip}
 <div class="display group">
 	<div class="header">
@@ -17,7 +17,7 @@
 					</ul>
 					<p><a href="{$smarty.const.USERS_PKG_URL}register.php">{tr}register{/tr}</a></p>
 				</div>
-			{else}
+			{elseif $recentListInfo.current_page < 2}
 				{if $gBitUser->hasPermission( 'p_group_create' ) }
 					<p><a class="item" href="{$smarty.const.GROUP_PKG_URL}edit.php">{tr}Create a Group{/tr}</a></p>
 				{/if}
@@ -52,7 +52,7 @@
 						{/foreach}
 					</table>
 					
-					{pagination}
+					{include file='bitpackage:kernel/pagination.tpl' listInfo=$memberListInfo}
 				</div>
 				{else}
 					<em>You currently do not belong to any groups</em>
@@ -91,7 +91,7 @@
 						{/foreach}
 					</table>
 					
-					{pagination}
+					{include file='bitpackage:kernel/pagination.tpl' listInfo=$recentListInfo}
 				</div>
 			{/if}
 		</div><!-- end .content -->
