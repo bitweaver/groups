@@ -79,7 +79,7 @@ if ( !empty($_REQUEST['send_invite']) && $gBitSystem->isPackageActive('switchboa
 				// @TODO maybe move this to a tpl	
 				$body = $gBitUser->getDisplayName()." ".$gBitUser->mInfo['email']." has invited you to join the group ".$gContent->getTitle()." at ".BIT_ROOT_URI;
 				$body .= "\n\n".$_REQUEST['email_body']."\n\nTo join this group click the following url:\n".GROUP_PKG_URI."join.php?invite_id=".$inviteId;
-				$body .= "\n\n".tra('Group Description')."\n\n".$gContent->mInfo['group_desc'];
+				$body .= !empty($gContent->mInfo['group_desc'])? "\n\n".tra('Group Description')."\n\n".$gContent->mInfo['group_desc'] : "" ;
 				// we pass in a hash so that the mailer knows which mime type we're sending. eventually when we have a tpl we can send as plain and html.
 				$bodyHash['alt_message'] = $body;
 
