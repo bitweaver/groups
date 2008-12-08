@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.131 2008/12/08 17:16:18 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.132 2008/12/08 18:03:03 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -115,6 +115,7 @@ class BitGroup extends LibertyMime {
 				$this->mInfo['creator'] =( isset( $result->fields['creator_real_name'] )? $result->fields['creator_real_name'] : $result->fields['creator_user'] );
 				$this->mInfo['editor'] =( isset( $result->fields['modifier_real_name'] )? $result->fields['modifier_real_name'] : $result->fields['modifier_user'] );
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
+				$this->mInfo['display_urls'] = $this->getDisplayUrls();
 				$this->mInfo['parsed_data'] = $this->parseData();
 				$this->mInfo['num_members'] = $this->getMembersCount( $this->mGroupId );
 				$this->mInfo['thumbnail_url'] = liberty_fetch_thumbnails( array( "storage_path" => $this->mInfo['image_attachment_path'] ) );
@@ -525,6 +526,44 @@ class BitGroup extends LibertyMime {
 		return $ret;
 	}
 
+	/**
+	 * Generates various urls for a group
+	 * @return a hash of urls
+	 */
+	function getDisplayUrls( $pParamHash = NULL ) {
+		global $gBitSystem;
+
+		$ret = NULL;
+
+		if( !empty( $pParamHash['title'] ) || !empty( $this->mInfo['title'] ) ){
+			$groupName = !empty( $pParamHash['title'] )?$pParamHash['title']:$this->mInfo['title'];
+		}
+		// @TODO even better would be to pass a name param in url instead of group_id
+		if( !empty( $pParamHash['group_id'] ) || !empty( $this->mGroupId ) ){
+			$groupId = !empty( $pParamHash['group_id'] )?$pParamHash['group_id']:$this->mGroupId;
+		}
+
+		if( !empty( $groupName ) && $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
+			$ret['summary'] = GROUP_PKG_URL.urlencode( $groupName );
+			$ret['about'] = GROUP_PKG_URL.urlencode( $groupName )."/about";
+			$ret['files'] = GROUP_PKG_URL.urlencode( $groupName )."/files";
+			$ret['manage'] = GROUP_PKG_URL.urlencode( $groupName )."/manage";
+			$ret['members'] = GROUP_PKG_URL.urlencode( $groupName )."/members";
+			$ret['settings'] = GROUP_PKG_URL.urlencode( $groupName )."/settings";
+			$ret['tasks'] = GROUP_PKG_URL.urlencode( $groupName )."/tasks";
+			$ret['theme'] = GROUP_PKG_URL.urlencode( $groupName )."/theme";
+		}elseif( !empty( $groupId ) ){
+			$ret['summary'] = GROUP_PKG_URL."index.php?group_id=".$groupId;
+			$ret['about'] = GROUP_PKG_URL."about.php?group_id=".$groupId;
+			$ret['files'] = GROUP_PKG_URL."files.php?group_id=".$groupId;
+			$ret['manage'] = GROUP_PKG_URL."manage.php?group_id=".$groupId;
+			$ret['members'] = GROUP_PKG_URL."members.php?group_id=".$groupId;
+			$ret['settingss'] = GROUP_PKG_URL."edit.php?group_id=".$groupId;
+			$ret['tasks'] = GROUP_PKG_URL."tasks.php?group_id=".$groupId;
+			$ret['theme'] = GROUP_PKG_URL."theme.php?group_id=".$groupId;
+		}
+		return $ret;
+	}
 
 
 

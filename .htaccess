@@ -6,6 +6,12 @@
     RewriteCond %{SCRIPT_FILENAME}/index.php    -f
     RewriteRule ^(.*)$            - [L]
 
-    RewriteRule ^view/(.*)$  index.php?group_name=$1  [L,QSA]
+    RewriteRule ^(.*)/about$  about.php?group_name=$1  [L,QSA]
+    RewriteRule ^(.*)/files$  files.php?group_name=$1  [L,QSA]
+    RewriteRule ^(.*)/manage$  manage.php?group_name=$1  [L,QSA]
+    RewriteRule ^(.*)/members$  members.php?group_name=$1  [L,QSA]
+    RewriteRule ^(.*)/settings$  edit.php?group_name=$1  [L,QSA]
+    RewriteRule ^(.*)/tasks$  tasks.php?group_name=$1  [L,QSA]
+    RewriteRule ^(.*)/theme$  theme.php?group_name=$1  [L,QSA]
     RewriteRule ^(.*)$       index.php?group_name=$1  [L,QSA]
 </IfModule>

@@ -23,6 +23,15 @@ if( empty( $lookupHash )) {
 
 // if we already have a gContent, we assume someone else created it for us, and has properly loaded everything up.
 if( empty( $gContent ) || !is_object( $gContent ) || !$gContent->isValid() ) {
+	// if someone gives us a group_name we try to find it
+	if( !empty( $lookupHash['group_name'] ) ){
+		global $gBitDb;
+		$lookupHash['group_id'] = $gBitDb->getOne( "SELECT group_id FROM `".BIT_DB_PREFIX."groups` g LEFT JOIN `".BIT_DB_PREFIX."liberty_content` lc ON (g.`content_id` = lc.`content_id`) WHERE lc.`title` = ?", array($lookupHash['group_name']) );
+		if( empty( $lookupHash['group_id'] ) ) {
+		  $gBitSystem->fatalError(tra('No group found with the name: ').$lookupHash['group_name']);
+		}
+	}
+
 	// if group_id supplied, use that
 	if( @BitBase::verifyId( $lookupHash['group_id'] ) ) {
 		$gContent = new BitGroup( $lookupHash['group_id'] );
