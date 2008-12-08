@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/group_home.tpl,v 1.9 2008/12/06 23:22:35 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/group_home.tpl,v 1.10 2008/12/08 15:33:12 wjames5 Exp $ *}
 {strip}
 <div class="display group">
 	<div class="header">
@@ -39,7 +39,7 @@
 						{foreach from=$memberGroups key=groupId item=memberGroup}
 							<tr class="{cycle values="odd,even"}">
 								<td>
-									{if $memberGroup.group_home}<a href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$memberGroup.group_id}" title="Group home page" />{/if}<strong>{$memberGroup.title}</strong>{if $memberGroup.group_home}</a>{/if}
+									{if $memberGroup.group_home}<a href="{$memberGroup.display_url}" title="Group home page" />{/if}<strong>{$memberGroup.title}</strong>{if $memberGroup.group_home}</a>{/if}
 								</td>
 								<td>
 									{$memberGroup.group_desc}
@@ -78,7 +78,7 @@
 						{foreach from=$recentGroups key=groupId item=recentGroup}
 							<tr class="{cycle values="odd,even"}">
 								<td>
-									{if $recentGroup.group_home}<a href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$recentGroup.group_id}" title="Group home page" />{/if}<strong>{$recentGroup.title}</strong>{if $recentGroup.group_home}</a>{/if}
+									{if $recentGroup.group_home}<a href="{$recentGroup.display_url}" title="Group home page" />{/if}<strong>{$recentGroup.title}</strong>{if $recentGroup.group_home}</a>{/if}
 								</td>
 								<td>
 									{$recentGroup.group_desc}

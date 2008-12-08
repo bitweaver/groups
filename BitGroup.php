@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.129 2008/12/04 19:58:23 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.130 2008/12/08 15:33:12 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -479,6 +479,7 @@ class BitGroup extends LibertyMime {
 		$result = $this->mDb->query( $query, $bindVars, $max_records, $offset );
 		$ret = array();
 		while( $res = $result->fetchRow() ) {
+			$res['display_url'] = $this->getDisplayUrl( $res );
 			$res['num_members'] = $this->getMembersCount( $res['group_id'] );
 			$res['thumbnail_url'] = liberty_fetch_thumbnails( array( "storage_path" => $res['image_attachment_path'] ) );
 			$ret[] = $res;
@@ -495,10 +496,23 @@ class BitGroup extends LibertyMime {
 	* @param pExistsHash the hash that was returned by LibertyContent::pageExists
 	* @return the link to display the page.
 	*/
-	function getDisplayUrl() {
+	function getDisplayUrl( $pParamHash = NULL ) {
+		global $gBitSystem;
+
 		$ret = NULL;
-		if( @$this->verifyId( $this->mGroupId ) ) {
-			$ret = GROUP_PKG_URL."index.php?group_id=".$this->mGroupId;
+
+		if( !empty( $pParamHash['title'] ) || !empty( $this->mInfo['title'] ) ){
+			$groupName = !empty( $pParamHash['title'] )?$pParamHash['title']:$this->mInfo['title'];
+		}
+		// @TODO even better would be to pass a name param in url instead of group_id
+		if( !empty( $pParamHash['group_id'] ) || !empty( $this->mGroupId ) ){
+			$groupId = !empty( $pParamHash['group_id'] )?$pParamHash['group_id']:$this->mGroupId;
+		}
+
+		if( !empty( $groupName ) && $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
+			$ret = GROUP_PKG_URL.urlencode( $groupName );
+		}elseif( !empty( $groupId ) ){
+			$ret = GROUP_PKG_URL."index.php?group_id=".$groupId;
 		}
 		return $ret;
 	}

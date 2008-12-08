@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/Attic/list_groups.tpl,v 1.4 2008/02/10 00:37:36 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/Attic/list_groups.tpl,v 1.5 2008/12/08 15:33:12 wjames5 Exp $ *}
 {strip}
 <div class="listing group">
 	<div class="header">
@@ -42,7 +42,7 @@
 						{/if}
 
 						{if $gBitSystem->isFeatureActive( 'group_list_title' )}
-							<td><a href="{$smarty.const.GROUP_PKG_URL}index.php?group_id={$group.group_id|escape:"url"}" title="{$group.group_id}">{$group.title|escape}</a></td>
+							<td><a href="{$group.display_url}" title="{$group.summary}">{$group.title|escape}</a></td>
 						{/if}
 
 						{if $gBitSystem->isFeatureActive( 'group_list_description' )}
