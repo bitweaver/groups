@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.130 2008/12/08 15:33:12 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.131 2008/12/08 17:16:18 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -311,6 +311,14 @@ class BitGroup extends LibertyMime {
 				if( empty( $pParamHash['title'] ) ) {
 					$this->mErrors['title'] = tra('You must enter a name for this group.');
 				} else {
+					$bindVars = array( $pParamHash['title'], $this->mContentTypeGuid );
+					// check to see if this name is already taken
+					$query = "SELECT lc.title 
+				           	  FROM `".BIT_DB_PREFIX."liberty_content` lc
+							  WHERE lc.`title` = ? AND lc.`content_type_guid` = ?";
+					if( $this->mDb->getOne( $query, $bindVars ) ){
+						$this->mErrors['title'] = tra("We're sorry, this group name is already taken, please create a unique group name");
+					}
 					$pParamHash['content_store']['title'] = substr( $pParamHash['title'], 0, 160 );
 					// Copy title to name for group verify
 					$pParamHash['name'] = $pParamHash['content_store']['title'];
