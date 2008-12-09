@@ -12,6 +12,15 @@
 /**
  * What options do groups support?
  */ 
+
+// boards / mailman mailing list crap - need a place to display it for the user, this seems as fine a place as any for now
+if( $gContent->isValid() 
+	&& ( $gContent->hasUpdatePermission() || $gContent->hasUserPermission( 'p_group_group_msgs_admin' ) ) 
+	&& $gBitSystem->getConfig( 'boards_sync_mail_server' ) 
+	&& ( $board = $gContent->getBoard() ) ){
+	$gBitSmarty->assign( 'mailinglist_pwd', $board->getPreference( 'boards_mailing_list_password' ) );
+}
+
 $formGroupOptions = array(
 	"view_content_public" => array(
 		'label' => 'Publicly Viewable',

@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.43 2008/12/01 15:51:56 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.44 2008/12/09 06:48:01 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: edit.php,v 1.43 2008/12/01 15:51:56 wjames5 Exp $
+ * $Id: edit.php,v 1.44 2008/12/09 06:48:01 tekimaki_admin Exp $
  * @package groups
  * @subpackage functions
  */
@@ -71,6 +71,28 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 		// if its new store set the creator's email pref to receive email
 		if( $gContent->mInfo['last_modified'] == $gContent->mInfo['created'] ){
 			$gContent->storeUserEmailPref( 'email' );
+
+			// if we are using mailiman mailing lists in boards then we send an annoying welcome message with the list password because mailman is such a fucking pain to theme
+			// @TODO some day this will use a tpl and not even mailman
+			if( $gBitSystem->getConfig( 'boards_sync_mail_server' ) && ( $board = $gContent->getBoard() ) && ( $mailingList = $board->getBoardMailingList() ) ){
+               // format the message and subject and send to switchboard
+                $subject = "Congratulations on your new ".$gBitSystem->getConfig('site_title')." group: ".$gContent->getTitle();
+
+				$body = "Welcome ".$gBitUser->getDisplayName().",\n\n";
+				$body .= "Here is some important information for you about your new group.\n\n";
+				$body .= "You can get to your group at ".str_replace( '//', '/', (BIT_ROOT_URI.$gContent->getField('display_url')) )."\n\n";
+				$body .= "You can post to your group's discussion board via email by sending messages to: ".$mailingList."\n\n";
+				$body .= "If your group discussions are moderated, you can approve or reject messages group members post using email. You will receive email notices when new messages are posted. ";
+				$body .= "To accept or reject them you will need your list password. Your mailing list password is: ".$board->getPreference('boards_mailing_list_password')." Please make a note of it.";
+
+                // we pass in a hash so that the mailer knows which mime type we're sending. eventually when we have a tpl we can send as plain and html.
+                $bodyHash['alt_message'] = $body;
+
+                // send email - each one must be separate since invite code is unique
+                $recipient = array( array( 'email' => $gBitUser->mInfo['email'] ) );
+                // @TODO add error handling so we know if there was a sending error
+				$gSwitchboardSystem->sendEmail( $subject, $bodyHash, $recipient );
+			}	
 		}
 
 		// if that went ok store role permissions for the group
