@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.132 2008/12/08 18:03:03 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.133 2008/12/10 21:52:06 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -746,8 +746,8 @@ class BitGroup extends LibertyMime {
 		// if the content is this and its board has a mailing list then act on that
 		if ( ($board = $this->getBoard()) && $board->getPreference( 'boards_mailing_list' ) ){
 			require_once( UTIL_PKG_PATH.'mailman_lib.php' );
-			if( $pPref == 'email' ) {
-				mailman_addmember( $board->getPreference( 'boards_mailing_list' ), $pUser->getField( 'email' ) );
+			if( $pPref != 'none' ) {
+				mailman_addmember( $board->getPreference( 'boards_mailing_list' ), $pUser->getField( 'email' ), $pPref );
 			} elseif( $pPref == 'none' ) {
 				mailman_remove_member( $board->getPreference( 'boards_mailing_list' ), $pUser->getField( 'email' ) );
 			}
@@ -792,8 +792,8 @@ class BitGroup extends LibertyMime {
 		// if this group has a board which has a mailing list then get prefs from it
 		if ( ($board = $this->getBoard()) && $board->getPreference( 'boards_mailing_list' ) ){
 			require_once( UTIL_PKG_PATH.'mailman_lib.php' );
-			if ( mailman_findmember($board->getPreference('boards_mailing_list'),$gBitUser->getField('email')) ){
-				$ret = 'email';
+			if( $rslt = mailman_getsubscriptiontype($board->getPreference('boards_mailing_list'),$gBitUser->getField('email')) ){
+				$ret =  $rslt[0];
 			}else{
 				$ret = 'none';
 			}
