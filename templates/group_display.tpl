@@ -14,7 +14,7 @@
 			{if $listInfo.current_page < 2}
 				{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
 
-				<div class="floaticon"><a href="{$smarty.const.BOARDS_PKG_URL}index.php?b={$gContent->mInfo.board_id}">{tr}View More{/tr}</a></div>
+				{if $topics}<div class="floaticon"><a href="{$smarty.const.BOARDS_PKG_URL}index.php?b={$gContent->mInfo.board_id}">{tr}View More{/tr}</a></div>{/if}
 				<h2>Discussions</h2>
 					<table class="data">
 						<tr>
@@ -71,7 +71,7 @@
 			{/if}
 
 			{if $contentList}
-				{if $listInfo.current_page < 2}
+				{if $listInfo.current_page < 2 && $listInfo.total_pages > 1}
 					<div class="floaticon"><a href="{$gContent->getDisplayUrl()}&list_page=2">{tr}View More{/tr}</a></div>
 				{/if}
 				<h2>Group Content</h2>
