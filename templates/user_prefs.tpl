@@ -7,8 +7,8 @@
 	</div><!-- end .header -->
 
 	<div class="body">
-	 	{if $errors}
- 			{formfeedback warning=`$errors`}
+	 	{if $errors || $successMsg}
+			{formfeedback success=$successMsg error=$errorMsg}
 	 	{/if}
 		{if !empty($joinModeration)}
 			<span class="warning">{tr}Your request to join this group is pending. You can update your preferences once your request has been approved.{/tr}
@@ -27,13 +27,11 @@
 							<input type="radio" value="email" name="notice" {if $userEmailPref=='email'}checked="checked"{/if}/>
 							{formhelp note="Recieve each message via email as it is posted."}
 						{/forminput}
-						{if !$hasMailList}
 						{formlabel label=Digest}
 						{forminput}
 							<input type="radio" value="digest" name="notice" {if $userEmailPref=='digest'}checked="checked"{/if}/>
 							{formhelp note="Get all messages for the day bundled into a single email."}
 						{/forminput}
-						{/if}
 						{formlabel label="No Email"}
 						{forminput}
 							<input type="radio" value="none" name="notice" {if $userEmailPref=='none'}checked="checked"{/if}/>

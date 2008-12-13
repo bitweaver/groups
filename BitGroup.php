@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.133 2008/12/10 21:52:06 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.134 2008/12/13 00:38:49 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -743,6 +743,10 @@ class BitGroup extends LibertyMime {
 		if ( !is_object( $pUser ) ){
 			$pUser = &$gBitUser;
 		}
+
+		// @TODO add errors if mailman or switchboard updates fail
+		$errors = array();
+
 		// if the content is this and its board has a mailing list then act on that
 		if ( ($board = $this->getBoard()) && $board->getPreference( 'boards_mailing_list' ) ){
 			require_once( UTIL_PKG_PATH.'mailman_lib.php' );
@@ -762,6 +766,7 @@ class BitGroup extends LibertyMime {
 			  $gSwitchboardSystem->deleteUserPref($pUser->mUserId, 'group', 'message', $this->mContentId);
 			}
 		}
+		return( count( $errors ) == 0 );
 	}
 
 	// dump the users email prefs

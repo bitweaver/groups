@@ -125,7 +125,9 @@ if ($gBitSystem->isPackageActive('moderation')) {
 if( $gBitUser->isInGroup( $gContent->mGroupId ) ){
 	// user is changing their preferences
    	if( !empty( $_REQUEST['save_prefs'] ) && !empty($_REQUEST['notice']) ) {
-		$gContent->storeUserEmailPref( $_REQUEST['notice'] );
+		if( $gContent->storeUserEmailPref( $_REQUEST['notice'] ) ){
+			$gBitSmarty->assign( "successMsg", "Email Preference Updated" );
+		}
 	} elseif( !empty( $_REQUEST['leave_group'] ) ){
 		// dump the users email prefs
 		$gContent->deleteUserEmailPref(); 
@@ -140,7 +142,9 @@ if( $gBitUser->isInGroup( $gContent->mGroupId ) ){
 	if ( $gContent->mInfo['is_public'] == "y" ){
 		if ( $gBitUser->addUserToGroup( $gBitUser->mUserId, $gContent->mGroupId ) ){
 			if ( !empty($_REQUEST['notice']) ) {
-				$gContent->storeUserEmailPref($_REQUEST['notice']);
+				if( $gContent->storeUserEmailPref( $_REQUEST['notice'] ) ){
+					$gBitSmarty->assign( "successMsg", "Email Preference Updated" );
+				}
 			}
 			header( "Location: ".$gContent->getDisplayUrl() );
 			die;
