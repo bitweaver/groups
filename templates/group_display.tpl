@@ -1,7 +1,7 @@
 {include file="bitpackage:liberty/services_inc.tpl" serviceLocation='nav' serviceHash=$gContent->mInfo}
 {strip}
 <div class="display group">
-	{include file="bitpackage:group/group_icons.tpl}
+	{include file="bitpackage:group/group_icons.tpl"}
 	
 	<div class="header">
 		<h1>{if $gContent->mInfo.thumbnail_url}<img class="thumb" style="vertical-align:middle;" src="{$gContent->mInfo.thumbnail_url.avatar}" alt="Group Image" title="{$gContent->mInfo.title|escape}" />&nbsp;{/if}
