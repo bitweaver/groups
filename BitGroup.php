@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.134 2008/12/13 00:38:49 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.135 2009/01/21 21:17:00 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1525,7 +1525,7 @@ function group_content_verify( &$pObject, &$pParamHash ) {
 				}
 			}
 			if ( empty( $connect_group_content_id ) ){
-				$pObject->mErrors['group_mappping'] = tra("You do not have permission to edit content outside of groups. Please copy your changes to some other work space, you can't not save your changes.");
+				$pObject->mErrors['group_mappping'] = tra("You do not have permission to edit content outside of groups. Please copy your changes to some other work space, you can not save your changes.");
 			}
 		}
 	}
