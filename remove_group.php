@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/remove_group.php,v 1.6 2008/06/18 14:50:43 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/remove_group.php,v 1.7 2009/01/21 22:09:29 tekimaki_admin Exp $
  *
  * Copyright (c) 2004 bitweaver.org
  * Copyright (c) 2003 tikwiki.org
@@ -8,7 +8,7 @@
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
  *
- * $Id: remove_group.php,v 1.6 2008/06/18 14:50:43 lsces Exp $
+ * $Id: remove_group.php,v 1.7 2009/01/21 22:09:29 tekimaki_admin Exp $
  * @package groups
  * @subpackage functions
  */
@@ -30,7 +30,7 @@ $gContent->hasUserPermission( 'p_group_admin' );
 
 if( isset( $_REQUEST["confirm"] ) ) {
 	if( $gContent->expunge()  ) {
-		header ("location: ".BIT_ROOT_URL );
+		header ("location: ".GROUP_PKG_URL );
 		die;
 	} else {
 		vd( $gContent->mErrors );
