@@ -1,12 +1,12 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/Attic/list_groups.php,v 1.7 2009/01/21 22:10:11 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/Attic/list_groups.php,v 1.8 2009/01/21 22:22:33 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * @author Will James, Tekimaki LCC <will@tekimaki.com>
  * 
- * @package group
+ * @package groups
  * @subpackage functions
  */
  
