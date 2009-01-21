@@ -1,11 +1,12 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/Attic/list_groups.php,v 1.6 2008/09/19 01:34:37 laetzer Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/Attic/list_groups.php,v 1.7 2009/01/21 22:10:11 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
+ * @author Will James, Tekimaki LCC <will@tekimaki.com>
  * 
- * @package groups
+ * @package group
  * @subpackage functions
  */
  
@@ -22,8 +23,8 @@ $gBitSystem->verifyPackage( 'group' );
 $gBitSystem->verifyPermission( 'p_group_view' );
 
 /* mass-remove:
-	the checkboxes are sent as the array $_REQUEST["checked[]"], values are the wiki-PageNames,
-	e.g. $_REQUEST["checked"][3]="HomePage"
+	the checkboxes are sent as the array $_REQUEST["checked[]"], values are the group id,
+	e.g. $_REQUEST["checked"][3]="69"
 	$_REQUEST["submit_mult"] holds the value of the "with selected do..."-option list
 	we look if any page's checkbox is on and if remove_groups is selected.
 	then we check permission to delete groups.
