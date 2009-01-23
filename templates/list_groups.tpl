@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/Attic/list_groups.tpl,v 1.5 2008/12/08 15:33:12 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/Attic/list_groups.tpl,v 1.6 2009/01/23 21:29:09 wjames5 Exp $ *}
 {strip}
 <div class="listing group">
 	<div class="header">
@@ -15,19 +15,19 @@
 			<table class="data">
 				<tr>
 					{if $gBitSystem->isFeatureActive( 'group_list_group_id' ) eq 'y'}
-						<th>{smartlink ititle="Group Id" isort=group_id offset=$control.offset iorder=desc idefault=1}</th>
+						<th>{smartlink ititle="Group Id" isort=group_id offset=$control.offset iorder=desc idefault=1 find=$smarty.request.find}</th>
 					{/if}
 
 					{if $gBitSystem->isFeatureActive( 'group_list_title' ) eq 'y'}
-						<th>{smartlink ititle="Title" isort=title offset=$control.offset}</th>
+						<th>{smartlink ititle="Title" isort=title offset=$control.offset find=$smarty.request.find}</th>
 					{/if}
 
 					{if $gBitSystem->isFeatureActive( 'group_list_description' ) eq 'y'}
-						<th>{smartlink ititle="Description" isort=description offset=$control.offset}</th>
+						<th>{smartlink ititle="Description" isort=data offset=$control.offset find=$smarty.request.find}</th>
 					{/if}
 
 					{if $gBitSystem->isFeatureActive( 'group_list_data' ) eq 'y'}
-						<th>{smartlink ititle="Text" isort=data offset=$control.offset}</th>
+						<th>{smartlink ititle="Text" isort=data offset=$control.offset find=$smarty.request.find}</th>
 					{/if}
 
 					{if $gBitUser->hasPermission( 'p_group_remove' )}
