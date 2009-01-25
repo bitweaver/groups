@@ -42,7 +42,9 @@ if( $gBitSystem->isPackageActive( 'group' ) ) {
 		require_once( BIT_ROOT_PATH.'switchboard/bit_setup_inc.php' );
 		if( $gBitSystem->isPackageActive( 'switchboard' )) {
 			global $gSwitchboardSystem;
-			$gSwitchboardSystem->registerSender( GROUP_PKG_TITLE, array( 'message' ));
+			$gSwitchboardSystem->registerSwitchboardSender( GROUP_PKG_NAME, array( 'message' ));
+			// @TODO - this is the future - but don't change it until ok from wjames5 or after april 1 2009
+			// $gSwitchboardSystem->registerSender( GROUP_PKG_TITLE, array( 'message' ));
 		}
 	}
 

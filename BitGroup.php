@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.137 2009/01/25 05:14:27 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.138 2009/01/25 05:32:23 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -755,6 +755,8 @@ class BitGroup extends LibertyMime {
 			} elseif( $pPref == 'none' ) {
 				mailman_remove_member( $board->getPreference( 'boards_mailing_list' ), $pUser->getField( 'email' ) );
 			}
+			// @TODO - this is may be the future - but don't change it until ok from wjames5 or after april 1 2009
+			$gSwitchboardSystem->storeUserPref($pUser->mUserId, 'group', 'message', $this->mContentId,  $pPref);
 		}
 		// no mailing list then store in switchboard
 		elseif ( $gBitSystem->isPackageActive('switchboard') ) {
