@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.136 2009/01/21 22:08:58 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.137 2009/01/25 05:14:27 spiderr Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -759,12 +759,7 @@ class BitGroup extends LibertyMime {
 		// no mailing list then store in switchboard
 		elseif ( $gBitSystem->isPackageActive('switchboard') ) {
 			global $gSwitchboardSystem;
-			if ($pPref != 'none') {
-			  $gSwitchboardSystem->storeUserPref($pUser->mUserId, 'group', 'message', $this->mContentId,  $pPref); 
-			}
-			else {
-			  $gSwitchboardSystem->deleteUserPref($pUser->mUserId, 'group', 'message', $this->mContentId);
-			}
+			$gSwitchboardSystem->storeUserPref($pUser->mUserId, 'group', 'message', $this->mContentId,  $pPref); 
 		}
 		return( count( $errors ) == 0 );
 	}
