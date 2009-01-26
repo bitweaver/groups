@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.138 2009/01/25 05:32:23 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.139 2009/01/26 16:41:01 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -467,12 +467,30 @@ class BitGroup extends LibertyMime {
 			$bindVars[] = '%' . strtoupper( $find ). '%';
 		}
 
-		$query = "SELECT g.*, lc.`content_id`, lcds.`data` AS `summary`, lc.`title`, lc.`data`, 
+		$query = "SELECT g.*, 
+			lc.`content_id`, 
+			lc.`title`, 
+			lc.`data`, 
+			lcds.`data` AS `summary`, 
+			lc.`content_type_guid`, 
+			lct.`content_description`, 
+			lc.`last_modified`, 
+			lc.`created`,
 			lfp.storage_path AS `image_attachment_path`, 
-			ug.* $selectSql
+			uue.`login` AS `modifier_user`,
+			uue.`real_name` AS `modifier_real_name`,
+			uue.`user_id` AS `modifier_user_id`,
+			uuc.`login` AS `creator_user`,
+			uuc.`real_name` AS `creator_real_name`,
+			uuc.`user_id` AS `creator_user_id`,
+			ug.* 
+			$selectSql
 			FROM `".BIT_DB_PREFIX."groups` g 
 			INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = g.`content_id` ) 
+			INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` lct ON (lc.`content_type_guid`=lct.`content_type_guid`)
 			INNER JOIN `".BIT_DB_PREFIX."users_groups` ug ON( ug.`group_id` = g.`group_id` ) 
+			INNER JOIN `".BIT_DB_PREFIX."users_users` uuc ON (lc.`user_id`=uuc.`user_id`)
+			INNER JOIN `".BIT_DB_PREFIX."users_users` uue ON (lc.`modifier_user_id`=uue.`user_id`)
 			LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_data` lcds ON (lc.`content_id` = lcds.`content_id` AND lcds.`data_type`='summary')
 			LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON( la.`content_id` = lc.`content_id` AND la.`is_primary` = 'y' ) 
 			LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_files` lfp ON( lfp.`file_id` = la.`foreign_id` )
