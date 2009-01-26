@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/Attic/list_groups.tpl,v 1.6 2009/01/23 21:29:09 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/Attic/list_groups.tpl,v 1.7 2009/01/26 16:50:08 tekimaki_admin Exp $ *}
 {strip}
 <div class="listing group">
 	<div class="header">
@@ -6,6 +6,14 @@
 	</div>
 
 	<div class="body">
+
+		{* requires gmap and geo packages - we send search request to gmap to display results on a map *}
+		{if $listInfo && $gBitSystem->isPackageActive( 'gmap' ) }
+			<div style="float:right">
+				<a href="{pageurl listInfo=$listInfo}&amp;display_mode=map" title="View all that have location data">{tr}View Results on a Map{/tr}</a>
+			</div>
+		{/if}
+
 		{minifind sort_mode=$sort_mode}
 
 		{form id="checkform"}
@@ -87,6 +95,7 @@
 		{/form}
 
 		{pagination}
+
 	</div><!-- end .body -->
 </div><!-- end .admin -->
 {/strip}
