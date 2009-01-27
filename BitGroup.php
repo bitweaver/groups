@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.139 2009/01/26 16:41:01 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.140 2009/01/27 02:14:25 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -506,7 +506,7 @@ class BitGroup extends LibertyMime {
 		$result = $this->mDb->query( $query, $bindVars, $max_records, $offset );
 		$ret = array();
 		while( $res = $result->fetchRow() ) {
-			$res['display_url'] = $this->getDisplayUrl( $res );
+			$res['display_url'] = $this->getDisplayUrl( NULL, $res );
 			$res['num_members'] = $this->getMembersCount( $res['group_id'] );
 			$res['thumbnail_url'] = liberty_fetch_thumbnails( array( "storage_path" => $res['image_attachment_path'] ) );
 			$ret[] = $res;
@@ -523,7 +523,7 @@ class BitGroup extends LibertyMime {
 	* @param pExistsHash the hash that was returned by LibertyContent::pageExists
 	* @return the link to display the page.
 	*/
-	function getDisplayUrl( $pParamHash = NULL ) {
+	function getDisplayUrl( $pContentId = NULL, $pParamHash = NULL ) {
 		global $gBitSystem;
 
 		$ret = NULL;
@@ -540,6 +540,12 @@ class BitGroup extends LibertyMime {
 			$ret = GROUP_PKG_URL.urlencode( $groupName );
 		}elseif( !empty( $groupId ) ){
 			$ret = GROUP_PKG_URL."index.php?group_id=".$groupId;
+		}
+
+		// if all else fails try to get a value from a content id
+		if( empty( $ret ) ){
+			$contentId = !empty( $pContentId )?$pContentId:( !empty( $this->mContentId )?$this->mContentId:NULL );
+			$ret = @LibertyContent::getDisplayUrl( $contentId, $pParamHash );
 		}
 		return $ret;
 	}
