@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/add_to_group.php,v 1.10 2008/10/20 21:40:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/add_to_group.php,v 1.11 2009/01/28 21:43:17 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: add_to_group.php,v 1.10 2008/10/20 21:40:10 spiderr Exp $
+ * $Id: add_to_group.php,v 1.11 2009/01/28 21:43:17 tekimaki_admin Exp $
  * @package groups
  * @subpackage functions
  */
@@ -20,7 +20,7 @@ $gBitSystem->verifyPackage( 'group' );
 
 //if the request is from the search field redirect us to the list - otherwise do what we do
 if ( isset( $_REQUEST['find'] ) ){
-	header ("location: ".GROUP_PKG_URI."list_groups.php?find=".$_REQUEST['find'] );
+	header ("location: ".GROUP_PKG_URI."search.php?find=".$_REQUEST['find'] );
 	die;
 }
 // verify the user can add stuff to a group
