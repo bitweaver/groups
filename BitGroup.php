@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.140 2009/01/27 02:14:25 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.141 2009/01/28 17:50:34 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -589,7 +589,19 @@ class BitGroup extends LibertyMime {
 		return $ret;
 	}
 
+	function getTitle( $pParamHash = NULL, $pContentId = NULL ){
+		$ret = NULL;
 
+		if( @BitBase::verifyId( $pContentId ) ){
+			global $gBitDb;
+			$ret = $gBitDb->getOne( "SELECT lc.`title` FROM `".BIT_DB_PREFIX."liberty_content` lc WHERE lc.`content_id` = ? AND lc.`content_type_guid` = ?", array($pContentId, 'bitgroup' ) );
+		}else{
+			$ret = parent::getTitle ( $pParamHash );
+		}
+
+		return $ret;
+	}
+	
 
 	// -------------------- Group Roles Funtions -------------------- //
 	
@@ -1220,11 +1232,26 @@ function group_module_display(&$pParamHash){
 	}
 }
 
+/**
+ * @param $pParamHash['connect_group_content_id']
+ * @param $pParamHash['search_group_content_id']
+ *
+ * content_group_content_id is more often used in the editing process or viewing specific lists of group content
+ * search_group_content_id is for generic search of group assoicated content and is utilized by the search_inc.tpl service
+ * the reason to have the two params is so that search service requirements need not be triggered on regular list lookups
+ **/
 function group_content_list_sql( &$pObject, $pParamHash=NULL ) {
 	global $gBitSystem;
 	$ret = array();
 	$ret['where_sql'] = "";
-	if ( $gBitSystem->isPackageActive( 'group' ) && !empty($pParamHash['connect_group_content_id']) && $pObject->verifyId( $pParamHash['connect_group_content_id'] ) ){
+
+	// if search also populate connect value
+	if( !empty( $pParamHash['search_group_content_id'] ) && ( empty( $pParamHash['content_type_guid'] ) || $pParamHash['content_type_guid'] == 'bitgroup' ) ){
+		$pParamHash['connect_group_content_id'] = $pParamHash['search_group_content_id'];
+	}
+
+	// sql required to list content associated with a group
+	if ( ( $gBitSystem->isPackageActive( 'group' ) || !empty( $pParamHash['search_group_content_id'] ) ) && !empty($pParamHash['connect_group_content_id']) && $pObject->verifyId( $pParamHash['connect_group_content_id'] ) ){
 		$ret['join_sql'] = " INNER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( lc.`content_id` = gccm.`to_content_id` )";
 		if ( isset($pParamHash['content_type_guid']) && $pParamHash['content_type_guid'] == "bitboard" ){
 			$ret['select_sql'] = " , brd.`board_id`";
@@ -1234,10 +1261,20 @@ function group_content_list_sql( &$pObject, $pParamHash=NULL ) {
 		$ret['bind_vars'][] = (int)$pParamHash['connect_group_content_id'];
 	}
 
+	// to exclude content associated with a group by content type
 	if ( isset($pParamHash['exclude_content_type_guid']) ){
 		$ret['where_sql'] .= " AND lc.`content_type_guid` != ?";
 		$ret['bind_vars'][] = $pParamHash['exclude_content_type_guid'];
 	}
+
+	// if searching for content associated with a group we may want to know at least the group's name
+	if( !empty( $pParamHash['search_group_content_id'] ) ){
+		global $gBitSmarty;
+		$groupSearchTitle = @BitGroup::getTitle( NULL, $pParamHash['search_group_content_id'] ); 
+		// make it available to smarty for the search_inc.tpl
+		$gBitSmarty->assign( 'groupSearchTitle', $groupSearchTitle );
+	}
+
 	return $ret;
 }
 

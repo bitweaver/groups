@@ -1,5 +1,5 @@
 <?php
-global $gBitSystem;
+global $gBitSystem, $gBitThemes;
 
 $registerHash = array(
 	'package_name' => 'group',
@@ -9,6 +9,9 @@ $registerHash = array(
 $gBitSystem->registerPackage( $registerHash );
 
 if( $gBitSystem->isPackageActive( 'group' ) ) {
+	// load the css file
+	$gBitThemes->loadCss( GROUP_PKG_PATH.'group.css' );
+
 	$menuHash = array(
 		'package_name'  => GROUP_PKG_NAME,
 		'index_url'     => GROUP_PKG_URL.'index.php',
@@ -30,6 +33,7 @@ if( $gBitSystem->isPackageActive( 'group' ) ) {
 		'content_verify_function'		=> 'group_content_verify',
 		'content_expunge_function'		=> 'group_content_expunge',
 		'content_user_perms_function'	=> 'group_content_user_perms',
+		'content_search_tpl'			=> 'bitpackage:group/search_inc.tpl'
 	) );
 
 	/**
