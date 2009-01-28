@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.141 2009/01/28 17:50:34 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.142 2009/01/28 21:29:10 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -440,7 +440,7 @@ class BitGroup extends LibertyMime {
 		$selectSql = $joinSql = $whereSql = '';
 		$bindVars = array();
 		array_push( $bindVars, $this->mContentTypeGuid );
-		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
+		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars, NULL, $pParamHash );
 
 		// this will set $find, $sort_mode, $max_records and $offset
 		extract( $pParamHash );
@@ -1240,7 +1240,7 @@ function group_module_display(&$pParamHash){
  * search_group_content_id is for generic search of group assoicated content and is utilized by the search_inc.tpl service
  * the reason to have the two params is so that search service requirements need not be triggered on regular list lookups
  **/
-function group_content_list_sql( &$pObject, $pParamHash=NULL ) {
+function group_content_list_sql( &$pObject, &$pParamHash=NULL ) {
 	global $gBitSystem;
 	$ret = array();
 	$ret['where_sql'] = "";
@@ -1273,6 +1273,10 @@ function group_content_list_sql( &$pObject, $pParamHash=NULL ) {
 		$groupSearchTitle = @BitGroup::getTitle( NULL, $pParamHash['search_group_content_id'] ); 
 		// make it available to smarty for the search_inc.tpl
 		$gBitSmarty->assign( 'groupSearchTitle', $groupSearchTitle );
+
+		// return the values sent for pagination / url purposes
+		$pParamHash['listInfo']['search_group_content_id'] = $pParamHash['search_group_content_id'];
+		$pParamHash['listInfo']['ihash']['search_group_content_id'] = $pParamHash['search_group_content_id'];
 	}
 
 	return $ret;
