@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/search_groups.tpl,v 1.1 2009/01/28 17:50:34 tekimaki_admin Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/search_groups.tpl,v 1.2 2009/01/28 21:33:29 tekimaki_admin Exp $ *}
 {strip}
 <div class="listing group">
 	<div class="header">
@@ -33,7 +33,7 @@
 				{* requires gmap and geo packages - we send search request to gmap to display results on a map *}
 				{if $listInfo && $gBitSystem->isPackageActive( 'gmap' ) }
 					<div style="float:right">
-						<a href="{pageurl listInfo=$listInfo}&amp;display_mode=map{if $smarty.request.search_group_content_id}&amp;search_group_content_id={$smarty.request.search_group_content_id}{/if}" title="View all that have location data">{tr}View Results on a Map{/tr}</a>
+						<a href="{pageurl listInfo=$listInfo}&amp;display_mode=map" title="View all that have location data">{tr}View Results on a Map{/tr}</a>
 					</div>
 				{/if}
 
