@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.44 2008/12/09 06:48:01 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.45 2009/01/30 18:41:46 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: edit.php,v 1.44 2008/12/09 06:48:01 tekimaki_admin Exp $
+ * $Id: edit.php,v 1.45 2009/01/30 18:41:46 tekimaki_admin Exp $
  * @package groups
  * @subpackage functions
  */
@@ -136,7 +136,7 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 			// for each group thats not this group and has the permission revoke it
 			foreach( $allGroups as $groupId => $group ){
 				$groupPerms = array_keys( $group['perms'] );
-				// if group has content view perm by default and is not admin and not our group
+				// if group has comment post perm by default and is not admin and not our group
 				if ( $groupId != 1 && $groupId != $gContent->mGroupId  && in_array( $commPostPerm, $groupPerms ) ){
 					// revoke
 					$gContent->storePermission( $groupId, $commPostPerm, TRUE, $boardContentId );
