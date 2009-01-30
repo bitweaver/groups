@@ -2,7 +2,7 @@
 	{if $smarty.const.ACTIVE_PACKAGE != 'group'}
 		<div class="row">
 			{formlabel label="Group:" for="search_group_content_id"}
-				{forminput}
+			{forminput}
 				{$groupSearchTitle}
 				<input type="hidden" name="search_group_content_id" value="{$smarty.request.search_group_content_id}" />
 				{formhelp note="Only show content associated with this group." }
