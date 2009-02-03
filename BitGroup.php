@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.142 2009/01/28 21:29:10 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.143 2009/02/03 18:03:50 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -774,7 +774,7 @@ class BitGroup extends LibertyMime {
 	// -------------------- Member Email Funtions -------------------- //
 	
 	function storeUserEmailPref( $pPref, $pUser=NULL ){ 
-		global $gBitSystem, $gBitUser;
+		global $gBitSystem, $gBitUser, $gSwitchboardSystem;
 		// if user is NULL get the active one
 		if ( !is_object( $pUser ) ){
 			$pUser = &$gBitUser;
@@ -796,7 +796,6 @@ class BitGroup extends LibertyMime {
 		}
 		// no mailing list then store in switchboard
 		elseif ( $gBitSystem->isPackageActive('switchboard') ) {
-			global $gSwitchboardSystem;
 			$gSwitchboardSystem->storeUserPref($pUser->mUserId, 'group', 'message', $this->mContentId,  $pPref); 
 		}
 		return( count( $errors ) == 0 );
