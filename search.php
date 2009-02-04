@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/search.php,v 1.1 2009/01/28 17:50:34 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/search.php,v 1.2 2009/02/04 20:37:02 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -46,7 +46,10 @@ if( !empty( $_REQUEST['display_mode'] ) && $_REQUEST['display_mode'] == 'map' ){
 	}
 
 	if( empty( $_REQUEST['content_type_guid'] ) ){
+		// maps needs a signal to get a default list
 		$_REQUEST['content_type_guid'] = 'Any';
+		// force comments inclusion since it would be stupid not to include comments (discussions)
+		$_REQUEST['include_comments'] = 'y';
 	}
 	include_once( GMAP_PKG_PATH.'map_content_list_inc.php' );
 	// end
@@ -56,6 +59,10 @@ elseif( !empty( $_REQUEST['search_group_content_id'] ) ){
 	// override group content type param if coupled with a search_group_content_id
 	if ( !empty($_REQUEST['content_type_guid']) && ( $_REQUEST['content_type_guid'] == 'bitgroup' ) ){
 		$_REQUEST['content_type_guid'] = NULL;
+	}
+	if( empty( $_REQUEST['content_type_guid'] ) ){
+		// force comments inclusion since it would be stupid not to include comments (discussions)
+		$_REQUEST['include_comments'] = 'y';
 	}
 	// we use the group list.tpl not liberty's so just give us the results
 	$_REQUEST['output'] = 'raw';

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.144 2009/02/03 19:17:21 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.145 2009/02/04 20:37:02 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1258,7 +1258,7 @@ function group_content_list_sql( &$pObject, &$pParamHash=NULL ) {
 		if ( !empty( $pParamHash['content_type_guid'] ) ){
 			$content_types = is_array( $pParamHash['content_type_guid'] )?$pParamHash['content_type_guid']:array( $pParamHash['content_type_guid'] );
 		}
-		if ( ( !empty($pParamHash['include_comments']) || in_array('bitcomment', $content_types) ) && !empty( $pParamHash['search_group_content_id'] )) {
+		if ( !empty( $pParamHash['search_group_content_id'] ) ) {
 			$ret['join_sql'] = 
 					" LEFT OUTER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( lc.`content_id` = gccm.`to_content_id` )".
 					" LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_comments` gclcomm ON ( lc.`content_id` = gclcomm.`content_id`)".
