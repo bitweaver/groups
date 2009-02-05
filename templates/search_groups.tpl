@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/search_groups.tpl,v 1.2 2009/01/28 21:33:29 tekimaki_admin Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/search_groups.tpl,v 1.3 2009/02/05 20:49:36 tekimaki_admin Exp $ *}
 {strip}
 <div class="listing group">
 	<div class="header">
@@ -7,13 +7,13 @@
 
 	<div class="body">
 
-		{form name="list-query-form" id="list-query-form" legend="Search"}
+		{form id="list-query-form" legend="Search"}
 
 		{if $smarty.request.search_group_content_id}
 			<div class="row">
 				{formlabel label="Content Types:" for="content_type_guid"}
 				{forminput}
-					{html_options options=$contentTypes name=content_type_guid id=content_type selected=$contentSelect size=5}
+					{html_options options=$contentTypes name=content_type_guid[] id=content_type selected=$contentSelect size=5 multiple=TRUE}
 					{formhelp note="Limit search by content type"}
 				{/forminput}
 			</div>
