@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/group_home.tpl,v 1.10 2008/12/08 15:33:12 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/group_home.tpl,v 1.11 2009/02/06 17:00:32 tekimaki_admin Exp $ *}
 {strip}
 <div class="display group">
 	<div class="header">
@@ -60,7 +60,7 @@
 			{/if}
 			{if $recentGroups}
 				<h2>Search Groups</h2>
-				{minifind sort_mode=$sort_mode}
+				{include file='bitpackage:group/search_form.tpl'}
 				<h2>New Groups</h2>
 
 				<div>
