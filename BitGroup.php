@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.145 2009/02/04 20:37:02 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.146 2009/02/06 19:24:05 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1378,7 +1378,7 @@ function group_content_preview( &$pObject) {
 function group_content_edit( &$pObject, &$pParamHash ) {
 	global $gBitSystem, $gBitSmarty, $gBitUser;
 	$errors = NULL;
-	if( $gBitSystem->isPackageActive( 'group' ) && $pObject->mContentTypeGuid != BITGROUP_CONTENT_TYPE_GUID ){
+	if( $gBitSystem->isPackageActive( 'group' ) && $pObject->getContentType() != BITGROUP_CONTENT_TYPE_GUID ){
 		$connect_group_content_id = NULL;
 
 		// when creating new content via a group we pass the group content id to the edit form
@@ -1593,8 +1593,8 @@ function group_content_verify( &$pObject, &$pParamHash ) {
 	$excludePackages = array( BITCOMMENT_CONTENT_TYPE_GUID, BITUSER_CONTENT_TYPE_GUID, BITGROUP_CONTENT_TYPE_GUID );
 
 	if ( $gBitSystem->isPackageActive( 'group' ) 
-		 && !in_array( $pObject->mContentTypeGuid, $excludePackages ) 
-		 && !( $pObject->mContentTypeGuid == BITBOARD_CONTENT_TYPE_GUID && !empty( $pParamHash['group']['bypass_map_required'] ) )		
+		 && !in_array( $pObject->getContentType(), $excludePackages ) 
+		 && !( $pObject->getContentType() == BITBOARD_CONTENT_TYPE_GUID && !empty( $pParamHash['group']['bypass_map_required'] ) )		
 		){
 		// if mapping is required we need a group content id, we'll try to get one unless the user can bypass this process
 		// we ignore comments and users since they are never mapped
@@ -1645,12 +1645,12 @@ function group_content_user_perms( &$pObject, $pParamHash ) {
 		$contentId = $pObject->mContentId;
 
 		// Need a different query for groups
-		if ( $pObject->mContentTypeGuid == BITGROUP_CONTENT_TYPE_GUID ) {
+		if ( $pObject->getContentType() == BITGROUP_CONTENT_TYPE_GUID ) {
 
 			$query = "SELECT rpm.`perm_name` AS `hash_key`, rpm.`perm_name`, g.`group_id`, ugm.`user_id`  FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rpm ".
 				"LEFT JOIN `".BIT_DB_PREFIX."groups_roles_users_map` rum ON ( rpm.`role_id` = rum.`role_id` AND rpm.`group_content_id` = rum.`group_content_id`) ".
 				"LEFT JOIN `".BIT_DB_PREFIX."groups` g ON (rpm.`group_content_id` = g.`content_id` ) ".
-				"LEFT OUTER JOIN `".BIT_DB_PREFIX."users_groups_map` ugm ON (g.`group_id` = ugm.`group_id` AND ugm.`user_id` = ?) ".
+				"INNER JOIN `".BIT_DB_PREFIX."users_groups_map` ugm ON (g.`group_id` = ugm.`group_id` AND ugm.`user_id` = ?) ".
 				"WHERE rpm.`group_content_id` = ? AND (rum.`user_id` = ? OR rpm.`role_id` = 3)";
 
 		} else {
@@ -1658,14 +1658,15 @@ function group_content_user_perms( &$pObject, $pParamHash ) {
 			$query = "SELECT rpm.`perm_name` AS `hash_key`, rpm.*, ccm.*, ugm.*, rpm.`perm_name`, rpm.`group_id` FROM `".BIT_DB_PREFIX."groups_roles_perms_map` rpm ".
 				"LEFT JOIN `".BIT_DB_PREFIX."groups_roles_users_map` rum ON (rpm.`role_id` = rum.`role_id` AND rpm.`group_content_id` = rum.`group_content_id` ) ".
 				"LEFT JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` ccm ON (rpm.`group_content_id` = ccm.`group_content_id` ) ".
-				"LEFT OUTER JOIN `".BIT_DB_PREFIX."users_groups_map` ugm ON (rpm.`group_id` = ugm.`group_id` AND ugm.`user_id` = ?) ".
+				"INNER JOIN `".BIT_DB_PREFIX."users_groups_map` ugm ON (rpm.`group_id` = ugm.`group_id` AND ugm.`user_id` = ?) ".
 				"WHERE  ccm.`to_content_id` = ? AND (rum.`user_id` = ? OR rpm.`role_id` = 3)";
 
 		}
-		$perms = $pObject->mDb->getAssoc($query, array($userId, $contentId, $userId));
+		$bindVars = array( $userId, $contentId, $userId );
+		$perms = $pObject->mDb->getAssoc($query, $bindVars);
 
 		// Add the admin permission for this content type if appropriate
-		if( isset($perms['p_group_group_content_admin'] ) && $pObject->mContentTypeGuid != BITGROUP_CONTENT_TYPE_GUID ) {
+		if( isset($perms['p_group_group_content_admin'] ) && $pObject->getContentType() != BITGROUP_CONTENT_TYPE_GUID ) {
 			$perms[$pObject->mAdminContentPerm] = array('perm_name'=>$pObject->mAdminContentPerm, 'user_id' => $userId);
 		}
 
@@ -1676,6 +1677,7 @@ function group_content_user_perms( &$pObject, $pParamHash ) {
 			$perms['p_liberty_admin_comments'] = array( 'perm_name'=>'p_liberty_admin_comments', 'user_id'=> $userId );
 		}
 
+		// vd( $pObject->mUserContentPerms );
 		// restore comment posting permission if revoked but user has role
 		if ( ( $pObject->isOwner() || !empty( $perms['p_group_group_msgs_create'] ) ) && empty( $pObject->mUserContentPerms['p_liberty_post_comments'] ) ){
 			$perms['p_liberty_post_comments'] = array( 'perm_name'=>'p_liberty_post_comments', 'user_id'=> $userId );
