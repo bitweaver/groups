@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.147 2009/02/19 16:29:55 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.148 2009/02/19 16:45:00 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -391,10 +391,10 @@ class BitGroup extends LibertyMime {
 			// before we clear out the group we need to know its board so we can clear it out too
 			$board = &$this->getBoard();
 
-			// delete the group and its related group pkg settings
+			// delete the group and its related group pkg settings - order matters to respect constraints
 			$this->mDb->StartTrans();
-			$query = "DELETE FROM `".BIT_DB_PREFIX."groups` WHERE `content_id` = ?";
-			$result = $this->mDb->query( $query, array( $this->mContentId ) );
+			$query = "DELETE FROM `".BIT_DB_PREFIX."groups_invitations` WHERE `group_id` = ?";
+			$result = $this->mDb->query( $query, array( $this->mGroupId ) );
 			$query = "DELETE FROM `".BIT_DB_PREFIX."groups_roles_perms_map` WHERE `group_content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
 			$query = "DELETE FROM `".BIT_DB_PREFIX."groups_roles_users_map` WHERE `group_content_id` = ?";
@@ -402,6 +402,8 @@ class BitGroup extends LibertyMime {
 			$query = "DELETE FROM `".BIT_DB_PREFIX."groups_content_cnxn_map` WHERE `group_content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
 			$query = "DELETE FROM `".BIT_DB_PREFIX."groups_content_types` WHERE `group_content_id` = ?";
+			$result = $this->mDb->query( $query, array( $this->mContentId ) );
+			$query = "DELETE FROM `".BIT_DB_PREFIX."groups` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
 			if( !empty( $board ) ) {
 				// delete the associated board
