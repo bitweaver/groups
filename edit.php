@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.45 2009/01/30 18:41:46 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.46 2009/02/19 20:28:01 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: edit.php,v 1.45 2009/01/30 18:41:46 tekimaki_admin Exp $
+ * $Id: edit.php,v 1.46 2009/02/19 20:28:01 tekimaki_admin Exp $
  * @package groups
  * @subpackage functions
  */
@@ -89,9 +89,11 @@ if( !empty( $_REQUEST["save_group"] ) ) {
                 $bodyHash['alt_message'] = $body;
 
                 // send email - each one must be separate since invite code is unique
-                $recipient = array( array( 'email' => $gBitUser->mInfo['email'] ) );
+                $emailHash['recipients'] = array( array( 'email' => $gBitUser->mInfo['email'] ) );
+				$emailHash['subject'] = $subject;
+				$emailHash['message'] = $bodyHash;
                 // @TODO add error handling so we know if there was a sending error
-				$gSwitchboardSystem->sendEmail( $subject, $bodyHash, $recipient );
+				$gSwitchboardSystem->sendEmail( $emailHash );
 			}	
 		}
 
