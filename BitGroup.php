@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.146 2009/02/06 19:24:05 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.147 2009/02/19 16:29:55 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -537,7 +537,9 @@ class BitGroup extends LibertyMime {
 		}
 
 		if( !empty( $groupName ) && $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
-			$ret = GROUP_PKG_URL.urlencode( $groupName );
+			// let people add any old fucking char they want - not sure what kind of disaster this might be but we'll find out - 2/19/09 wjames5
+			$prettyGroupName = preg_replace( '/ /', '+', $groupName );
+			$ret = GROUP_PKG_URL.$prettyGroupName;
 		}elseif( !empty( $groupId ) ){
 			$ret = GROUP_PKG_URL."index.php?group_id=".$groupId;
 		}
@@ -568,14 +570,16 @@ class BitGroup extends LibertyMime {
 		}
 
 		if( !empty( $groupName ) && $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
-			$ret['summary'] = GROUP_PKG_URL.urlencode( $groupName );
-			$ret['about'] = GROUP_PKG_URL.urlencode( $groupName )."/about";
-			$ret['files'] = GROUP_PKG_URL.urlencode( $groupName )."/files";
-			$ret['manage'] = GROUP_PKG_URL.urlencode( $groupName )."/manage";
-			$ret['members'] = GROUP_PKG_URL.urlencode( $groupName )."/members";
-			$ret['settings'] = GROUP_PKG_URL.urlencode( $groupName )."/settings";
-			$ret['tasks'] = GROUP_PKG_URL.urlencode( $groupName )."/tasks";
-			$ret['theme'] = GROUP_PKG_URL.urlencode( $groupName )."/theme";
+			// let people add any old fucking char they want - not sure what kind of disaster this might be but we'll find out - 2/19/09 wjames5
+			$prettyGroupName = preg_replace( '/ /', '+', $groupName );
+			$ret['summary'] = GROUP_PKG_URL.$prettyGroupName;
+			$ret['about'] = GROUP_PKG_URL.$prettyGroupName."/about";
+			$ret['files'] = GROUP_PKG_URL.$prettyGroupName."/files";
+			$ret['manage'] = GROUP_PKG_URL.$prettyGroupName."/manage";
+			$ret['members'] = GROUP_PKG_URL.$prettyGroupName."/members";
+			$ret['settings'] = GROUP_PKG_URL.$prettyGroupName."/settings";
+			$ret['tasks'] = GROUP_PKG_URL.$prettyGroupName."/tasks";
+			$ret['theme'] = GROUP_PKG_URL.$prettyGroupName."/theme";
 		}elseif( !empty( $groupId ) ){
 			$ret['summary'] = GROUP_PKG_URL."index.php?group_id=".$groupId;
 			$ret['about'] = GROUP_PKG_URL."about.php?group_id=".$groupId;
