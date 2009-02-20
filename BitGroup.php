@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.148 2009/02/19 16:45:00 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.149 2009/02/20 16:18:15 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -385,11 +385,24 @@ class BitGroup extends LibertyMime {
 	* This function removes a group entry
 	**/
 	function expunge() {
-		global $gBitUser;
-		$ret = FALSE;
+		global $gBitSystem, $gBitUser;
 		if( $this->isValid() ) {
 			// before we clear out the group we need to know its board so we can clear it out too
 			$board = &$this->getBoard();
+
+			// before we clear out a a group we may need to nuke all its related content as well
+			/* Note: this is probably not perfect - we're assuming there are custom content perms if one of these is active
+			 * which is the source of the issue. A more robust solution might allow content to be freed from its group
+			 * something someone more ambitous and with that need can explore
+			 */
+			if( $gBitSystem->isFeatureActive( 'group_admin_content' ) || $gBitSystem->isFeatureActive('group_map_required') ){
+				// get all mapped content ids
+				$query = "SELECT `to_content_id` as `content_id` FROM `".BIT_DB_PREFIX."groups_content_cnxn_map` WHERE `group_content_id` = ?";
+				$result = $this->mDb->query( $query, array( $this->mContentId ), 9999999 );
+				while( $res = $result->fetchRow() ) {
+					$groupContent[] = $res;
+				}
+			}	
 
 			// delete the group and its related group pkg settings - order matters to respect constraints
 			$this->mDb->StartTrans();
@@ -405,23 +418,40 @@ class BitGroup extends LibertyMime {
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
 			$query = "DELETE FROM `".BIT_DB_PREFIX."groups` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
+
+			// now we can expunge related content
 			if( !empty( $board ) ) {
 				// delete the associated board
 				$board->expunge();
 			}
+
+			// delete related content
+			if( !empty( $groupContent ) ){
+				foreach( $groupContent as $item ){
+					$obj = LibertyBase::getLibertyObject( $item['content_id'] ); 
+					// make sure the object loaded
+					if( is_object( $obj ) ){
+						$obj->expunge();
+					}
+				}
+			}
+
+			// expunge the parent objects
 			if( LibertyMime::expunge() ) {
 				if( $gBitUser->expungeGroup( $this->mGroupId ) ) {
-					$ret = TRUE;
 					$this->mDb->CompleteTrans();
 				}
-				else {
+			   	else {
 					$this->mDb->RollbackTrans();
+					$this->mErrors['group_expunge'] = 'Users group expunge failed';
 				}
-			} else {
+			}
+			else {
 				$this->mDb->RollbackTrans();
+				$this->mErrors['group_expunge'] = 'Parent Liberty class expunge failed';
 			}
 		}
-		return $ret;
+		return( count( $this->mErrors ) == 0 );
 	}
 
 	/**
