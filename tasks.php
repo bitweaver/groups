@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/tasks.php,v 1.7 2008/10/20 21:40:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/tasks.php,v 1.8 2009/03/10 16:15:46 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -60,9 +60,13 @@ $gBitSmarty->assign_by_ref( 'modRequests', $modRequests );
 if ( isset($_REQUEST['send_email']) && $gBitSystem->isPackageActive('switchboard') ) {
 	$subject = "[".$gContent->getTitle()." ".tra('Group')."] ".$_REQUEST['email_subject'];
 	$body = $_REQUEST['email_body'];
+	$bodyHash['alt_message'] = $body;
 	$usersHash = array( 'email', 'real_name', 'login', 'user_id' );
 	$recipients = $gContent->getMembers();
-	$gSwitchboardSystem->sendEmail( $subject, $body, $recipients );
+	$emailHash['recipients'] = $recipients;
+	$emailHash['subject'] = $subject;
+	$emailHash['message'] = $bodyHash;
+	$gSwitchboardSystem->sendEmail( $emailHash );
 	$gBitSmarty->assign( 'successEmailMsg', 'Email sent!' );
 }
 

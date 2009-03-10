@@ -84,9 +84,13 @@ if ( !empty($_REQUEST['send_invite']) && $gBitSystem->isPackageActive('switchboa
 				$bodyHash['alt_message'] = $body;
 
 				// send email - each one must be separate since invite code is unique
-				$recipient = array( array( 'email' => $email ) );
+				$recipients = array( array( 'email' => $email ) );
+
+				$emailHash['recipients'] = $recipients;
+				$emailHash['subject'] = $subject;
+				$emailHash['message'] = $bodyHash;
 				// @TODO add error handling so we know if there was a sending error
-				$gSwitchboardSystem->sendEmail( $subject, $bodyHash, $recipient );
+				$gSwitchboardSystem->sendEmail( $emailHash );
 			}
 		}
 		$msg = tra( 'Invitations sent!' );
