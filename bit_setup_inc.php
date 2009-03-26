@@ -25,6 +25,7 @@ if( $gBitSystem->isPackageActive( 'group' ) ) {
 		'content_nav_tpl'				=> 'bitpackage:group/view_group_nav.tpl',
 		'content_body_tpl'				=> 'bitpackage:group/view_group_body.tpl',
 		'content_view_tpl'				=> 'bitpackage:group/view_group_view.tpl',
+		'content_search_tpl'			=> 'bitpackage:group/search_inc.tpl',
 		'content_display_function'		=> 'group_content_display',
 		'content_list_sql_function'		=> 'group_content_list_sql',
 		'content_preview_function'		=> 'group_content_preview',
@@ -33,7 +34,7 @@ if( $gBitSystem->isPackageActive( 'group' ) ) {
 		'content_verify_function'		=> 'group_content_verify',
 		'content_expunge_function'		=> 'group_content_expunge',
 		'content_user_perms_function'	=> 'group_content_user_perms',
-		'content_search_tpl'			=> 'bitpackage:group/search_inc.tpl'
+		'comment_store_function'		=> 'group_comment_store'
 	) );
 
 	/**
