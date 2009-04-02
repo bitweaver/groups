@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.149 2009/02/20 16:18:15 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.150 2009/04/02 16:53:26 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1316,12 +1316,6 @@ function group_content_list_sql( &$pObject, &$pParamHash=NULL ) {
 			$ret['join_sql'] .= " INNER JOIN `".BIT_DB_PREFIX."boards` brd ON (lc.`content_id` = brd.`content_id`)";
 		}
 
-	}
-
-	// to exclude content associated with a group by content type
-	if ( isset($pParamHash['exclude_content_type_guid']) ){
-		$ret['where_sql'] .= " AND lc.`content_type_guid` != ?";
-		$ret['bind_vars'][] = $pParamHash['exclude_content_type_guid'];
 	}
 
 	// if searching for content associated with a group we may want to know at least the group's name
