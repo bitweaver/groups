@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.150 2009/04/02 16:53:26 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.151 2009/04/07 15:13:24 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1620,10 +1620,10 @@ function group_content_store( &$pObject, &$pParamHash ) {
 function group_content_verify( &$pObject, &$pParamHash ) {
 	global $gBitSystem, $gBitUser;
 	// services are tripped even on native group object its board and other content we don't map to groups - we ignore those
-	$excludePackages = array( BITCOMMENT_CONTENT_TYPE_GUID, BITUSER_CONTENT_TYPE_GUID, BITGROUP_CONTENT_TYPE_GUID );
+	$excludeContent = array( BITCOMMENT_CONTENT_TYPE_GUID, BITUSER_CONTENT_TYPE_GUID, BITGROUP_CONTENT_TYPE_GUID );
 
 	if ( $gBitSystem->isPackageActive( 'group' ) 
-		 && !in_array( $pObject->getContentType(), $excludePackages ) 
+		 && !in_array( $pObject->getContentType(), $excludeContent ) 
 		 && !( $pObject->getContentType() == BITBOARD_CONTENT_TYPE_GUID && !empty( $pParamHash['group']['bypass_map_required'] ) )		
 		){
 		// if mapping is required we need a group content id, we'll try to get one unless the user can bypass this process
