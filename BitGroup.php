@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.151 2009/04/07 15:13:24 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.152 2009/04/16 19:28:35 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -618,7 +618,7 @@ class BitGroup extends LibertyMime {
 			$ret['files'] = GROUP_PKG_URL."files.php?group_id=".$groupId;
 			$ret['manage'] = GROUP_PKG_URL."manage.php?group_id=".$groupId;
 			$ret['members'] = GROUP_PKG_URL."members.php?group_id=".$groupId;
-			$ret['settingss'] = GROUP_PKG_URL."edit.php?group_id=".$groupId;
+			$ret['settings'] = GROUP_PKG_URL."edit.php?group_id=".$groupId;
 			$ret['tasks'] = GROUP_PKG_URL."tasks.php?group_id=".$groupId;
 			$ret['theme'] = GROUP_PKG_URL."theme.php?group_id=".$groupId;
 		}
