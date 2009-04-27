@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.16 2009/01/20 22:18:07 dansut Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/edit_group.tpl,v 1.17 2009/04/27 16:13:43 tekimaki_admin Exp $ *}
 {strip}
 <div class="floaticon">{bithelp}</div>
 
@@ -63,8 +63,10 @@
 						{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl"}
 
 						<div class="row submit">
-							<input type="submit" name="preview" value="{tr}Preview{/tr}" /> 
-							<input type="submit" name="save_group" value="{tr}Save{/tr}" />
+							<input type="submit" name="cancel" value="{tr}Cancel{/tr}" />&nbsp;
+							<input type="submit" name="preview" value="{tr}Preview{/tr}" />&nbsp; 
+							<input type="submit" name="save_group" value="{tr}Save{/tr}" />&nbsp;
+							<input type="submit" name="save_group_continue" value="{tr}Save and Continue Editing{/tr}" />
 						</div>
 					{/legend}
 				{/jstab}

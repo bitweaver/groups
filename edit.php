@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.46 2009/02/19 20:28:01 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.47 2009/04/27 16:13:43 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  * 
- * $Id: edit.php,v 1.46 2009/02/19 20:28:01 tekimaki_admin Exp $
+ * $Id: edit.php,v 1.47 2009/04/27 16:13:43 tekimaki_admin Exp $
  * @package groups
  * @subpackage functions
  */
@@ -28,6 +28,15 @@ if( $gContent->isValid() ) {
 	$gContent->setGroupStyle();
 } else {
 	$gContent->verifyCreatePermission();
+}
+
+// user canceled out get us out of here
+if( !empty( $_REQUEST['cancel'] ) ) {
+	if(  $gContent->isValid() ) {
+		bit_redirect( $gContent->getDisplayUrl() );
+	}else{
+		bit_redirect( GROUP_PKG_URL );
+	}
 }
 
 // get content types groups can associate with their group
@@ -58,7 +67,7 @@ $allRolesPerms = $gContent->getRolesPerms();
 $gBitSmarty->assign('allRolesPerms', $allRolesPerms );
 
 // If we are saving
-if( !empty( $_REQUEST["save_group"] ) ) {
+if( !empty( $_REQUEST["save_group"] ) || !empty( $_REQUEST["save_group_continue"] ) ) {
 
 	// get the current public status of the group before we save. we need this later for setting access control
 	$publicStatus = isset( $gContent->mInfo['view_content_public'] )?$gContent->mInfo['view_content_public']:NULL;
@@ -252,10 +261,16 @@ if( !empty( $_REQUEST["save_group"] ) ) {
 		}
 		//----- end set access perms -----//
 
-		header( "Location: ".$gContent->getDisplayUrl() );
-		die;
+		if( !empty( $_REQUEST['save_group'] ) ){
+			header( "Location: ".$gContent->getDisplayUrl() );
+			die;
+		}
+		else{
+			// user has requested to continue editing
+			$gContent->load();
+		}
 	} else {
-	      	$gContent->preparePreview( $_REQUEST );
+		$gContent->preparePreview( $_REQUEST );
 		$gBitSmarty->assign_by_ref( 'errors', $gContent->mErrors );
 	}
 }
