@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.153 2009/05/01 15:53:16 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.154 2009/05/12 17:13:40 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1396,10 +1396,11 @@ function group_content_display( &$pObject, &$pParamHash ) {
 }
 
 function group_content_preview( &$pObject) {
-	global $gBitSystem;
+	global $gBitSystem, $gBitSmarty;
 	if ( $gBitSystem->isPackageActive( 'group' ) ) {		
 		if (isset($_REQUEST['connect_group_content_id'])) {
 			$pObject->mInfo['connect_group_content_id'] = $_REQUEST['connect_group_content_id'];
+			$gBitSmarty->assign( "connect_group_content_id",  $_REQUEST['connect_group_content_id'] );
 		}
 	}
 }
