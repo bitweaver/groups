@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/group_home.tpl,v 1.11 2009/02/06 17:00:32 tekimaki_admin Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/group_home.tpl,v 1.12 2009/05/15 20:55:52 tekimaki_admin Exp $ *}
 {strip}
 <div class="display group">
 	<div class="header">
@@ -8,7 +8,7 @@
 	<div class="body">
 		<div class="content">
 			{if !$gBitUser->isRegistered()}
-				<h2>Create a Group in Three East Steps</h2>
+				<h2>Create a Group in Three Easy Steps</h2>
 				<div>
 					<ul>
 						<li>1 Register</li>
