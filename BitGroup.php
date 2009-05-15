@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.154 2009/05/12 17:13:40 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.155 2009/05/15 19:43:01 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1277,61 +1277,74 @@ function group_module_display(&$pParamHash){
 function group_content_list_sql( &$pObject, &$pParamHash=NULL ) {
 	global $gBitSystem;
 	$ret = array();
-	$ret['where_sql'] = "";
+	$ret['where_sql'] = $ret['select_sql'] = $ret['join_sql'] = "";
 
-	// if search also populate connect value
-	if( !empty( $pParamHash['search_group_content_id'] ) ){
-		$pParamHash['connect_group_content_id'] = $pParamHash['search_group_content_id'];
-	}
-
-	// sql required to list content associated with a group
-	if ( ( $gBitSystem->isPackageActive( 'group' ) || !empty( $pParamHash['search_group_content_id'] ) ) && !empty($pParamHash['connect_group_content_id']) && $pObject->verifyId( $pParamHash['connect_group_content_id'] ) ){
-
-		// Comments add considerable expense. Don't do it unless we have to
-		// sometimes content_type_guid is a string and sometimes its an array - deal with it.
-		$content_types = array();
-		if ( !empty( $pParamHash['content_type_guid'] ) ){
-			$content_types = is_array( $pParamHash['content_type_guid'] )?$pParamHash['content_type_guid']:array( $pParamHash['content_type_guid'] );
-		}
-		if ( !empty( $pParamHash['search_group_content_id'] ) ) {
-			$ret['join_sql'] = 
-					" LEFT OUTER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( lc.`content_id` = gccm.`to_content_id` )".
-					" LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_comments` gclcomm ON ( lc.`content_id` = gclcomm.`content_id`)".
-					" LEFT OUTER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm2 ON ( gclcomm.`root_id` = gccm2.`to_content_id` )";
-			// join on the connection map
-			$ret['where_sql'] .= " AND ( gccm.`group_content_id` = ? OR gccm2.`group_content_id` = ? ) ";
-			$ret['bind_vars'][] = (int)$pParamHash['connect_group_content_id'];
-			$ret['bind_vars'][] = (int)$pParamHash['connect_group_content_id'];
-		}else{
-			$ret['join_sql'] = " INNER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( lc.`content_id` = gccm.`to_content_id` )";
-			// join on the connection map
-			$ret['where_sql'] .= " AND gccm.`group_content_id` = ? ";
-			$ret['bind_vars'][] = (int)$pParamHash['connect_group_content_id'];
-		}	
-
-		// if its a list of boards join in the board_id to make things convenient
-		if ( isset($pParamHash['content_type_guid']) && $pParamHash['content_type_guid'] == "bitboard" ){
-			$ret['select_sql'] = " , brd.`board_id`";
-			$ret['join_sql'] .= " INNER JOIN `".BIT_DB_PREFIX."boards` brd ON (lc.`content_id` = brd.`content_id`)";
+	if( $gBitSystem->isPackageActive( 'group' ) ){
+		// -------------------- Search and List Limiting -------------------- //
+		// if search also populate connect value
+		if( !empty( $pParamHash['search_group_content_id'] ) ){
+			$pParamHash['connect_group_content_id'] = $pParamHash['search_group_content_id'];
 		}
 
-	}
+		// sql required to list content associated with a group
+		if ( !empty($pParamHash['connect_group_content_id']) && $pObject->verifyId( $pParamHash['connect_group_content_id'] ) ){
 
-	// if searching for content associated with a group we may want to know at least the group's name
-	if( !empty( $pParamHash['search_group_content_id'] ) ){
-		global $gBitSmarty;
-		$groupSearchTitle = @BitGroup::getTitle( NULL, $pParamHash['search_group_content_id'] ); 
-		// make it available to smarty for the search_inc.tpl
-		$gBitSmarty->assign( 'groupSearchTitle', $groupSearchTitle );
+			// Comments add considerable expense. Don't do it unless we have to
+			// sometimes content_type_guid is a string and sometimes its an array - deal with it.
+			$content_types = array();
+			if ( !empty( $pParamHash['content_type_guid'] ) ){
+				$content_types = is_array( $pParamHash['content_type_guid'] )?$pParamHash['content_type_guid']:array( $pParamHash['content_type_guid'] );
+			}
+			if ( !empty( $pParamHash['search_group_content_id'] ) ) {
+				$ret['join_sql'] = 
+						" LEFT OUTER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( lc.`content_id` = gccm.`to_content_id` )".
+						" LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_comments` gclcomm ON ( lc.`content_id` = gclcomm.`content_id`)".
+						" LEFT OUTER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm2 ON ( gclcomm.`root_id` = gccm2.`to_content_id` )";
+				// join on the connection map
+				$ret['where_sql'] .= " AND ( gccm.`group_content_id` = ? OR gccm2.`group_content_id` = ? ) ";
+				$ret['bind_vars'][] = (int)$pParamHash['connect_group_content_id'];
+				$ret['bind_vars'][] = (int)$pParamHash['connect_group_content_id'];
+			}else{
+				$ret['join_sql'] = " INNER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( lc.`content_id` = gccm.`to_content_id` )";
+				// join on the connection map
+				$ret['where_sql'] .= " AND gccm.`group_content_id` = ? ";
+				$ret['bind_vars'][] = (int)$pParamHash['connect_group_content_id'];
+			}	
 
-		// return the values sent for pagination / url purposes
-		$pParamHash['listInfo']['search_group_content_id'] = $pParamHash['search_group_content_id'];
-		$pParamHash['listInfo']['ihash']['search_group_content_id'] = $pParamHash['search_group_content_id'];
+			// if its a list of boards join in the board_id to make things convenient
+			if ( isset($pParamHash['content_type_guid']) && $pParamHash['content_type_guid'] == "bitboard" ){
+				$ret['select_sql'] = " , brd.`board_id`";
+				$ret['join_sql'] .= " INNER JOIN `".BIT_DB_PREFIX."boards` brd ON (lc.`content_id` = brd.`content_id`)";
+			}
 
-		// @TODO move this to a liberty list_sql service
-		if( !empty( $pParamHash['include_comments'] ) ){
-			$pParamHash['listInfo']['include_comments'] = $pParamHash['include_comments'];
-			$pParamHash['listInfo']['ihash']['include_comments'] = $pParamHash['include_comments'];
+		}
+
+		// if searching for content associated with a group we may want to know at least the group's name
+		if( !empty( $pParamHash['search_group_content_id'] ) ){
+			global $gBitSmarty;
+			$groupSearchTitle = @BitGroup::getTitle( NULL, $pParamHash['search_group_content_id'] ); 
+			// make it available to smarty for the search_inc.tpl
+			$gBitSmarty->assign( 'groupSearchTitle', $groupSearchTitle );
+
+			// return the values sent for pagination / url purposes
+			$pParamHash['listInfo']['search_group_content_id'] = $pParamHash['search_group_content_id'];
+			$pParamHash['listInfo']['ihash']['search_group_content_id'] = $pParamHash['search_group_content_id'];
+
+			// @TODO move this to a liberty list_sql service
+			if( !empty( $pParamHash['include_comments'] ) ){
+				$pParamHash['listInfo']['include_comments'] = $pParamHash['include_comments'];
+				$pParamHash['listInfo']['ihash']['include_comments'] = $pParamHash['include_comments'];
+			}
+		}
+		// -------------------- End Search and List Limiting -------------------- //
+		
+		// -------------------- Generic Listing --------------------- //
+		// if were getting a general list and content has a one to one relation with groups,  we may want to know the name of the group the object is mapped to
+		$excludeContent = array( BITCOMMENT_CONTENT_TYPE_GUID, BITUSER_CONTENT_TYPE_GUID, BITGROUP_CONTENT_TYPE_GUID );
+		if( $gBitSystem->isFeatureActive( 'group_admin_content' ) && !in_array( $pObject->getContentType(), $excludeContent ) ){
+			$ret['select_sql'] .= ", lcg.`title` AS group_title, lcg.`content_id` AS group_content_id";
+			$ret['join_sql'] .= "LEFT OUTER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm3 ON lc.`content_id` = gccm3.`to_content_id`
+						 		LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content` lcg ON gccm3.`group_content_id` = lcg.`content_id`";
 		}
 	}
 
