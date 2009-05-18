@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.155 2009/05/15 19:43:01 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.156 2009/05/18 19:53:16 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -484,8 +484,8 @@ class BitGroup extends LibertyMime {
 		}
 
 		if( isset( $pParamHash['mapped_content_id'] )){
-			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON (g.`content_id` = gccm.`group_content_id`)";
-			$whereSql .= " AND gccm.`to_content_id` = ?";
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm1 ON (g.`content_id` = gccm1.`group_content_id`)";
+			$whereSql .= " AND gccm1.`to_content_id` = ?";
 			$bindVars[] = $pParamHash['mapped_content_id'];
 		}
 
@@ -515,7 +515,8 @@ class BitGroup extends LibertyMime {
 			uuc.`login` AS `creator_user`,
 			uuc.`real_name` AS `creator_real_name`,
 			uuc.`user_id` AS `creator_user_id`,
-			ug.* 
+			ug.*, 
+			brd.`board_id`
 			$selectSql
 			FROM `".BIT_DB_PREFIX."groups` g 
 			INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = g.`content_id` ) 
@@ -526,6 +527,8 @@ class BitGroup extends LibertyMime {
 			LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_data` lcds ON (lc.`content_id` = lcds.`content_id` AND lcds.`data_type`='summary')
 			LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON( la.`content_id` = lc.`content_id` AND la.`is_primary` = 'y' ) 
 			LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_files` lfp ON( lfp.`file_id` = la.`foreign_id` )
+			LEFT OUTER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm ON ( lc.`content_id` = gccm.`group_content_id` )
+			INNER JOIN `".BIT_DB_PREFIX."boards` brd ON (gccm.`to_content_id` = brd.`content_id`)
 			$joinSql
 			WHERE lc.`content_type_guid` = ? $whereSql
 			ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
@@ -541,6 +544,7 @@ class BitGroup extends LibertyMime {
 			$res['display_url'] = $this->getDisplayUrl( NULL, $res );
 			$res['num_members'] = $this->getMembersCount( $res['group_id'] );
 			$res['thumbnail_url'] = liberty_fetch_thumbnails( array( "storage_path" => $res['image_attachment_path'] ) );
+			$res['display_urls'] = $this->getDisplayUrls( $res );
 			$ret[] = $res;
 		}
 		$pParamHash["cant"] = $this->mDb->getOne( $query_cant, $bindVars );
@@ -611,6 +615,7 @@ class BitGroup extends LibertyMime {
 			$ret['settings'] = GROUP_PKG_URL.$prettyGroupName."/settings";
 			$ret['tasks'] = GROUP_PKG_URL.$prettyGroupName."/tasks";
 			$ret['theme'] = GROUP_PKG_URL.$prettyGroupName."/theme";
+			$ret['join'] = GROUP_PKG_URL.$prettyGroupName."/join";
 		}elseif( !empty( $groupId ) ){
 			$ret['summary'] = GROUP_PKG_URL."index.php?group_id=".$groupId;
 			$ret['about'] = GROUP_PKG_URL."about.php?group_id=".$groupId;
@@ -620,6 +625,7 @@ class BitGroup extends LibertyMime {
 			$ret['settings'] = GROUP_PKG_URL."edit.php?group_id=".$groupId;
 			$ret['tasks'] = GROUP_PKG_URL."tasks.php?group_id=".$groupId;
 			$ret['theme'] = GROUP_PKG_URL."theme.php?group_id=".$groupId;
+			$ret['join'] = GROUP_PKG_URL."join.php?group_id=".$groupId;
 		}
 		return $ret;
 	}
@@ -1341,7 +1347,7 @@ function group_content_list_sql( &$pObject, &$pParamHash=NULL ) {
 		// -------------------- Generic Listing --------------------- //
 		// if were getting a general list and content has a one to one relation with groups,  we may want to know the name of the group the object is mapped to
 		$excludeContent = array( BITCOMMENT_CONTENT_TYPE_GUID, BITUSER_CONTENT_TYPE_GUID, BITGROUP_CONTENT_TYPE_GUID );
-		if( $gBitSystem->isFeatureActive( 'group_admin_content' ) && !in_array( $pObject->getContentType(), $excludeContent ) ){
+		if( $gBitSystem->isFeatureActive( 'group_admin_content' ) && ( !$pObject->isValid() || !in_array( $pObject->getContentType(), $excludeContent )) ){
 			$ret['select_sql'] .= ", lcg.`title` AS group_title, lcg.`content_id` AS group_content_id";
 			$ret['join_sql'] .= "LEFT OUTER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm3 ON lc.`content_id` = gccm3.`to_content_id`
 						 		LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content` lcg ON gccm3.`group_content_id` = lcg.`content_id`";
