@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.156 2009/05/18 19:53:16 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.157 2009/05/20 14:37:42 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1347,7 +1347,7 @@ function group_content_list_sql( &$pObject, &$pParamHash=NULL ) {
 		// -------------------- Generic Listing --------------------- //
 		// if were getting a general list and content has a one to one relation with groups,  we may want to know the name of the group the object is mapped to
 		$excludeContent = array( BITCOMMENT_CONTENT_TYPE_GUID, BITUSER_CONTENT_TYPE_GUID, BITGROUP_CONTENT_TYPE_GUID );
-		if( $gBitSystem->isFeatureActive( 'group_admin_content' ) && ( !$pObject->isValid() || !in_array( $pObject->getContentType(), $excludeContent )) ){
+		if( $gBitSystem->isFeatureActive( 'group_admin_content' ) && ( !method_exists( $pObject, 'isValid' ) || ( !$pObject->isValid() || !in_array( $pObject->getContentType(), $excludeContent ) ) ) ){
 			$ret['select_sql'] .= ", lcg.`title` AS group_title, lcg.`content_id` AS group_content_id";
 			$ret['join_sql'] .= "LEFT OUTER JOIN `".BIT_DB_PREFIX."groups_content_cnxn_map` gccm3 ON lc.`content_id` = gccm3.`to_content_id`
 						 		LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content` lcg ON gccm3.`group_content_id` = lcg.`content_id`";
