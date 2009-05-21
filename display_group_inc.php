@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.7 2008/12/06 21:17:06 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.8 2009/05/21 14:46:26 tekimaki_admin Exp $
  * @package groups
  * @subpackage functions
  */
@@ -30,6 +30,10 @@ $contentListHash = array(
 	);
 // if a content_type has been requested the user just wants a list of that
 if ( isset( $_REQUEST['content_type_guid'] ) ){
+	if( is_array( $_REQUEST['content_type_guid'] ) ){
+		// if pagination sets it as an array get the first one, we dont deal with multi content types
+		$_REQUEST['content_type_guid'] = $_REQUEST['content_type_guid'][0];
+	}
 	$contentListHash['content_type_guid'] =  $_REQUEST['content_type_guid'];
 	if ( isset( $allowedContentTypes[$_REQUEST['content_type_guid']] ) ){
 		$gBitSmarty->assign( "reqContentType", $allowedContentTypes[$_REQUEST['content_type_guid']] );
