@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.157 2009/05/20 14:37:42 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.158 2009/05/21 19:45:13 tekimaki_admin Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -1341,6 +1341,12 @@ function group_content_list_sql( &$pObject, &$pParamHash=NULL ) {
 				$pParamHash['listInfo']['include_comments'] = $pParamHash['include_comments'];
 				$pParamHash['listInfo']['ihash']['include_comments'] = $pParamHash['include_comments'];
 			}
+		}
+
+		// if getting a list of a group's connected content the group_id is needed to make pagination work out nice
+		if( !empty( $pParamHash['content_type_guid'] ) && !empty( $pParamHash['group_id'] ) ){
+			$pParamHash['listInfo']['group_id'] = $pParamHash['group_id'];
+			$pParamHash['listInfo']['ihash']['group_id'] = $pParamHash['group_id'];
 		}
 		// -------------------- End Search and List Limiting -------------------- //
 		
