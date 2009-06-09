@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/remove_group.php,v 1.8 2009/02/20 16:18:15 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/remove_group.php,v 1.9 2009/06/09 16:17:26 wjames5 Exp $
  *
  * Copyright (c) 2004 bitweaver.org
  * Copyright (c) 2003 tikwiki.org
@@ -8,7 +8,7 @@
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
  *
- * $Id: remove_group.php,v 1.8 2009/02/20 16:18:15 tekimaki_admin Exp $
+ * $Id: remove_group.php,v 1.9 2009/06/09 16:17:26 wjames5 Exp $
  * @package groups
  * @subpackage functions
  */
@@ -39,7 +39,7 @@ if( isset( $_REQUEST["confirm"] ) ) {
 
 $gBitSystem->setBrowserTitle( tra( 'Confirm delete of: ' ).$gContent->getTitle() );
 $formHash['remove'] = TRUE;
-$formHash['group_id'] = $_REQUEST['group_id'];
+$formHash['group_id'] = $gContent->mGroupId;
 
 // See BitGroup::expunge for explanation of why this is
 if( $gBitSystem->isFeatureActive( 'group_admin_content' ) || $gBitSystem->isFeatureActive('group_map_required') ){
