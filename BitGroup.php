@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.158 2009/05/21 19:45:13 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.159 2009/06/12 13:05:45 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
@@ -75,7 +75,6 @@ class BitGroup extends LibertyMime {
 
 	/**
 	* Load the data from the database
-	* @param pParamHash be sure to pass by reference in case we need to make modifcations to the hash
 	**/
 	function load() {
 		if( $this->verifyId( $this->mGroupId ) || $this->verifyId( $this->mContentId ) ) {
@@ -490,7 +489,7 @@ class BitGroup extends LibertyMime {
 		}
 
 		if( is_array( $find ) ) {
-			// you can use an array of pages
+			// you can use an array of groups
 			$whereSql .= " AND lc.`title` IN( ".implode( ',',array_fill( 0,count( $find ),'?' ) )." )";
 			$bindVars = array_merge ( $bindVars, $find );
 		} elseif( is_string( $find ) ) {
