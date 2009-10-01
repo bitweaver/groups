@@ -1,8 +1,8 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/members.php,v 1.11 2009/10/01 13:45:40 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/members.php,v 1.12 2009/10/01 14:17:00 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
- * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * All Rights Reserved. See below for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
  * 
  * @package groups

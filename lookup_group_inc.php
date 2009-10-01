@@ -2,7 +2,7 @@
 /**
  * @version $Header:
  * Copyright (c) 2008 bitweaver Group
- * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * All Rights Reserved. See below for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
  * 
  * @package groups
