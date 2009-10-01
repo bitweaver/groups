@@ -1,9 +1,9 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/expunge_group_inc.php,v 1.1 2009/01/26 16:50:08 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/expunge_group_inc.php,v 1.2 2009/10/01 13:45:40 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
  * @author Will James, Tekimaki LCC <will@tekimaki.com>
  * 
  * @package groups
