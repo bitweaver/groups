@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/search_groups.tpl,v 1.4 2009/02/06 17:00:33 tekimaki_admin Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_groups/templates/search_groups.tpl,v 1.5 2010/02/09 17:21:21 wjames5 Exp $ *}
 {strip}
 <div class="listing group">
 	<div class="header">
@@ -76,7 +76,7 @@
 				<div style="text-align:right;">
 					<script type="text/javascript">/* <![CDATA[ check / uncheck all */
 						document.write("<label for=\"switcher\">{tr}Select All{/tr}</label> ");
-						document.write("<input name=\"switcher\" id=\"switcher\" type=\"checkbox\" onclick=\"switchCheckboxes(this.form.id,'checked[]','switcher')\" /><br />");
+						document.write("<input name=\"switcher\" id=\"switcher\" type=\"checkbox\" onclick=\"BitBase.switchCheckboxes(this.form.id,'checked[]','switcher')\" /><br />");
 					/* ]]> */</script>
 
 					<select name="submit_mult" onchange="this.form.submit();">
