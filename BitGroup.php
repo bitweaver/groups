@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.162 2010/02/25 19:05:25 dansut Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.163 2010/02/25 20:10:56 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See below for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
@@ -15,7 +15,6 @@
 /**
  * Initialize
  */
-require_once( LIBERTY_PKG_PATH.'LibertyComment.php' );
 
 /**
 * This is used to uniquely identify the object
