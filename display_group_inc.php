@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.8 2009/05/21 14:46:26 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.9 2010/04/17 15:36:07 wjames5 Exp $
  * @package groups
  * @subpackage functions
  */
@@ -83,7 +83,7 @@ if ( isset ( $_REQUEST['content_type_guid'] ) && isset( $gLibertySystem->mConten
 	$class =  $contentTypeHash['handler_class'];
 	$classFile =  $contentTypeHash['handler_file'];
 	$package = $contentTypeHash['handler_package'];
-	$contentDesc = $contentTypeHash['content_description'];
+	$contentDesc = $gLibertySystem->getContentTypeName( $contentTypeHash['content_type_guid'] );
 	$gBitSmarty->assign( 'contentTypeDesc', $contentDesc );
 
 	$pathVar = strtoupper($package).'_PKG_PATH'; 

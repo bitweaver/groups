@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.50 2010/02/08 21:27:23 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/edit.php,v 1.51 2010/04/17 15:36:07 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See below for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
  * 
- * $Id: edit.php,v 1.50 2010/02/08 21:27:23 wjames5 Exp $
+ * $Id: edit.php,v 1.51 2010/04/17 15:36:07 wjames5 Exp $
  * @package groups
  * @subpackage functions
  */
@@ -44,7 +44,7 @@ $exclude = array( 'bitboard', 'bitgroup', 'bitcomment' );
 $formGroupContent = array();
 foreach( $gLibertySystem->mContentTypes as $cType ) {
     if( !in_array( $cType['content_type_guid'], $exclude ) && $gBitSystem->getConfig( 'group_content_'.$cType['content_type_guid'] ) ) {
-		$formGroupContent['guids'][$cType['content_type_guid']]  = $cType['content_description'];
+		$formGroupContent['guids'][$cType['content_type_guid']]  = $gLibertySystem->getContentTypeName( $cType['content_type_guid'] );
     }
 }
 

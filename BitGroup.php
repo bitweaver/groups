@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.163 2010/02/25 20:10:56 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.164 2010/04/17 15:36:07 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See below for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
@@ -1094,7 +1094,7 @@ class BitGroup extends LibertyMime {
 				$contentTypes = $this->getContentTypePrefs();
 				foreach( $gLibertySystem->mContentTypes as $cType ) {
 					if( in_array( $cType['content_type_guid'], $contentTypes ) ) {
-						$contentTypeData[$cType['content_type_guid']]  = $cType['content_description'];
+						$contentTypeData[$cType['content_type_guid']]  = $gLibertySystem->getContentTypeName( $cType['content_type_guid'] );
 					}
 				}
 			}
