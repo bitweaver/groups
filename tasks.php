@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/tasks.php,v 1.11 2010/02/08 21:27:23 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/tasks.php,v 1.12 2010/04/17 22:46:08 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See below for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
@@ -42,7 +42,7 @@ if (isset($_REQUEST['moderation_id'])) {
 												NULL : $_REQUEST['reply']) );
 
 		if ( $moderation['type'] == "add_content" ){
-			$msg = $moderation['data']['content_description']." ".$moderation['data']['title']." ".$_REQUEST['transition'];
+			$msg = $moderation['data']['content_name']." ".$moderation['data']['title']." ".$_REQUEST['transition'];
 		}
 		$gBitSmarty->assign_by_ref( 'successModMsg', $msg );
 	}else{

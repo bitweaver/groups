@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.164 2010/04/17 15:36:07 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/BitGroup.php,v 1.165 2010/04/17 22:46:08 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See below for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
@@ -56,7 +56,7 @@ class BitGroup extends LibertyMime {
 		$this->mContentTypeGuid = BITGROUP_CONTENT_TYPE_GUID;
 		$this->registerContentType( BITGROUP_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => BITGROUP_CONTENT_TYPE_GUID,
-			'content_description' => 'Group',
+			'content_name' => 'Group',
 			'handler_class' => 'BitGroup',
 			'handler_package' => 'group',
 			'handler_file' => 'BitGroup.php',
@@ -503,7 +503,8 @@ class BitGroup extends LibertyMime {
 			lc.`data`, 
 			lcds.`data` AS `summary`, 
 			lc.`content_type_guid`, 
-			lct.`content_description`, 
+			lct.`content_name`, 
+			lct.`content_name_plural`, 
 			lc.`last_modified`, 
 			lc.`created`,
 			lfp.storage_path AS `image_attachment_path`, 

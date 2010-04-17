@@ -85,7 +85,7 @@
 					{foreach item=item from=$contentList}
 						<tr class="{cycle values="even,odd"}" >
 							<td style="text-align:left;">
-								{$item.content_description}
+								{$item.content_name}
 							</td>
 							<td style="text-align:left;">
 								<a href="{$item.display_url}">{$item.title}</a>

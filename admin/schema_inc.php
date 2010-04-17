@@ -141,7 +141,7 @@ $gBitInstaller->registerPreferences( GROUP_PKG_NAME, array(
 
 // Package Requirements
 $gBitInstaller->registerRequirements( GROUP_PKG_NAME, array(
-	'liberty'       => array( 'min' => '2.1.0' ),
+	'liberty'       => array( 'min' => '2.1.4' ),
 	'boards'        => array( 'min' => '0.0.0' ),
 	'moderation'    => array( 'min' => '0.0.0' ),
 	'modcomments'   => array( 'min' => '0.0.0' ),

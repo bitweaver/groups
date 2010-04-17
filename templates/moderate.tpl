@@ -3,7 +3,7 @@
 	<div class="row">
 		{if !empty($moderation.request)}
 			{if $moderation.type=='add_content' && $moderation.data.map_content_id}
-				<strong>{tr}Request{/tr}:</strong> {$moderation.data.content_description} <a href="{$smarty.const.BIT_ROOT_URL}index.php?content_id={$moderation.data.map_content_id}">{$moderation.data.title}</a> {tr}submitted to group{/tr}.<br />
+				<strong>{tr}Request{/tr}:</strong> {$moderation.data.content_name} <a href="{$smarty.const.BIT_ROOT_URL}index.php?content_id={$moderation.data.map_content_id}">{$moderation.data.title}</a> {tr}submitted to group{/tr}.<br />
 			{else}
 				<strong>{tr}Request{/tr}:</strong> {$moderation.request|escape:html}<br/>
 			{/if}

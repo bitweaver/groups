@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/add_to_group.php,v 1.15 2010/04/17 15:36:07 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_groups/add_to_group.php,v 1.16 2010/04/17 22:46:08 wjames5 Exp $
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See below for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
  * 
- * $Id: add_to_group.php,v 1.15 2010/04/17 15:36:07 wjames5 Exp $
+ * $Id: add_to_group.php,v 1.16 2010/04/17 22:46:08 wjames5 Exp $
  * @package groups
  * @subpackage functions
  */
@@ -117,7 +117,7 @@ if( !$gContent->isValid() ) {
 		// @TODO add a check here to see if the request has been made before to prevent duplicate requests
 		$dataHash = array( 'map_content_id'=>$linkContent->mContentId,
 	   					   'content_type_guid'=>$linkContent->mType['content_type_guid'],
-	   					   'content_description'=>$linkContent->getContentTypeName(),
+	   					   'content_name'=>$linkContent->getContentTypeName(),
 				   		   'title'=>$linkContent->getTitle() );
 		$requestText = "The user has submitted a ".$linkContent->getContentTypeName()." to the group ".$gContent->getTitle();
 		$modID = $gModerationSystem->requestModeration('group', 'add_content', NULL, $gContent->mGroupId, NULL, $gContent->mContentId, $requestText, MODERATION_PENDING, $dataHash );
