@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/display_group_inc.php,v 1.10 2010/04/17 18:49:37 wjames5 Exp $
+ * @version $Header$
  * @package groups
  * @subpackage functions
  */

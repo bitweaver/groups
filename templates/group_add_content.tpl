@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/group_add_content.tpl,v 1.3 2008/04/02 14:46:28 wjames5 Exp $ *}
+{* $Header$ *}
 {strip}
 <div class="display group">
 	<div class="header">

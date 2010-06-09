@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/expunge_group_inc.php,v 1.3 2009/10/01 14:17:00 wjames5 Exp $
+ * @version $Header$
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See below for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.

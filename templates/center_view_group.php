@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/templates/center_view_group.php,v 1.2 2008/07/29 18:08:35 lsces Exp $
+ * @version $Header$
  * @package bitweaver
  */
 global $gBitSmarty, $gBitSystem, $gQueryUserId, $moduleParams, $gBitUser, $gContent;

@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/add_to_group.php,v 1.16 2010/04/17 22:46:08 wjames5 Exp $
+ * @version $Header$
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See below for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
  * 
- * $Id: add_to_group.php,v 1.16 2010/04/17 22:46:08 wjames5 Exp $
+ * $Id$
  * @package groups
  * @subpackage functions
  */

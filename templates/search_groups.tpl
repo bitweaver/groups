@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_groups/templates/search_groups.tpl,v 1.5 2010/02/09 17:21:21 wjames5 Exp $ *}
+{* $Header$ *}
 {strip}
 <div class="listing group">
 	<div class="header">

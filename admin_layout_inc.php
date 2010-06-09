@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_groups/admin_layout_inc.php,v 1.9 2010/02/08 21:27:23 wjames5 Exp $
+ * @version $Header$
  * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See below for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
  * 
- * $Id: admin_layout_inc.php,v 1.9 2010/02/08 21:27:23 wjames5 Exp $
+ * $Id$
  * @package groups
  * @subpackage functions
  */
