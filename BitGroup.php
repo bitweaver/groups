@@ -540,7 +540,7 @@ class BitGroup extends LibertyMime {
 		$result = $this->mDb->query( $query, $bindVars, $max_records, $offset );
 		$ret = array();
 		while( $res = $result->fetchRow() ) {
-			$res['display_url'] = $this->getDisplayUrl( NULL, $res );
+			$res['display_url'] = $this->getDisplayUrl( $res );
 			$res['num_members'] = $this->getMembersCount( $res['group_id'] );
 			$res['thumbnail_url'] = liberty_fetch_thumbnails( array( "storage_path" => $res['image_attachment_path'] ) );
 			$res['display_urls'] = $this->getDisplayUrls( $res );
@@ -557,17 +557,17 @@ class BitGroup extends LibertyMime {
 	* Generates the URL to the group page
 	* @return the link to display the page.
 	*/
-	function getDisplayUrl( $pContentId = NULL, $pParamHash = NULL ) {
+	function getDisplayUrlFromHash( $pParamHash = NULL ) {
 		global $gBitSystem;
 
 		$ret = NULL;
 
-		if( !empty( $pParamHash['title'] ) || !empty( $this->mInfo['title'] ) ){
-			$groupName = !empty( $pParamHash['title'] )?$pParamHash['title']:$this->mInfo['title'];
+		if( !empty( $pParamHash['title'] ) ){
+			$groupName = $pParamHash['title'];
 		}
 		// @TODO even better would be to pass a name param in url instead of group_id
 		if( !empty( $pParamHash['group_id'] ) || !empty( $this->mGroupId ) ){
-			$groupId = !empty( $pParamHash['group_id'] )?$pParamHash['group_id']:$this->mGroupId;
+			$groupId = $pParamHash['group_id'];
 		}
 
 		if( !empty( $groupName ) && $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
@@ -581,7 +581,7 @@ class BitGroup extends LibertyMime {
 		// if all else fails try to get a value from a content id
 		if( empty( $ret ) ){
 			$contentId = !empty( $pContentId )?$pContentId:( !empty( $this->mContentId )?$this->mContentId:NULL );
-			$ret = @LibertyContent::getDisplayUrl( $contentId, $pParamHash );
+			$ret = LibertyContent::getDisplayUrlFromHash( $pParamHash );
 		}
 		return $ret;
 	}
@@ -1505,7 +1505,7 @@ function group_comment_store( &$pObject, &$pParamHash ) {
 				$link = BIT_BASE_URI.$post->getDisplayUrl();
 
 				// some text we need
-				$permaLink = BIT_BASE_URI.$pObject->getDisplayUrl( NULL, array('parent_id' => $pParamHash['root_id'], 'content_id'=>$pParamHash['content_id']) );
+				$permaLink = BIT_BASE_URI.$pObject->getDisplayUrlFromHash( array('parent_id' => $pParamHash['root_id'], 'content_id'=>$pParamHash['content_id']) );
 				$parseHash = $pParamHash['content_store'];
 				$parseHash['uri_mode'] = TRUE;
 				$parsedData = $pObject->parseData($parseHash);
