@@ -86,7 +86,7 @@ class BitGroup extends LibertyMime {
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
 			$query = "SELECT s.*, lc.*, lcds.`data` AS `summary`, lcda.`data` AS `after_registration`, ug.*, " .
-			"lfp.storage_path AS `image_attachment_path`, " .
+			"lfp.file_name AS `image_attachment_path`, " .
 			"uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name, " .
 			"uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name, " .
 			"brd.`board_id`" .
@@ -507,7 +507,7 @@ class BitGroup extends LibertyMime {
 			lct.`content_name_plural`, 
 			lc.`last_modified`, 
 			lc.`created`,
-			lfp.storage_path AS `image_attachment_path`, 
+			lfp.file_name AS `image_attachment_path`, 
 			uue.`login` AS `modifier_user`,
 			uue.`real_name` AS `modifier_real_name`,
 			uue.`user_id` AS `modifier_user_id`,
@@ -557,7 +557,7 @@ class BitGroup extends LibertyMime {
 	* Generates the URL to the group page
 	* @return the link to display the page.
 	*/
-	function getDisplayUrlFromHash( $pParamHash = NULL ) {
+	public static function getDisplayUrlFromHash( $pParamHash = NULL ) {
 		global $gBitSystem;
 
 		$ret = NULL;
