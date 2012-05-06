@@ -50,7 +50,7 @@ class BitGroup extends LibertyMime {
 	* During initialisation, be sure to call our base constructors
 	**/
 	function BitGroup( $pGroupId=NULL, $pContentId=NULL ) {
-		LibertyMime::LibertyMime();
+		parent::__construct();
 		$this->mGroupId = (int)$pGroupId;
 		$this->mContentId = (int)$pContentId;
 		$this->mContentTypeGuid = BITGROUP_CONTENT_TYPE_GUID;
