@@ -73,7 +73,7 @@ if( !empty( $_REQUEST["save_roles"] ) ) {
 	$gContent->deleteUserEmailPref( $assignUser ); 
 	// remove the user from the group
 	$gBitUser->removeUserFromGroup($_REQUEST["assign_user"], $_REQUEST["group_id"]);
-	header( 'Location: '.$_SERVER['PHP_SELF'].'?group_id='.$gContent->mGroupId );
+	header( 'Location: '.$_SERVER['SCRIPT_NAME'].'?group_id='.$gContent->mGroupId );
 	die;
 }
 

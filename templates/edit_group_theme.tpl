@@ -29,7 +29,7 @@
 		{jstabs}
 			{if $gBitSystem->isFeatureActive( 'group_layouts' )}
 				{jstab title="Layout Options"}
-					{form action=$smarty.server.PHP_SELF legend="Assign column modules"}
+					{form action=$smarty.server.SCRIPT_NAME legend="Assign column modules"}
 
 						<input type="hidden" name="group_id" value="{$gContent->mGroupId}" />
 						<table class="data">
@@ -93,7 +93,7 @@
 					{/form}
 					{legend legend="Assign center modules"}
 					{if count($centerAssignedModules) > 0}
-						{form action=$smarty.server.PHP_SELF}
+						{form action=$smarty.server.SCRIPT_NAME}
 							<input type="hidden" name="group_id" value="{$gContent->mGroupId}" />
 							<table class="data">
 								<thead>
@@ -143,7 +143,7 @@
 					{else}
 						<div style="margin:0 0 20px 0; text-align:center;"><em>There are currently no custom assigned center modules. Defaults are used.</em></div>
 					{/if}
-					{form action=$smarty.server.PHP_SELF}
+					{form action=$smarty.server.SCRIPT_NAME}
 			<input type="hidden" name="group_id" value="{$gContent->mGroupId}" />
 			<input type="hidden" name="fAssign[layout_area]" value="c" />
 
