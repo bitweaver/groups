@@ -60,7 +60,7 @@
 
 						{if $gBitUser->hasPermission( 'p_group_remove' )}
 							<td class="actionicon">
-								{smartlink ititle="Edit" ifile="edit.php" ibiticon="icons/accessories-text-editor" group_id=$item.group_id}
+								{smartlink ititle="Edit" ifile="edit.php" booticon="icon-edit" group_id=$item.group_id}
 								<input type="checkbox" name="checked[]" title="{$item.title|escape}" value="{$item.group_id}" />
 							</td>
 						{/if}
