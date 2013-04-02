@@ -226,7 +226,7 @@
 							<li class="{cycle values='odd,even"} item">
 								<h2 {if $style eq $s.style}class="highlight"{/if}>
 									{if $style eq $s.style}
-										{biticon ipackage="icons" iname="dialog-ok" iexplain="Current Style"}&nbsp;
+										{booticon iname="icon-ok"  ipackage="icons"  iexplain="Current Style"}&nbsp;
 									{/if}
 									<a href="{$smarty.const.GROUP_PKG_URL}theme.php?group_id={$gContent->mGroupId}&amp;group_style={$s.style}">{$s.style|replace:"_":" "}</a>
 								</h2>
