@@ -11,24 +11,24 @@
 
 	<div class="body">
 		<div class="content">
-			<div class="row">
+			<div class="control-group">
 				{formlabel label="Members"}
 				<div class="forminput">{$gContent->mInfo.num_members}</div>
 			</div>
-			<div class="row">
+			<div class="control-group">
 				{formlabel label="Description"}
 				<div class="forminput">{$gContent->mInfo.parsed_data}</div>
 			</div>
-			<div class="row">
+			<div class="control-group">
 				{formlabel label="Created by"}
 				<div class="forminput">{displayname user=$gContent->mInfo.creator_user user_id=$gContent->mInfo.creator_user_id real_name=$gContent->mInfo.creator_real_name} on <strong>{$gContent->mInfo.created|bit_long_date}</strong></div>
 			</div>
-			<div class="row">
+			<div class="control-group">
 				{formlabel label="Homepage URL"}
 				<div class="forminput"><a href="{$smarty.const.BIT_BASE_URI}{$gContent->getDisplayUrl()}">{$smarty.const.BIT_BASE_URI}{$gContent->getDisplayUrl()}</a></div>
 			</div>
 			{if $gBitUser->isInGroup( $gContent->mGroupId ) && $boardsMailingList}
-			<div class="row">
+			<div class="control-group">
 				{formlabel label="Group Email Address"}
 				<div class="forminput">
 					{$boardsMailingList}
@@ -37,7 +37,7 @@
 			</div>
 			{/if}
 			<!-- @TODO 
-			<div class="row">
+			<div class="control-group">
 				{formlabel label="RSS Feed"}
 				<div class="forminput">@TODO link to board messages feed here</div>
 			</div>

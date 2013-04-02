@@ -53,7 +53,7 @@
 				{legend legend="Upload File"}
 					{include file="bitpackage:liberty/edit_storage.tpl" formid=$formid}
 				{/legend}
-				<div class="row submit">
+				<div class="control-group submit">
 					<input type="submit" name="save_group" value="{tr}Upload{/tr}" />
 				</div>
 			{/form}

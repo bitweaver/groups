@@ -12,7 +12,7 @@
 			{legend legend="Member Administration"}
 				<input type="hidden" name="group[group_id]" value="{$gContent->mInfo.group_id}" />
 				<p>{tr}You can give your group members different roles, and then assign different administrative permissions to those roles in your Group Settings{/tr}</p>
-				<div class="row">
+				<div class="control-group">
 					<table class="data">
 						{capture assign=th}
 							<tr>
@@ -43,7 +43,7 @@
 						{/foreach}
 					</table>
 				</div>
-				<div class="row submit">
+				<div class="control-group submit">
 					<input type="submit" name="save_roles" value="{tr}Save{/tr}" />
 				</div>
 			{/legend}

@@ -1,7 +1,7 @@
 {strip}
 {legend legend="Group Options"}
 	{foreach from=$formGroupOptions key=item item=output}
-		<div class="row">
+		<div class="control-group">
 			{formlabel label=`$output.label` for=$item}
 			{forminput}
 				<input type="checkbox" name="group[{$item}]" value="y" {if $gContent->mInfo.$item|default:$output.default == "y"}checked{/if} id="{$item}" />
@@ -15,7 +15,7 @@
 {/legend}
 {if $formGroupContent.guids}
 	{legend legend="Group Content"}
-		<div class="row">
+		<div class="control-group">
 			{formlabel label="Allowed Content Types"}
 			{forminput}
 				{html_checkboxes options=$formGroupContent.guids name=group_content separator="<br />" checked=$formGroupContent.checked}

@@ -34,14 +34,14 @@
 					{legend legend="Group Information"}
 						<input type="hidden" name="group[group_id]" value="{$gContent->mInfo.group_id}" />
 
-						<div class="row">
+						<div class="control-group">
 							{formlabel label="Title" for="title"}
 							{forminput}
 								<input type="text" size="60" maxlength="200" name="group[title]" id="title" value="{$gContent->mInfo.title|escape}" />
 							{/forminput}
 						</div>
 
-						<div class="row">
+						<div class="control-group">
 							{formlabel label="Short Description (Optional)" for="summary"}
 							{forminput}
 								<input size="60" type="text" name="group[summary]" id="summary" value="{$gContent->mInfo.summary|escape}" />
@@ -51,7 +51,7 @@
 
 						{textarea name="group[edit]" label="Long Description" help="The description of the group or other group message. By default this appears at the top of your group home page"}{$gContent->mInfo.data}{/textarea}
 						
-						<div class="row">
+						<div class="control-group">
 							{formlabel label="After Registration Message"}
 							{forminput}
 								<textarea cols="50" rows="10" name="group[after_registration]">{$gContent->mInfo.after_registration}</textarea>
@@ -62,7 +62,7 @@
 						{* any simple service edit options *}
 						{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl"}
 
-						<div class="row submit">
+						<div class="control-group submit">
 							<input type="submit" name="cancel" value="{tr}Cancel{/tr}" />&nbsp;
 							<input type="submit" name="preview" value="{tr}Preview{/tr}" />&nbsp; 
 							<input type="submit" name="save_group" value="{tr}Save{/tr}" />&nbsp;

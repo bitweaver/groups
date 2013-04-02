@@ -51,7 +51,7 @@
 						{/forminput}
 					{/legend}
 				{/if}
-				<div class="row submit">
+				<div class="control-group submit">
 					{if !$gBitUser->isInGroup( $gContent->mGroupId )}
 						<input type="submit" name="join_group" value="{tr}Join{/tr}" />
 					{else}

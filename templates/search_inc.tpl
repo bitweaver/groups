@@ -1,6 +1,6 @@
 {if $groupSearchTitle && $smarty.request.search_group_content_id && !($smarty.request.content_type_guid eq 'bitgroup')}
 	{if $smarty.const.ACTIVE_PACKAGE != 'group'}
-		<div class="row">
+		<div class="control-group">
 			{formlabel label="Group:" for="search_group_content_id"}
 			{forminput}
 				{$groupSearchTitle}
