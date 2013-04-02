@@ -128,7 +128,7 @@
 												<input type="text" size="15" name="fAssign[{$cmodule.module_id}][params]" id="params" value="{$cmodule.params|escape}" />
 											</td>
 											<td style="text-align:center;">
-												<a title="{tr}Unassign{/tr}" href="{$smarty.const.GROUP_PKG_URL}theme.php?group_id={$gContent->mGroupId}&amp;unassigncenter=1&amp;module_id={$cmodule.module_id}">{biticon ipackage="icons" iname="edit-delete" iexplain="Unassign Module"}</a>
+												<a title="{tr}Unassign{/tr}" href="{$smarty.const.GROUP_PKG_URL}theme.php?group_id={$gContent->mGroupId}&amp;unassigncenter=1&amp;module_id={$cmodule.module_id}">{booticon iname="icon-trash" ipackage="icons" iexplain="Unassign Module"}</a>
 											</td>
 										</tr>
 									{/if}

@@ -36,7 +36,7 @@
 								{/foreach}
 									<td style="text-align:center;">
 										{if $role.role_id eq 3 &&  $user.user_id != $gContent->mInfo.user_id }
-										<a href="{$smarty.const.GROUP_PKG_URL}manage.php?action=removeuser&amp;group_id={$gContent->mGroupId}&amp;assign_user={$user.user_id}">{biticon ipackage="icons" iname="edit-delete" iexplain="remove from group"}</a>
+										<a href="{$smarty.const.GROUP_PKG_URL}manage.php?action=removeuser&amp;group_id={$gContent->mGroupId}&amp;assign_user={$user.user_id}">{booticon iname="icon-trash" ipackage="icons" iexplain="remove from group"}</a>
 										{/if}
 									</td>
 							</tr>
