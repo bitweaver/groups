@@ -53,10 +53,10 @@
 				{/if}
 				<div class="control-group submit">
 					{if !$gBitUser->isInGroup( $gContent->mGroupId )}
-						<input type="submit" name="join_group" value="{tr}Join{/tr}" />
+						<input type="submit" class="btn" name="join_group" value="{tr}Join{/tr}" />
 					{else}
-						<input type="submit" name="save_prefs" value="{tr}Update{/tr}" />&nbsp;
-						<input type="submit" name="leave_group" value="{tr}Unsubscribe{/tr}" />
+						<input type="submit" class="btn" name="save_prefs" value="{tr}Update{/tr}" />&nbsp;
+						<input type="submit" class="btn" name="leave_group" value="{tr}Unsubscribe{/tr}" />
 					{/if}
 				</div>
 			{/form}

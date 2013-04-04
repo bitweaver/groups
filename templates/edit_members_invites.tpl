@@ -27,7 +27,7 @@
 					{/forminput}
 				</div>
 				<div class="control-group submit">
-					<input type="submit" name="send_invite" value="{tr}Invite Members{/tr}" />
+					<input type="submit" class="btn" name="send_invite" value="{tr}Invite Members{/tr}" />
 				</div>
 			{/form}
 			{if $invalidEmail}
@@ -75,7 +75,7 @@
 						<tfoot>
 							<tr>
 								<td colspan=3 style="text-align:right">
-									<input type="submit" name="delete_invites" value="Delete Checked" />
+									<input type="submit" class="btn" name="delete_invites" value="Delete Checked" />
 								</td>
 							</tr>
 						</tfoot>

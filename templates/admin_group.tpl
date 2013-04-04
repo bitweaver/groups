@@ -75,7 +75,7 @@
 		{/jstab}
 	{/jstabs}
 	<div class="control-group submit">
-		<input type="submit" name="group_preferences" value="{tr}Change Preferences{/tr}" />
+		<input type="submit" class="btn" name="group_preferences" value="{tr}Change Preferences{/tr}" />
 	</div>
 {/form}
 {/strip}

@@ -54,7 +54,7 @@
 					{include file="bitpackage:liberty/edit_storage.tpl" formid=$formid}
 				{/legend}
 				<div class="control-group submit">
-					<input type="submit" name="save_group" value="{tr}Upload{/tr}" />
+					<input type="submit" class="btn" name="save_group" value="{tr}Upload{/tr}" />
 				</div>
 			{/form}
 		{/if}

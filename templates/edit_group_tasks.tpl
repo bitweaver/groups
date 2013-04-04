@@ -59,7 +59,7 @@
 						</div>
 						{textarea name="email_body" label="Email Body"}{/textarea}
 						<div class="control-group submit">
-							<input type="submit" name="send_email" value="{tr}Send{/tr}" />
+							<input type="submit" class="btn" name="send_email" value="{tr}Send{/tr}" />
 						</div>
 				{/form}
 				{/legend}
