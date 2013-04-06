@@ -49,7 +49,7 @@
 						{/if}
 
 						{if $smarty.request.search_group_content_id}
-							<td>{assign var=content_type_guid value=`$item.content_type_guid`}{$contentTypes.$content_type_guid}</td>
+							<td>{assign var=content_type_guid value=$item.content_type_guid}{$contentTypes.$content_type_guid}</td>
 						{else if $gBitSystem->isFeatureActive( 'group_list_description' )}
 							<td>{$item.summary|escape}</td>
 						{/if}

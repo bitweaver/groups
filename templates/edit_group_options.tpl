@@ -2,10 +2,10 @@
 {legend legend="Group Options"}
 	{foreach from=$formGroupOptions key=item item=output}
 		<div class="control-group">
-			{formlabel label=`$output.label` for=$item}
+			{formlabel label=$output.label for=$item}
 			{forminput}
 				<input type="checkbox" name="group[{$item}]" value="y" {if $gContent->mInfo.$item|default:$output.default == "y"}checked{/if} id="{$item}" />
-				{formhelp note=`$output.note` page=`$output.page`}
+				{formhelp note=$output.note page=$output.page}
                 {if $item eq 'mod_msgs' && $mailinglist_pwd}
                     {formhelp note="<strong>You can moderate message by using mailinglist password: `$mailinglist_pwd`</strong"}
                 {/if}

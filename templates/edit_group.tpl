@@ -6,7 +6,7 @@
 	{if $preview}
 		<h2>Preview {$gContent->mInfo.title|escape}</h2>
 		<div class="preview">
-			{include file="bitpackage:group/group_about.tpl" page=`$gContent->mInfo.group_id`}
+			{include file="bitpackage:group/group_about.tpl" page=$gContent->mInfo.group_id}
 		</div>
 	{/if}
 
@@ -23,7 +23,7 @@
 	</div>
 
  	{if $errors}
- 		{formfeedback warning=`$errors`}
+ 		{formfeedback warning=$errors}
  	{/if}
 
 

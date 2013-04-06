@@ -153,7 +153,7 @@
 					{if $fEdit && $fAssign.name}
 						<input type="hidden" name="fAssign[module]" value="{$fAssign.module}" id="module" />{$fAssign.module}
 					{else}
-						{html_options name="fAssign[module_rsrc]" id="module" values=$allCenters options=$allCenters selected=`$mod`}
+						{html_options name="fAssign[module_rsrc]" id="module" values=$allCenters options=$allCenters selected=$mod}
 					{/if}
 					{formhelp note="Pick the center bit you want to display when accessing this package."}
 				{/forminput}

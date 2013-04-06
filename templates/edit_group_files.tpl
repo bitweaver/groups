@@ -10,7 +10,7 @@
 	</div>
 
  	{if $errors}
- 		{formfeedback warning=`$errors`}
+ 		{formfeedback warning=$errors}
  	{/if}
 
 	<div class="body">

@@ -7,10 +7,10 @@
 
 				{foreach from=$formGroupFeatures key=item item=output}
 					<div class="control-group">
-						{formlabel label=`$output.label` for=$item}
+						{formlabel label=$output.label for=$item}
 						{forminput}
 							{html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item) labels=false id=$item}
-							{formhelp note=`$output.note` page=`$output.page`}
+							{formhelp note=$output.note page=$output.page}
 						{/forminput}
 					</div>
 				{/foreach}
@@ -31,7 +31,7 @@
 				</p>
 				{foreach from=$formGroupServiceDisplayOptions key=item item=output}
 					<div class="control-group">
-						{formlabel label=`$output.label` for=$item}
+						{formlabel label=$output.label for=$item}
 						{forminput}
 							{if $output.type == 'numeric'}
 								<input size="5" type='text' name="{$item}" id="{$item}" value="{$gBitSystem->getConfig($item,$output.default)}" />
@@ -40,7 +40,7 @@
 							{else}
 								{html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item) labels=false id=$item}
 							{/if}
-							{formhelp note=`$output.note` page=`$output.page`}
+							{formhelp note=$output.note page=$output.page}
 						{/forminput}
 					</div>
 				{/foreach}
@@ -64,10 +64,10 @@
 				<input type="hidden" name="page" value="{$page}" />
 				{foreach from=$formGroupLists key=item item=output}
 					<div class="control-group">
-						{formlabel label=`$output.label` for=$item}
+						{formlabel label=$output.label for=$item}
 						{forminput}
 							{html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item) labels=false id=$item}
-							{formhelp note=`$output.note` page=`$output.page`}
+							{formhelp note=$output.note page=$output.page}
 						{/forminput}
 					</div>
 				{/foreach}
