@@ -57,7 +57,7 @@
 								<input type="text" size="60" maxlength="200" name="email_subject" id="subject" value="" />
 							{/forminput}
 						</div>
-						{textarea name="email_body" label="Email Body"}{/textarea}
+						{textarea name="email_body" label="Email Body"}
 						<div class="control-group submit">
 							<input type="submit" class="btn" name="send_email" value="{tr}Send{/tr}" />
 						</div>

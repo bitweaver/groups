@@ -49,7 +49,7 @@
 							{/forminput}
 						</div>
 
-						{textarea name="group[edit]" label="Long Description" help="The description of the group or other group message. By default this appears at the top of your group home page"}{$gContent->mInfo.data}{/textarea}
+						{textarea name="group[edit]" label="Long Description" help="The description of the group or other group message. By default this appears at the top of your group home page" edit=$gContent->mInfo.data}
 						
 						<div class="control-group">
 							{formlabel label="After Registration Message"}
