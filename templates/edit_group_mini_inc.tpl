@@ -4,11 +4,10 @@
 
 	{if !$gContent->isValid() || $gContent->isOwner() || $gContent->hasAdminPermission()}
 	<div class="control-group">
-		{formlabel label="Allow Fellow Group Members To Edit" for="group_share_update"}
-		{forminput}
-			<input type="checkbox" name="group_share_update" value="y" {if $groupUpdateShared}checked="checked"{/if} />
+		<label class="checkbox">
+			<input type="checkbox" name="group_share_update" value="y" {if $groupUpdateShared}checked="checked"{/if} />Allow Fellow Group Members To Edit
 			{formhelp note="Checking this box will allow fellow group users to edit this content."}
-		{/forminput}
+		</label>
 	</div>
 	{/if}
 {/if}

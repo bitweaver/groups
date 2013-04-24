@@ -16,7 +16,7 @@
 
 				{if $topics}<div class="floaticon"><a href="{$smarty.const.BOARDS_PKG_URL}index.php?b={$gContent->mInfo.board_id}">{tr}View More{/tr}</a></div>{/if}
 				<h2>Discussions</h2>
-					<table class="data">
+					<table class="table data">
 						<tr>
 							<th>{tr}Title{/tr}</th>
 							<th>{tr}Replies{/tr}</th>
@@ -75,7 +75,7 @@
 					<div class="floaticon"><a href="{$gContent->getDisplayUrl()}&list_page=2">{tr}View More{/tr}</a></div>
 				{/if}
 				<h2>Group Content</h2>
-				<table class="data">
+				<table class="table data">
 					<tr>
 						<th style="width:20%;">{tr}Type{/tr}</th>
 						<th style="width:50%;">{tr}Title{/tr}</th>

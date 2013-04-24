@@ -11,7 +11,7 @@
 				<h2>Your Groups</h2>
 
 				<div>
-					<table class="data">
+					<table class="table data">
 						<tr>
 							<th style="text-align:left;">
 								<a href="{$smarty.const.GROUP_PKG_URL}index.php?offset={$offset}&amp;sort_mode={if $sort_mode eq 'group_name_desc'}group_name_asc{else}group_name_desc{/if}">{tr}Group{/tr}</a> 
@@ -47,7 +47,7 @@
 				<h2>New Groups</h2>
 
 				<div>
-					<table class="data">
+					<table class="table data">
 						<tr>
 							<th style="text-align:left;">
 								<a href="{$smarty.const.GROUP_PKG_URL}index.php?offset={$offset}&amp;sort_mode={if $sort_mode eq 'group_name_desc'}group_name_asc{else}group_name_desc{/if}">{tr}Group{/tr}</a> 

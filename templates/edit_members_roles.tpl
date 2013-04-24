@@ -13,7 +13,7 @@
 				<input type="hidden" name="group[group_id]" value="{$gContent->mInfo.group_id}" />
 				<p>{tr}You can give your group members different roles, and then assign different administrative permissions to those roles in your Group Settings{/tr}</p>
 				<div class="control-group">
-					<table class="data">
+					<table class="table data">
 						{capture assign=th}
 							<tr>
 								<th>{tr}Group Member{/tr}</th>

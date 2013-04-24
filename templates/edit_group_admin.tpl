@@ -1,7 +1,7 @@
 {strip}
 {legend legend="Group Administration"}
 	<p>{tr}You can fine tune administration of your group by assigning permissions to different roles. In the membership administration panel you can assign members to more advanced roles like Group Manager or Group Administrator{/tr}</p>
-	<table class="data">
+	<table class="table data">
 		{capture assign=th}
 			<tr>
 				<th>{tr}Permissions{/tr}</th>

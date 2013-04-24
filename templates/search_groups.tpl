@@ -13,7 +13,7 @@
 			<input type="hidden" name="offset" value="{$control.offset|escape}" />
 			<input type="hidden" name="sort_mode" value="{$control.sort_mode|escape}" />
 
-			<table class="data">
+			<table class="table data">
 				<tr>
 					{if $gBitSystem->isFeatureActive( 'group_list_group_id' ) eq 'y'}
 						<th>{smartlink ititle="Group Id" isort=group_id offset=$control.offset iorder=desc idefault=1 find=$smarty.request.find}</th>

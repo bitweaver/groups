@@ -32,7 +32,7 @@
 					{form action=$smarty.server.SCRIPT_NAME legend="Assign column modules"}
 
 						<input type="hidden" name="group_id" value="{$gContent->mGroupId}" />
-						<table class="data">
+						<table class="table data">
 							<thead>
 								<tr style="text-align:left;">
 									<th style="width:30%">{tr}Column Modules{/tr}</th>
@@ -95,7 +95,7 @@
 					{if count($centerAssignedModules) > 0}
 						{form action=$smarty.server.SCRIPT_NAME}
 							<input type="hidden" name="group_id" value="{$gContent->mGroupId}" />
-							<table class="data">
+							<table class="table data">
 								<thead>
 									<tr style="text-align:left;">
 										<th style="width:30%">{tr}Assigned Center Modules{/tr}</th>
