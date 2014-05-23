@@ -87,7 +87,7 @@
 						</table>
 
 						<div class="control-group submit">
-							<input type="submit" class="btn" name="submitcolumns" value="{tr}Change columns settings{/tr}" />
+							<input type="submit" class="btn btn-default" name="submitcolumns" value="{tr}Change columns settings{/tr}" />
 						</div>
 
 					{/form}
@@ -137,7 +137,7 @@
 							</table>
 
 							<div class="control-group submit">
-								<input type="submit" class="btn" name="changecenter" value="{tr}Change center settings{/tr}" />
+								<input type="submit" class="btn btn-default" name="changecenter" value="{tr}Change center settings{/tr}" />
 							</div>
 						{/form}
 					{else}
@@ -191,7 +191,7 @@
 				{/forminput}
 			</div>
 						<div class="control-group submit">
-							<input type="submit" class="btn" name="submitcenter" value="{tr}Assign center module{/tr}" />
+							<input type="submit" class="btn btn-default" name="submitcenter" value="{tr}Assign center module{/tr}" />
 						</div>
 					{/form}
 					{/legend}
