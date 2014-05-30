@@ -6,7 +6,7 @@
 				<input type="hidden" name="page" value="{$page}" />
 
 				{foreach from=$formGroupFeatures key=item item=output}
-					<div class="control-group">
+					<div class="form-group">
 						{formlabel label=$output.label for=$item}
 						{forminput}
 							{html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item) labels=false id=$item}
@@ -17,7 +17,7 @@
 			{/legend}
 
 			{legend legend="Group Content"}
-				<div class="control-group">
+				<div class="form-group">
 					{formlabel label="Allowed Content Types"}
 					{forminput}
 						{html_checkboxes options=$formGroupContent.guids name=group_content separator="<br />" checked=$formGroupContent.checked}
@@ -30,7 +30,7 @@
 					{tr}Content that is associated with a group or groups can display a list of those groups on the content object's page and in lists. Choose any one or more of the following to display permalinks to groups a content obj is mapped to.{/tr}
 				</p>
 				{foreach from=$formGroupServiceDisplayOptions key=item item=output}
-					<div class="control-group">
+					<div class="form-group">
 						{formlabel label=$output.label for=$item}
 						{forminput}
 							{if $output.type == 'numeric'}
@@ -50,7 +50,7 @@
 			{legend legend="Allowed Modules"}
 				{formhelp note="You can select what layout modules groups can add to their layout."}
 				{foreach from=$formGroupModules item=modules key=package} 
-				<div class="control-group">
+				<div class="form-group">
 					{formlabel label=$package}
 					{forminput}
 						{html_checkboxes options=$modules name=group_modules separator="<br />" checked=$formGroupModules.checked}
@@ -63,7 +63,7 @@
 			{legend legend="List Settings"}
 				<input type="hidden" name="page" value="{$page}" />
 				{foreach from=$formGroupLists key=item item=output}
-					<div class="control-group">
+					<div class="form-group">
 						{formlabel label=$output.label for=$item}
 						{forminput}
 							{html_checkboxes name="$item" values="y" checked=$gBitSystem->getConfig($item) labels=false id=$item}
@@ -74,7 +74,7 @@
 			{/legend}
 		{/jstab}
 	{/jstabs}
-	<div class="control-group submit">
+	<div class="form-group submit">
 		<input type="submit" class="btn btn-default" name="group_preferences" value="{tr}Change Preferences{/tr}" />
 	</div>
 {/form}

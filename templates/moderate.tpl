@@ -1,6 +1,6 @@
 {strip}
 {form}
-	<div class="control-group">
+	<div class="form-group">
 		{if !empty($moderation.request)}
 			{if $moderation.type=='add_content' && $moderation.data.map_content_id}
 				<strong>{tr}Request{/tr}:</strong> {$moderation.data.content_name} <a href="{$smarty.const.BIT_ROOT_URL}index.php?content_id={$moderation.data.map_content_id}">{$moderation.data.title}</a> {tr}submitted to group{/tr}.<br />
@@ -19,7 +19,7 @@
 			<textarea name="reply" id="reply-{$moderation.moderation_id}"></textarea>
 		{/if}
 	</div>
-	<div class="control-group submit">
+	<div class="form-group submit">
 		{foreach from=$moderation.transitions item=transition}
 			<input type=submit name="transition" value="{$transition}" />&nbsp;
 		{/foreach}

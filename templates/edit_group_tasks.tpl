@@ -24,7 +24,7 @@
 								</ul></div>
 							{/if}
 							{assign var=last_type value=$moderation.type}
-							<div class="control-group">
+							<div class="form-group">
 								<h3>{if $moderation.type=='add_content'}Content Submissions{else}{$moderation.type|ucwords}{/if}</h3>
 								<ul>
 						{/if}
@@ -51,14 +51,14 @@
 				{formfeedback success=$successEmailMsg error=$errorEmailMsg}
 				{form}
 						<input type="hidden" name="group_id" value="{$gContent->mInfo.group_id}" />
-						<div class="control-group">
+						<div class="form-group">
 							{formlabel label="Subject" for="subject"}
 							{forminput}
 								<input type="text" size="60" maxlength="200" name="email_subject" id="subject" value="" />
 							{/forminput}
 						</div>
 						{textarea name="email_body" label="Email Body"}
-						<div class="control-group submit">
+						<div class="form-group submit">
 							<input type="submit" class="btn btn-default" name="send_email" value="{tr}Send{/tr}" />
 						</div>
 				{/form}

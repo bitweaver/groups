@@ -86,7 +86,7 @@
 							</tbody>
 						</table>
 
-						<div class="control-group submit">
+						<div class="form-group submit">
 							<input type="submit" class="btn btn-default" name="submitcolumns" value="{tr}Change columns settings{/tr}" />
 						</div>
 
@@ -136,7 +136,7 @@
 								</tbody>
 							</table>
 
-							<div class="control-group submit">
+							<div class="form-group submit">
 								<input type="submit" class="btn btn-default" name="changecenter" value="{tr}Change center settings{/tr}" />
 							</div>
 						{/form}
@@ -147,7 +147,7 @@
 			<input type="hidden" name="group_id" value="{$gContent->mGroupId}" />
 			<input type="hidden" name="fAssign[layout_area]" value="c" />
 
-			<div class="control-group">
+			<div class="form-group">
 				{formlabel label="Center Piece" for="module"}
 				{forminput}
 					{if $fEdit && $fAssign.name}
@@ -159,7 +159,7 @@
 				{/forminput}
 			</div>
 
-			<div class="control-group">
+			<div class="form-group">
 				{formlabel label="Order" for="c_ord"}
 				{forminput}
 					<input type="text" size="5" name="fAssign[pos]" id="pos" value="" />
@@ -167,7 +167,7 @@
 				{/forminput}
 			</div>
 
-			<div class="control-group">
+			<div class="form-group">
 				{formlabel label="Cache Time" for="c_cache_time"}
 				{forminput}
 					<input type="text" name="fAssign[cache_time]" id="c_cache_time" size="5" value="{$fAssign.cache_time|escape}" /> seconds
@@ -175,7 +175,7 @@
 				{/forminput}
 			</div>
 
-			<div class="control-group">
+			<div class="form-group">
 				{formlabel label="Rows" for="c_rows"}
 				{forminput}
 					<input type="text" size="5" name="fAssign[module_rows]" id="c_rows" value="{$fAssign.module_rows|escape}" />
@@ -183,14 +183,14 @@
 				{/forminput}
 			</div>
 
-			<div class="control-group">
+			<div class="form-group">
 				{formlabel label="Parameters" for="c_params"}
 				{forminput}
 					<input type="text" size="48" name="fAssign[params]" id="c_params" value="{$fAssign.params|escape}" />
 					{formhelp note="Here you can enter any additional parameters the module might need. (optional)"}
 				{/forminput}
 			</div>
-						<div class="control-group submit">
+						<div class="form-group submit">
 							<input type="submit" class="btn btn-default" name="submitcenter" value="{tr}Assign center module{/tr}" />
 						</div>
 					{/form}
