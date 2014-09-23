@@ -629,7 +629,7 @@ class BitGroup extends LibertyMime {
 		return $ret;
 	}
 
-	function getTitleFromHash( $pParamHash = NULL, $pContentId = NULL ){
+	public static function getTitleFromHash( $pParamHash = NULL, $pContentId = NULL ){
 		$ret = NULL;
 
 		if( @BitBase::verifyId( $pContentId ) ){
